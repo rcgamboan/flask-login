@@ -42,10 +42,10 @@ def login():
                 else:
                     return redirect(url_for('admin'))
             else:
-                flash("Alguno de los datos es incorrecto. ")
+                flash("Alguno de los datos es incorrecto")
                 return render_template('auth/login.html')
         else:
-            flash("Alguno de los datos es incorrecto. ")
+            flash("El usuario no existe")
             return render_template('auth/login.html')    
     else:
         return render_template('auth/login.html')
@@ -71,8 +71,13 @@ def admin():
             flash("Este nombre de usuario ya existe ")
             return render_template('admin.html')    
     else:
-        return render_template('admin.html')
-    return render_template('admin.html')
+        users = obtenerUsuarios()
+        return render_template('admin.html',users=users)
+    
+
+def obtenerUsuarios():
+    usuarios = db1.session.query(Usuario).filter_by().all()
+    return usuarios
 
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)

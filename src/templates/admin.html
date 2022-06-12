@@ -22,7 +22,7 @@
         </div>
         <div class="form-check">
             <input class="form-check-input" type="radio" id="isAdmin" name="isAdmin" value="0">
-            <label class="form-check-label" for="isAdmin">Staff</label>
+            <label class="form-check-label" for="isAdmin">Usuario normal</label>
         </div>
         <div class="form-check">
             <input class="form-check-input" type="radio" name="isAdmin" value="1">
@@ -31,6 +31,19 @@
         <button class="w-100 btn btn-lg btn-primary" type="submit">Agregar usuario</button> 
     </div>
 </form>
+
+{%if users%}
+    <div class="users" style="margin-right:20%">
+      <h2>Usuarios Registrados</h2>
+      <table style="width:100%;">
+        {%for user in users%}
+          <tr>
+            <td>{{user.username}}</td>
+          </tr>   
+        {%endfor%}
+      </table>
+    </div>
+{%endif%}
 
 
 {% endblock %}

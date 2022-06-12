@@ -4,7 +4,7 @@ from sqlalchemy import Column, Integer, String, Float
 class Usuario(db.Base):
     __tablename__ = 'usuarios'
     id = Column(Integer, primary_key=True, autoincrement=True)
-    username = Column(String, nullable=False)
+    username = Column(String, nullable=False, unique=True)
     password = Column(String)
     isAdmin = Column(Integer, default=0)
 
