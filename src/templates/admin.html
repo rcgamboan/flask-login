@@ -8,4 +8,29 @@
 
 {% block body %}
 <h1>Bienvenido, Administrador!</h1>
+<form class="form-signin" action="/admin" method="POST">
+    <input type="checkbox" id="menu">
+    <label for="menu"  class="collapsible-menu" >Agregar nuevo usuario</label>
+    <div class="form-floating menu-content">
+    <div class="form-floating">
+            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+            <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" id="isAdmin" name="isAdmin" value="0">
+            <label class="form-check-label" for="isAdmin">Staff</label>
+        </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="isAdmin" value="1">
+            <label class="form-check-label" for="isAdmin">Administrador</label>
+        </div>
+        <button class="w-100 btn btn-lg btn-primary" type="submit">Agregar usuario</button> 
+    </div>
+</form>
+
+
 {% endblock %}

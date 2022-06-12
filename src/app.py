@@ -15,7 +15,7 @@ def agregarUsuario(username,password,isAdmin):
     user = Usuario(username, generate_password_hash(password),isAdmin)
     db1.session.add(user)
     db1.session.commit()
-    
+
 # Si se trata de acceder al directorio raiz de la pagina se redirecciona a login
 @app.route('/')
 def index():
@@ -55,13 +55,27 @@ def login():
 def home():
     return render_template('home.html')
 
-@app.route('/admin')
+
+# Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
+# 
+@app.route('/admin',methods=['GET','POST'])
 def admin():
+
+    if request.method=='POST':
+        new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+        if new_user == None:
+            agregarUsuario(request.form['username'], request.form['password'], request.form['isAdmin'])
+            return render_template('admin.html')
+
+        else:
+            flash("Este nombre de usuario ya existe ")
+            return render_template('admin.html')    
+    else:
+        return render_template('admin.html')
     return render_template('admin.html')
 
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
-    #agregarUsuario()
     app.config.from_object(config['development'])
     app.run()
 
