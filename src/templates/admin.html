@@ -7,17 +7,48 @@
 {% endblock %}
 
 {% block body %}
-<h1>Bienvenido, Administrador!</h1>
-<form class="form-signin" action="/admin" method="POST">
-    <input type="checkbox" id="menu">
-    <label for="menu"  class="collapsible-menu" >Agregar nuevo usuario</label>
-    <div class="form-floating menu-content">
-    <div class="form-floating">
-            <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+<h2 class="mb-3">Perfiles de Usuarios</h2>
+{% with messages = get_flashed_messages()%}
+
+{% if messages %}
+<br/>
+{% for message in messages%}
+<div class="alert alert-primary alert-dismissible" role="alert">
+    <strong>{{ message }}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+</div>
+{% endfor %}
+{% endif %}
+
+{% endwith %}
+
+<div class="row justify-content-md-center">
+  <div class="col-12 col-md-4 d-flex justify-content-end">
+        <input type="text" class="form-control my-2 search">
+        <button type="button" class="btn btn-dark my-2 search-btn">
+          <i class="fa-solid fa-magnifying-glass"></i>
+        </button>
+        <button type="button" class="btn btn-primary my-2 mr-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
+          <i class="fa-solid fa-plus"></i>
+        </button>
+  </div>
+</div>
+
+<!--Modal Agregar usuario-->
+<div class="modal fade" id="AgregarUsuario" tabindex="-1" role="dialog" aria-labelledby="Agregar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="form-signin modal-body" action="/admin" method="POST">
+        <div class="form-floating">
+            <input type="username" class="form-control" id="username" name="username" placeholder="Username" required="required" pattern="[A-Za-z0-9]{1,20}">
             <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required="required">
             <label for="floatingPassword">Password</label>
         </div>
         <div class="form-check">
@@ -25,25 +56,41 @@
             <label class="form-check-label" for="isAdmin">Usuario normal</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="isAdmin" value="1">
-            <label class="form-check-label" for="isAdmin">Administrador</label>
+            <input class="form-check-input" type="radio" name="isAdmin" value="1" required="required">
+            <label class="form-check-label" for="isAdmin" required="required">Administrador</label>
         </div>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Agregar usuario</button> 
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Agregar usuario</button>
+      </div>
+    </form>
     </div>
-</form>
+  </div>
+</div>
 
 {%if users%}
-    <div class="users" style="margin-right:20%">
-      <h2>Usuarios Registrados</h2>
-      <table style="width:100%;">
-        {%for user in users%}
-          <tr>
-            <td>{{user.username}}</td>
-          </tr>   
-        {%endfor%}
-      </table>
+    <div class="row justify-content-md-center">
+      <div class="col-12 col-md-4">
+        <table class="table table-bordered">
+          <thead class="thead-dark">
+            <th scope="col">Id</th>
+            <th scope="col">Username</th>
+            <th scope="col">Rol</th>
+          </thead>
+          <tbody>
+            {%for user in users%}
+            <tr>
+              <th scope="row">{{user.id}}</th>
+              <td>{{user.username}}</td>
+              <td>{{user.isAdmin}}</td>
+            </tr>
+            {%endfor%}
+          </tbody>
+        </table>
+      </div>
     </div>
 {%endif%}
+
 
 
 {% endblock %}

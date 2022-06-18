@@ -7,33 +7,44 @@
 {% endblock %}
 
 {% block body %}
-<form class="form-signin" action="/login" method="POST">
-    <img class="mb-4" src="{{ url_for('static',filename='img/logoUSB.png') }}" alt="" width="72" height="57">
+<div class="row justify-content-md-center">
+  <div class="col-12 col-md-auto">
+    <form class="form-signin" action="/login" method="POST">
+        <img class="mb-4" src="{{ url_for('static',filename='img/logoUSB.png') }}" alt="" width="72" height="57">
 
-    {% with messages = get_flashed_messages()%}
+        {% with messages = get_flashed_messages()%}
 
-    {% if messages %}
-    <br/>
-    {% for message in messages%}
-    <div class="alert alert-primary alert-dismissible" role="alert">
-        <strong>{{ message }}</strong>
-        <button type="button" class="btn_close" data-bs-dismiss="alert" aria-label="Close"></button>
-    </div>
-    {% endfor %}
-    {% endif %}
+        {% if messages %}
+        <br/>
+        {% for message in messages%}
+        <div class="alert alert-primary alert-dismissible" role="alert">
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            <strong>{{ message }}</strong>
+        </div>
+        {% endfor %}
+        {% endif %}
 
-    {% endwith %}
-    <h1 class="h3 mb-3 fw-normal">Introduzca sus datos</h1>
+        {% endwith %}
+        <h1 class="h3 mb-3 fw-normal">Introduzca sus datos</h1>
 
-    <div class="form-floating">
-      <input type="text" class="form-control" id="username" name="username" placeholder="Username">
-      <label for="floatingInput">Username</label>
-    </div>
-    <div class="form-floating">
-      <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
-      <label for="floatingPassword">Password</label>
-    </div>
-    <button class="w-100 btn btn-lg btn-primary" type="submit">Sign in</button>
-    <!--<p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>-->
-</form>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="username" name="username" placeholder="Username">
+          <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password">
+          <label for="floatingPassword">Password</label>
+        </div>
+        <div class="row justify-content-around">
+          <div class="col-8 col-md-auto">
+            <button class="w-100 btn btn-lg btn-primary mb-2" type="Enviar">Enviar</button>
+          </div>
+          <div class="col-8 col-md-auto">
+            <button class="w-100 btn btn-lg btn-secondary mb-3" type="reset">Limpiar</button>
+          </div>
+        <!--<p class="mt-5 mb-3 text-muted">&copy; 2017–2022</p>-->
+    </form>
+  </div>
+</div>
+
 {% endblock %}

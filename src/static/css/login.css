@@ -12,15 +12,24 @@ body {
 }
 
 .form-signin {
-  max-width: 330px;
   padding: 15px;
 }
 
+.search{
+  border-top-right-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.search-btn{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  margin-right: 1rem;
+}
 .form-signin .form-floating:focus-within {
   z-index: 2;
 }
 
-.form-signin input[type="email"] {
+.form-signin input[type="username"] {
   margin-bottom: -1px;
   border-bottom-right-radius: 0;
   border-bottom-left-radius: 0;
@@ -32,47 +41,7 @@ body {
   border-top-right-radius: 0;
 }
 
-.collapsible-menu {
-  background-color: rgb(255, 255, 255);
-  border-bottom: 3px solid #afafaf;
-  box-shadow: 1px 2px 3px rgba(0,0,0,0.2);
-  padding: 10px;
-  border-radius: 6px;
-}
-.collapsible-menu ul {
-  list-style-type: none;
-  padding: 0;
-}
-.collapsible-menu a {
-  display:block;
-  padding: 10px;
-  text-decoration: none;
-}
-
-.collapsible-menu label {
-  font-family: 'Sedgwick Ave Display', cursive;
-  font-size: 56px;
-  display: block;
-  cursor: pointer;
-  background: url(menu.png) no-repeat left center;
-  padding: 10px 0 10px 50px;
-}
-input#menu {
-  display: none;
-}
-
-.menu-content {
-  max-height: 0;
-  overflow: hidden;
-}
-
 .form-check {
   text-align: left !important;
 }
-/* Toggle Effect */
-input:checked ~ label {
-  background-image: url(close.png);
-}
-input:checked ~ .menu-content {
-  max-height: 100%;
-}
+

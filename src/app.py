@@ -63,13 +63,16 @@ def admin():
 
     if request.method=='POST':
         new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+        
+        #si no existe el usuario en la base de datos
         if new_user == None:
             agregarUsuario(request.form['username'], request.form['password'], request.form['isAdmin'])
             return render_template('admin.html')
 
         else:
             flash("Este nombre de usuario ya existe ")
-            return render_template('admin.html')    
+            users = obtenerUsuarios()
+            return render_template('admin.html',users=users)   
     else:
         users = obtenerUsuarios()
         return render_template('admin.html',users=users)
