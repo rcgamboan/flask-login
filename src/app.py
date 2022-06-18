@@ -55,15 +55,19 @@ def login():
 def home():
     return render_template('home.html')
 
+@app.route('/admin/update',methods=['POST'])
+def update():
+    actualizarRol(request.form['ID'], request.form['rol'])
+    return redirect(url_for('admin'))
 
 # Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
 # 
-@app.route('/admin',methods=['GET','POST'])
+@app.route('/admin',methods=['GET','POST','PUT'])
 def admin():
 
     if request.method=='POST':
         new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-        
+
         #si no existe el usuario en la base de datos
         if new_user == None:
             agregarUsuario(request.form['username'], request.form['password'], request.form['isAdmin'])
@@ -77,6 +81,10 @@ def admin():
         users = obtenerUsuarios()
         return render_template('admin.html',users=users)
     
+def actualizarRol(id,newRol):
+    user = db1.session.query(Usuario).filter_by(id = id).first()
+    user.isAdmin = newRol
+    db1.session.commit()
 
 def obtenerUsuarios():
     usuarios = db1.session.query(Usuario).filter_by().all()
