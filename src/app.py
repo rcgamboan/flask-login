@@ -71,7 +71,8 @@ def admin():
         #si no existe el usuario en la base de datos
         if new_user == None:
             agregarUsuario(request.form['username'], request.form['password'], request.form['isAdmin'])
-            return render_template('admin.html')
+            users = obtenerUsuarios()
+            return render_template('admin.html',users=users)
 
         else:
             flash("Este nombre de usuario ya existe ")
