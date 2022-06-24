@@ -3,17 +3,28 @@ from sqlalchemy import Column, Integer, String, Float
 
 class Usuario(db.Base):
     __tablename__ = 'usuarios'
-    id = Column(Integer, primary_key=True, autoincrement=True)
+    id = Column(Integer, primary_key=True)
     username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
+    nombres = Column(String, nullable=False)
+    apellidos = Column(String, nullable=False)
+    telefonoCelular = Column(Integer, nullable=False)
+    telefonoLocal = Column(Integer, nullable=True)
+    direccion = Column(String, nullable=False)
     rol = Column(Integer, default=0, nullable=False)
     # rol = 0 -> Usuario normal
     # rol = 1 -> admin
     # rol = 2 -> proveedor
 
-    def __init__(self, username, password, rol = 0):
+    def __init__(self, id,username, password, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol = 0):
+        self.id = id
         self.username = username
         self.password = password
+        self.nombres = nombres
+        self.apellidos = apellidos
+        self.telefonoCelular = telefonoCelular
+        self.telefonoLocal = telefonoLocal
+        self.direccion = direccion
         self.rol = rol
 
     def __repr__(self):
