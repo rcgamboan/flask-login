@@ -70,7 +70,7 @@
           <i class="fa-solid fa-plus"></i>
         </button>
   </div>
-</div>
+
 
 <!--Modal Agregar usuario-->
 <div class="modal fade" id="AgregarUsuario" tabindex="-1" role="dialog" aria-labelledby="Agregar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
@@ -136,7 +136,7 @@
 
 {%if users%}
     <div class="row justify-content-md-center">
-      <div class="col-12 col-md-4">
+      <div class="col-12 col-md-6 table-responsive">
         <table class="table mt-2 table-hover" id = "users">
           <thead>
             <th scope="col">Cedula</th>
@@ -194,7 +194,7 @@
       </div>
     </div>
 {%endif%}
-
+</div>
 
 
 {% endblock %}
