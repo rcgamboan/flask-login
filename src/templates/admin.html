@@ -61,21 +61,49 @@
       </div>
       <form class="form-signin modal-body" action="/admin" method="POST">
         <div class="form-floating">
-            <input type="username" class="form-control" id="username" name="username" placeholder="Username" required="required" pattern="[A-Za-z0-9]{1,20}">
+            <input type="username" class="form-control" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
             <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="Password" required="required">
+            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="*******" required="required">
             <label for="floatingPassword">Password</label>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" id="isAdmin" name="isAdmin" value="0">
-            <label class="form-check-label" for="isAdmin">Usuario normal</label>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+          <label for="floatingInput">Nombres</label>
+        </div>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+          <label for="floatingInput">Apellidos</label>
+        </div>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="cedula" name="cedula" placeholder="1234567" required="required">
+          <label for="floatingInput">Cedula</label>
+      </div>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="telefonoL" name="telefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+          <label for="floatingInput">Telefono Local</label>
+        </div>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="telefonoC" name="telefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+          <label for="floatingInput">Telefono Celular</label>
+        </div>
+        <div class="form-floating">
+          <input type="username" class="form-control" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+          <label for="floatingInput">Direccion</label>
         </div>
         <div class="form-check">
-            <input class="form-check-input" type="radio" name="isAdmin" value="1" required="required">
-            <label class="form-check-label" for="isAdmin" required="required">Administrador</label>
+            <input class="form-check-input" type="radio" id="rol" name="rol" value="0">
+            <label class="form-check-label" for="rol">Usuario normal</label>
         </div>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="rol" value="1" required="required">
+            <label class="form-check-label" for="rol" required="required">Administrador</label>
+        </div>
+        <div class="form-check">
+          <input class="form-check-input" type="radio" name="rol" value="2" required="required">
+          <label class="form-check-label" for="rol" required="required">Productor</label>
+      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Agregar usuario</button>
@@ -90,8 +118,10 @@
       <div class="col-12 col-md-4">
         <table class="table mt-2 table-hover" id = "users">
           <thead>
-            <th scope="col">ID</th>
+            <th scope="col">Cedula</th>
             <th scope="col">Username</th>
+            <th scope="col">Nombres</th>
+            <th scope="col">Apellidos</th>
             <th scope="col">Rol</th>
             <th scope="col">Actions</th>
           </thead>
@@ -101,6 +131,8 @@
               <form action="/admin/update" method="POST"  >
                 <th scope="row" id="{{user.id}}">{{user.id}}</th>
                 <td class="table-light tdEdit" type="username" id="username">{{user.username}}</td>
+                <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
+                <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
                 <input type="hidden" name="ID">
                 <input type="hidden" name="rol">
                 <td class="table-light drop tdEdit">
