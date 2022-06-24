@@ -11,10 +11,16 @@ app = Flask(__name__)
 
 # Recibe el username y la contraseña del usuario a crear
 # Se llama a la sesion de SQLAlchemy y se crea el usuario
-def agregarUsuario(username,password,rol):
-    user = Usuario(username, generate_password_hash(password),rol)
-    db1.session.add(user)
-    db1.session.commit()
+def agregarUsuario(id,username,password,nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol):
+
+    logged_user = db1.session.query(Usuario).filter_by(id = request.form['cedula']).first()
+
+    if logged_user == None:
+        user = Usuario(id,username, generate_password_hash(password),nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol)
+        db1.session.add(user)
+        db1.session.commit()
+    else:
+        flash("El usuario ya se encuentra registrado")
 
 def eliminarUsuario(ID):
     db1.query.filter_by(id=ID).delete()
@@ -42,16 +48,19 @@ def login():
 
     if request.method=='POST':
         logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+
         if logged_user != None:
 
             if check_password_hash(logged_user.password,request.form['password']):
 
                 if logged_user.rol == 0:
-                    return redirect(url_for('home'))
+                    return render_template('home.html',nombre=logged_user.nombres)
                 elif logged_user.rol == 1:
                     return redirect(url_for('admin'))
-                else:
+                elif logged_user.rol == 2:
                     return redirect(url_for('proveedor'))
+                else:
+                    return redirect(url_for('login'))
             else:
                 flash("Alguno de los datos es incorrecto")
                 return render_template('auth/login.html')
@@ -86,10 +95,17 @@ def admin():
 
     if request.method=='POST':
         new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-
         #si no existe el usuario en la base de datos
         if new_user == None:
-            agregarUsuario(request.form['username'], request.form['password'], request.form['rol'])
+            agregarUsuario(int(request.form['cedula']),
+                            request.form['username'], 
+                            request.form['password'], 
+                            request.form['nombre'],
+                            request.form['apellido'],
+                            request.form['telefonoC'],
+                            request.form['telefonoL'],
+                            request.form['direccion'],
+                            request.form['rol'])
             users = obtenerUsuarios()
             return render_template('admin.html',users=users)
 
@@ -104,6 +120,7 @@ def admin():
 # Se obtienen los productos del productor indicado y se pasan como datos para mostrarlos
 @app.route('/proveedor',methods=['GET','POST','PUT'])
 def proveedor():
+    
     idProveedor = request.form['idProveedor']
     if request.method=='POST':
         
@@ -146,7 +163,7 @@ def editarUsuario(id,username,password,rol):
 
 # Elimina el usuario por id
 def eliminarUsuario(id):
-    user = db1.session.query(Usuario).filter_by(id = id).first()
+    user = db1.session.query(Usuario).get(id)
     db1.session.delete(user)
     db1.session.commit()
 
