@@ -62,29 +62,29 @@ body {
   margin: -5px;
 }
 
-.edit{
-  display: flex;
-  flex: 0 0 auto;
-  width: 40%;
-  justify-content: center;
-  padding: 10px 7px;
-  border-radius: 40rem;
+form.edit{
+  display: flex !important;
+  flex: 0 0 auto !important;
+  width: 40% !important;
+  justify-content: center !important;
+  padding: 6px 7px !important;
+  border-radius: 40rem !important;
 }
 
 .trash{
-  margin-left: 3.5px;
+  margin-left: 3.5px !important;
 
 }
 .trash:hover {
-  background-color: rgb(215, 70, 70);
-  color: rgb(255, 181, 181);
+  background-color: rgb(215, 70, 70) !important;
+  color: rgb(255, 181, 181) !important;
 }
 
 .pencil{
-  margin-right: 3.5px;
+  margin-right: 3.5px !important;
 }
 
 .pencil:hover{
-  background-color: rgb(120, 120, 120);
-  color: rgb(225, 225, 225)
+  background-color: rgb(154, 156, 182) !important;
+  color: rgb(225, 225, 225) !important;
 }

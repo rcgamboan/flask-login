@@ -16,6 +16,10 @@ def agregarUsuario(username,password,rol):
     db1.session.add(user)
     db1.session.commit()
 
+def eliminarUsuario(ID):
+    db1.query.filter_by(id=ID).delete()
+    db1.session.commit()
+
 def agregarProducto(nombre,idProveedor,precio,descripcion = ''):
     prod = Producto(nombre, idProveedor, precio, descripcion)
     db1.session.add(prod)
@@ -66,8 +70,14 @@ def home():
 def update():
     #obtener tipo y con eso crear funciones para eliminar o editar segun corresponda
     #print(request.form['tipo'])
-    actualizarRol(request.form['ID'], request.form['rol'])
+    actualizarRol(request.form['ID'], request.form['role'])
     return redirect(url_for('admin'))
+
+@app.route('/admin/delete',methods=['POST'])
+def delete():
+    eliminarUsuario(request.form['id'])
+    return redirect(url_for('admin'))
+
 
 # Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
 # 
