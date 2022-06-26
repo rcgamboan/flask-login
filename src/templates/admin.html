@@ -31,17 +31,9 @@
       rows[i].onclick = function() {
         var id = this.cells[0].innerHTML
         document.querySelector('input[name="id"]').value = id;
-        console.log(document.querySelector('form[name="ID"]'))
         document.querySelector('form[name="ID"]').submit();
-        //document.getElementsByTagName('form')[1].submit(); 
       }
     }
-
-
-    //console.log(document.querySelector('input[name="id"]').value)
-    //console.log(document.querySelector('form[name="ID"]'))
-    //console.log(document.querySelector('form[name="ID"]').value)
-    //document.getElementsByTagName('form')[3].submit();
   }
 </script>
 
@@ -82,35 +74,35 @@
       </div>
       <form class="form-signin modal-body" action="/admin" method="POST">
         <div class="form-floating">
-            <input type="username" class="form-control" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
+            <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
             <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control" id="floatingPassword" name="password" placeholder="*******" required="required">
+            <input type="password" class="form-control bottom" id="floatingPassword" name="password" placeholder="*******" required="required">
             <label for="floatingPassword">Password</label>
         </div>
         <div class="form-floating">
-          <input type="username" class="form-control" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+          <input class="form-control top" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
           <label for="floatingInput">Nombres</label>
         </div>
         <div class="form-floating">
-          <input type="username" class="form-control" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+          <input  class="form-control  middle" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
           <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating">
-          <input type="username" class="form-control" id="cedula" name="cedula" placeholder="1234567" required="required">
+          <input   class="form-control  middle" id="cedula" name="cedula" placeholder="1234567" required="required">
           <label for="floatingInput">Cedula</label>
       </div>
         <div class="form-floating">
-          <input type="username" class="form-control" id="telefonoL" name="telefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+          <input  class="form-control  middle" id="telefonoL" name="telefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
           <label for="floatingInput">Telefono Local</label>
         </div>
         <div class="form-floating">
-          <input type="username" class="form-control" id="telefonoC" name="telefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+          <input   class="form-control middle" id="telefonoC" name="telefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
           <label for="floatingInput">Telefono Celular</label>
         </div>
-        <div class="form-floating">
-          <input type="username" class="form-control" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+        <div class="form-floating mb-3">
+          <input class="form-control bottom" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
           <label for="floatingInput">Direccion</label>
         </div>
         <div class="form-check">
@@ -121,7 +113,7 @@
             <input class="form-check-input" type="radio" name="rol" value="1" required="required">
             <label class="form-check-label" for="rol" required="required">Administrador</label>
         </div>
-        <div class="form-check">
+        <div class="form-check mb-3">
           <input class="form-check-input" type="radio" name="rol" value="2" required="required">
           <label class="form-check-label" for="rol" required="required">Productor</label>
       </div>
@@ -139,12 +131,12 @@
       <div class="col-12 col-md-6 table-responsive">
         <table class="table mt-2 table-hover" id = "users">
           <thead>
-            <th scope="col">Cedula</th>
-            <th scope="col">Username</th>
+            <th scope="col">Cédula</th>
+            <th scope="col">Usuario</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">Rol</th>
-            <th scope="col">Actions</th>
+            <th scope="col">Acciones</th>
           </thead>
           <tbody>
             {%for user in users%}

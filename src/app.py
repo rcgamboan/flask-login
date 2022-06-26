@@ -120,7 +120,7 @@ def admin():
 # Se obtienen los productos del productor indicado y se pasan como datos para mostrarlos
 @app.route('/proveedor',methods=['GET','POST','PUT'])
 def proveedor():
-    
+
     idProveedor = request.form['idProveedor']
     if request.method=='POST':
         
@@ -154,18 +154,67 @@ def obtenerUsuarios():
     usuarios = db1.session.query(Usuario).filter_by().all()
     return usuarios
 
-def editarUsuario(id,username,password,rol):
-    user = db1.session.query(Usuario).filter_by(id = id).first()
-    user.username = username
-    user.password = generate_password_hash(password)
-    user.rol = rol
+def editarUsuario(id,username = "", password = "",nombres = "",apellidos = "",telefonoCelular = 0,telefonoLocal = 0,direccion = "",rol = -1):
+
+    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
+    
+    if logged_user != None:
+        user = db1.session.query(Usuario).filter_by(id = id).first()
+        if username != "" and username != None:
+            user.username = username
+        
+        if password != "" and password != None:
+            user.password = generate_password_hash(password)
+
+        if nombres != "" and nombres != None:            
+            user.nombres = nombres
+
+        if apellidos != "" and apellidos != None:
+            user.apellidos = apellidos
+        
+        if telefonoCelular != 0 and telefonoCelular != None:
+            user.telefonoCelular = telefonoCelular
+        
+        if telefonoLocal != 0 and telefonoLocal != None:
+            user.telefonoLocal = telefonoLocal
+        
+        if direccion != "" and direccion != None:
+            user.direccion = direccion
+        
+        if rol != -1 and rol != None:
+            user.rol = rol
+
+        db1.session.commit()
+    else:
+        flash("El usuario no existe")
+
+# Recibe el username y la contraseña del usuario a crear
+# Se llama a la sesion de SQLAlchemy y se crea el usuario
+def agregarUsuario(id,username,password,nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol):
+
+    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
+
+    if logged_user == None:
+        user = Usuario(id,username, generate_password_hash(password),nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol)
+        db1.session.add(user)
+        db1.session.commit()
+    else:
+        flash("El usuario ya se encuentra registrado")
+
+def agregarProducto(nombre,idProveedor,precio,descripcion = ''):
+    prod = Producto(nombre, idProveedor, precio, descripcion)
+    db1.session.add(prod)
     db1.session.commit()
 
 # Elimina el usuario por id
 def eliminarUsuario(id):
-    user = db1.session.query(Usuario).get(id)
-    db1.session.delete(user)
-    db1.session.commit()
+    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
+    if logged_user != None:
+        user = db1.session.query(Usuario).get(id)
+        db1.session.delete(user)
+        db1.session.commit()
+    else:
+        flash("El usuario no existe")
 
 # Metodo que retorna los productos correspondientes al proveedor indicado
 def obtenerProductos(id):
