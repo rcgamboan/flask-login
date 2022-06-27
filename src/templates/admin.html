@@ -35,6 +35,28 @@
       }
     }
   }
+
+  function search() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("users");
+  tr = table.getElementsByTagName("tr");
+
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+}
 </script>
 
 <h2 class="mb-3">Perfiles de Usuarios</h2>
@@ -54,11 +76,8 @@
 
 <div class="row justify-content-md-center">
   <div class="col-12 col-md-4 d-flex justify-content-end">
-        <input type="text" class="form-control my-2 search">
-        <button type="button" class="btn btn-dark my-2 search-btn">
-          <i class="fa-solid fa-magnifying-glass"></i>
-        </button>
-        <button type="button" class="btn btn-primary my-2 mr-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
+        <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
+        <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
           <i class="fa-solid fa-plus"></i>
         </button>
   </div>
