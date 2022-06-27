@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash , generate_password_hash
 from config import config
 import sqlite3 as sql
 import database as db1
-from model import Usuario, Producto
+from model import Usuario, Productor
 
 
 app = Flask(__name__)
@@ -27,8 +27,8 @@ def eliminarUsuario(ID):
     db1.query.filter_by(id=ID).delete()
     db1.session.commit()
 
-def agregarProducto(nombre,idProveedor,precio,descripcion = ''):
-    prod = Producto(nombre, idProveedor, precio, descripcion)
+def agregarProductor(nid, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
+    prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo)
     db1.session.add(prod)
     db1.session.commit()
 
@@ -58,7 +58,7 @@ def login():
                 elif logged_user.rol == 1:
                     return redirect(url_for('admin'))
                 elif logged_user.rol == 2:
-                    return redirect(url_for('proveedor'))
+                    return redirect(url_for('productor'))
                 else:
                     return redirect(url_for('login'))
             else:
@@ -97,7 +97,6 @@ def delete():
 
 
 # Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
-# 
 @app.route('/admin',methods=['GET','POST','PUT'])
 def admin():
 
@@ -125,33 +124,36 @@ def admin():
         users = obtenerUsuarios()
         return render_template('admin.html',users=users)
 
-# Se obtienen los productos del productor indicado y se pasan como datos para mostrarlos
-@app.route('/proveedor',methods=['GET','POST','PUT'])
-def proveedor():
+# Se obtienen los datos de los productores
+@app.route('/productor',methods=['GET','POST','PUT'])
+def productor():
 
-    idProveedor = request.form['idProveedor']
     if request.method=='POST':
         
-        new_prod = db1.session.query(Producto).filter_by(nombre = request.form['nombre']).first()
+        new_prod = db1.session.query(Productor).filter_by(nombre = request.form['nombre']).first()
 
-        # Tengo que obtener el id del proveedor que solicita agregar el producto y enviarlo como parametro de la funcion
         if new_prod == None:
-            agregarProducto(request.form['nombre'],idProveedor , request.form['precio'],request.form['descripcion'])
-            productos = obtenerProductos(idProveedor)
-            return render_template('proveedor.html',productos=productos)
+            agregarProductor(request.form["id"], 
+                            request.form["nombres"],
+                            request.form["apellidos"],
+                            request.form["telefonoCelular"],
+                            request.form["telefonoLocal"],
+                            request.form["direccion"],
+                            request.form["tipo"],)
+            productores = obtenerProductores()
+            return render_template('productor.html',productores=productores)
 
         else:
             flash("Este producto ya existe ")
-            productos = obtenerProductos(idProveedor)
-            return render_template('proveedor.html',productos=productos)   
+            productores = obtenerProductores()
+            return render_template('productor.html',productores=productores)
     else:
-        idProveedor = request.form['idProveedor']
-        productos = obtenerProductos(idProveedor)
-        return render_template('proveedor.html',productos=productos)
+        productores = obtenerProductores()
+        return render_template('productor.html',productores=productores)
 
-@app.route('/proveedor/update',methods=['POST'])
+@app.route('/productor/update',methods=['POST'])
 def prov_update():
-    return redirect(url_for('proveedor'))
+    return redirect(url_for('productor'))
 
 
 def obtenerUsuarios():
@@ -205,8 +207,8 @@ def agregarUsuario(id,username,password,nombres,apellidos,telefonoCelular,telefo
     else:
         flash("El usuario ya se encuentra registrado")
 
-def agregarProducto(nombre,idProveedor,precio,descripcion = ''):
-    prod = Producto(nombre, idProveedor, precio, descripcion)
+def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
+    prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo)
     db1.session.add(prod)
     db1.session.commit()
 
@@ -220,10 +222,10 @@ def eliminarUsuario(id):
     else:
         flash("El usuario no existe")
 
-# Metodo que retorna los productos correspondientes al proveedor indicado
-def obtenerProductos(id):
-    productos = db1.session.query(Producto).filter_by(proveedor = id).all()
-    return productos
+# Metodo que retorna los productos correspondientes al productor indicado
+def obtenerProductores():
+    productores = db1.session.query(Productor).filter_by().all()
+    return productores
 
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
