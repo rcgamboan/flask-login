@@ -9,8 +9,8 @@ class Usuario(db.Base):
     password = Column(String, nullable=False)
     nombres = Column(String, nullable=False)
     apellidos = Column(String, nullable=False)
-    telefonoCelular = Column(Integer, nullable=False)
-    telefonoLocal = Column(Integer, nullable=True)
+    telefonoCelular = Column(String, nullable=False)
+    telefonoLocal = Column(String, nullable=True)
     direccion = Column(String, nullable=False)
     rol = Column(Integer, default=0, nullable=False)
     # rol = 0 -> Usuario normal
@@ -38,12 +38,12 @@ class Productor(db.Base):
     id = Column(Integer, primary_key=True)
     nombres = Column(String, nullable=False)
     apellidos = Column(String, nullable=False)
-    telefonoCelular = Column(Integer, nullable=False)
-    telefonoLocal = Column(Integer, nullable=True)
+    telefonoCelular = Column(String, nullable=False)
+    telefonoLocal = Column(String, nullable=True)
     direccion = Column(String, nullable=False)
     tipo = Column(Integer, ForeignKey("tipoproductor.id"))
 
-    def __init__(self, id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo = ''):
+    def __init__(self, id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
         self.id = id
         self.nombres = nombres
         self.apellidos = apellidos
