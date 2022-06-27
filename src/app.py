@@ -22,6 +22,7 @@ def agregarUsuario(id,username,password,nombres,apellidos,telefonoCelular,telefo
     else:
         flash("El usuario ya se encuentra registrado")
 
+
 def eliminarUsuario(ID):
     db1.query.filter_by(id=ID).delete()
     db1.session.commit()
@@ -79,7 +80,15 @@ def home():
 def update():
     #obtener tipo y con eso crear funciones para eliminar o editar segun corresponda
     #print(request.form['tipo'])
-    actualizarRol(request.form['ID'], request.form['role'])
+    editarUsuario(int(request.form['editcedula']),
+                    request.form['editusername'], 
+                    request.form['editpassword'], 
+                    request.form['editnombre'],
+                    request.form['editapellido'],
+                    request.form['edittelefonoC'],
+                    request.form['edittelefonoL'],
+                    request.form['editdireccion'],
+                    request.form['editrol'])
     return redirect(url_for('admin'))
 
 @app.route('/admin/delete',methods=['POST'])

@@ -8,18 +8,21 @@
 
 {% block body %}
 <script>
-
-  function handleRole(nuevo_rol){
+  function mapRoles(){
     var table = document.getElementById('users');
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
     for (i = 0; i < rows.length; i++){
-      rows[i].onclick = function() {
-        var id = this.cells[0].innerHTML
-        document.querySelector('input[name="ID"]').value = id;
-        document.querySelector('input[name="role"]').value = nuevo_rol;
-        document.getElementsByTagName('form')[1].submit(); 
-      }
+        console.log(rows[i])
+        console.log(rows[i].cells[4].getAttribute('value'))
+        if(rows[i].cells[4].getAttribute('value') == 0){
+          console.log("skere")
+          rows[i].cells[4].innerHTML = "Usuario Normal"
+        } else if (rows[i].cells[4].getAttribute('value') == 1) {
+          rows[i].cells[4].innerHTML = "Administrador"
+        } else {
+          rows[i].cells[4].innerHTML = "Productor"
+        }
     }
   }
 
@@ -29,9 +32,34 @@
     var rows = tbody.getElementsByTagName('tr');
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = function() {
-        var id = this.cells[0].innerHTML
+        id = this.cells[0].innerHTML
         document.querySelector('input[name="id"]').value = id;
         document.querySelector('form[name="ID"]').submit();
+      }
+    }
+  }
+
+  function handleEdit(){
+    var table = document.getElementById('users');
+    var tbody = table.getElementsByTagName('tbody')[0];
+    var rows = tbody.getElementsByTagName('tr');
+    var id
+    for (i = 0; i < rows.length; i++){
+      rows[i].onclick = async function() {
+        id = this.cells[0].innerHTML
+        "{% for user in users %}"
+          if(id === '{{user.id}}'){
+            console.log(id)
+            document.querySelector('input[name="editusername"]').value = '{{user.username}}';
+            document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
+            document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
+            document.querySelector('input[name="editcedula"]').value = '{{user.id}}';
+            document.querySelector('input[name="edittelefonoL"]').value = '{{user.telefonoLocal}}';
+            document.querySelector('input[name="edittelefonoC"]').value = '{{user.telefonoCelular}}';
+            document.querySelector('input[name="editdireccion"]').value = '{{user.direccion}}';
+            document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
+          }
+        "{% endfor %}"
       }
     }
   }
@@ -57,6 +85,8 @@
     }
   }
 }
+
+window.onload = mapRoles;
 </script>
 
 <h2 class="mb-3">Perfiles de Usuarios</h2>
@@ -145,6 +175,66 @@
   </div>
 </div>
 
+<!--Modal Editar usuario-->
+{%for user in users%}
+<div class="modal fade" id="EditarUsuario" tabindex="-1" role="dialog" aria-labelledby="Editar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Editar usuario</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <form class="form-signin modal-body" action="/admin/update" method="POST">
+        <div class="form-floating">
+            <input type="username" class="form-control top" id="username" name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
+            <label for="floatingInput">Username</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control bottom" id="password" name="editpassword" placeholder="*******" required="required">
+            <label for="floatingPassword">Password</label>
+        </div>
+        <div class="form-floating">
+          <input class="form-control top" id="nombre" name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+          <label for="floatingInput">Nombres</label>
+        </div>
+        <div class="form-floating">
+          <input  class="form-control  middle" id="apellido" name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+          <label for="floatingInput">Apellidos</label>
+        </div>
+        <div class="form-floating">
+          <input   class="form-control  middle" id="cedula" name="editcedula" placeholder="1234567" required="required">
+          <label for="floatingInput">Cedula</label>
+      </div>
+        <div class="form-floating">
+          <input  class="form-control  middle" id="telefonoL" name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+          <label for="floatingInput">Telefono Local</label>
+        </div>
+        <div class="form-floating">
+          <input   class="form-control middle" id="telefonoC" name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+          <label for="floatingInput">Telefono Celular</label>
+        </div>
+        <div class="form-floating">
+          <input class="form-control middle" id="direccion" name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+          <label for="floatingInput">Direccion</label>
+        </div>
+        <div class="form-floating mb-3">
+          <select id="rol" class="form-control bottom" name="editrol">
+            <option value="0">Usuario Normal</option>
+            <option value="1">Administrador</option>
+            <option value="2">Productor</option>
+          </select>
+          <label for="floatingInput">Rol</label>
+        </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">Editar usuario</button>
+      </div>
+    </form>
+    </div>
+  </div>
+</div>
+{%endfor%}
+
 {%if users%}
     <div class="row justify-content-md-center">
       <div class="col-12 col-md-6 table-responsive">
@@ -160,37 +250,20 @@
           <tbody>
             {%for user in users%}
             <tr class=" deleteOut tdEdit">
-              <form action="/admin/update" method="POST"  >
                 <th scope="row" id="{{user.id}}">{{user.id}}</th>
                 <td class="table-light tdEdit" type="username" id="username">{{user.username}}</td>
                 <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
                 <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
-                <input type="hidden" name="ID">
-                <input type="hidden" name="role">
-                <td class="table-light drop tdEdit">
-                  <div class="dropdown">
-                    <button class="btn btn-light dropdown-toggle drop-btn" type="button" data-bs-toggle="dropdown" aria-expanded="false">
-                      {{user.rol}}
-                    </button>
-                    <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
-                      <li type="submit" onclick="handleRole(0);">
-                        <a class="dropdown-item">0</a>
-                      </li>
-                      <li type="submit" onclick="handleRole(1);">
-                        <a class="dropdown-item">1</a>
-                      </li>
-                    </ul>
-                  </div>
-                </td>
-              </form>
+                <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}">sdasd</td>
                 <td>
                   <div class="cont">
-                    <form action="/admin/delete" method="POST" class="edit pencil" role="button" onclick="handleDelete();">
+                    <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                      data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
                       <div>
                         <i class="fa-solid fa-pencil"></i>
                       </div>
-                    </form>
-                    <form name="ID" action="/admin/delete" method="POST" class="edit trash" role="button" onclick="handleDelete();">
+                    </button>
+                    <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
                       <input type="hidden" name="id" value="">
                       <div >
                         <i class="fa-solid fa-trash"></i>
