@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -16,8 +17,38 @@
     {% block customCSS %}
     {% endblock %}
 </head>
-<body class="text-center">
-    <main class="form-signin w-100 m-auto">
+
+<body>
+    <div class="d-flex flex-column p-3 bg-light sidebar " style="width: 280px; height: 100%;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 link-dark text-decoration-none justify-content-md-center">
+            <span class="fs-2 fw-bold ">Menú</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto">
+            <li class="nav-item btn btn-light mb-2" >
+            <a href="#" class="nav-link link-dark" aria-current="page">
+                Datos del productor
+            </a>
+            </li>
+            <li class="nav-item btn btn-light mb-2">
+            <a href="{{ url_for('admin') }}" class="nav-link link-dark" aria-current="page">
+                Perfiles de Usuarios
+            </a>
+            </li>
+            <li class="nav-item btn btn-light mb-2">
+            <a href="#" class="nav-link link-dark">
+                Tipos de Productor
+            </a>
+            </li>
+            <li class="nav-item btn btn-light mb-2">
+            <a href="#" class="nav-link link-dark">
+                Logger de Eventos
+            </a>
+            </li>
+        </ul>
+        <hr>
+    </div>
+    <main class="form-signin w-100 m-auto text-center">
     {% block body %}
     {% endblock %}
     <!-- JavaScript Bundle with Popper -->

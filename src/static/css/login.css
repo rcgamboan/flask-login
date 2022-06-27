@@ -6,9 +6,19 @@ body {
 body {
   display: flex;
   align-items: center;
-  padding-top: 40px;
-  padding-bottom: 40px;
   background-color: #f5f5f5;
+}
+
+.sidebar{
+  box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
+  background-color: #f5f5f5 !important;
+}
+
+.nav-item{
+  box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+}
+.nav-item:hover{
+  box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
 }
 
 .form-signin {

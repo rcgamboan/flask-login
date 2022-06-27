@@ -46,7 +46,6 @@ def index():
 # si todos los datos concuerdan se redirecciona a home o a la pagina de admin segun corresponda
 @app.route('/login',methods=['GET','POST'])
 def login():
-
     if request.method=='POST':
         logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
 
@@ -153,11 +152,7 @@ def proveedor():
 @app.route('/proveedor/update',methods=['POST'])
 def prov_update():
     return redirect(url_for('proveedor'))
-  
-def actualizarRol(id,newRol):
-    user = db1.session.query(Usuario).filter_by(id = id).first()
-    user.rol = newRol
-    db1.session.commit()
+
 
 def obtenerUsuarios():
     usuarios = db1.session.query(Usuario).filter_by().all()

@@ -13,15 +13,12 @@
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
     for (i = 0; i < rows.length; i++){
-        console.log(rows[i])
-        console.log(rows[i].cells[4].getAttribute('value'))
         if(rows[i].cells[4].getAttribute('value') == 0){
-          console.log("skere")
-          rows[i].cells[4].innerHTML = "Usuario Normal"
+          rows[i].cells[4].innerHTML = "Analista de Compra"
         } else if (rows[i].cells[4].getAttribute('value') == 1) {
           rows[i].cells[4].innerHTML = "Administrador"
         } else {
-          rows[i].cells[4].innerHTML = "Productor"
+          rows[i].cells[4].innerHTML = "Vendedor"
         }
     }
   }
@@ -150,22 +147,18 @@ window.onload = mapRoles;
           <input   class="form-control middle" id="telefonoC" name="telefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
           <label for="floatingInput">Telefono Celular</label>
         </div>
-        <div class="form-floating mb-3">
-          <input class="form-control bottom" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+        <div class="form-floating">
+          <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
           <label for="floatingInput">Direccion</label>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" id="rol" name="rol" value="0">
-            <label class="form-check-label" for="rol">Usuario normal</label>
+        <div class="form-floating mb-3">
+          <select id="rol" class="form-control bottom" name="rol">
+            <option value="0">Analista de Compra</option>
+            <option value="1">Administrador</option>
+            <option value="2">Vendedor</option>
+          </select>
+          <label for="floatingInput">Rol</label>
         </div>
-        <div class="form-check">
-            <input class="form-check-input" type="radio" name="rol" value="1" required="required">
-            <label class="form-check-label" for="rol" required="required">Administrador</label>
-        </div>
-        <div class="form-check mb-3">
-          <input class="form-check-input" type="radio" name="rol" value="2" required="required">
-          <label class="form-check-label" for="rol" required="required">Productor</label>
-      </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
         <button type="submit" class="btn btn-primary">Agregar usuario</button>
@@ -186,42 +179,42 @@ window.onload = mapRoles;
       </div>
       <form class="form-signin modal-body" action="/admin/update" method="POST">
         <div class="form-floating">
-            <input type="username" class="form-control top" id="username" name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
+            <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
             <label for="floatingInput">Username</label>
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control bottom" id="password" name="editpassword" placeholder="*******" required="required">
+            <input type="password" class="form-control bottom"  name="editpassword" placeholder="*******" required="required">
             <label for="floatingPassword">Password</label>
         </div>
         <div class="form-floating">
-          <input class="form-control top" id="nombre" name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+          <input class="form-control top"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
           <label for="floatingInput">Nombres</label>
         </div>
         <div class="form-floating">
-          <input  class="form-control  middle" id="apellido" name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+          <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
           <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating">
-          <input   class="form-control  middle" id="cedula" name="editcedula" placeholder="1234567" required="required">
+          <input   class="form-control  middle"  name="editcedula" placeholder="1234567" required="required">
           <label for="floatingInput">Cedula</label>
       </div>
         <div class="form-floating">
-          <input  class="form-control  middle" id="telefonoL" name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+          <input  class="form-control  middle"  name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
           <label for="floatingInput">Telefono Local</label>
         </div>
         <div class="form-floating">
-          <input   class="form-control middle" id="telefonoC" name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+          <input   class="form-control middle"  name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
           <label for="floatingInput">Telefono Celular</label>
         </div>
         <div class="form-floating">
-          <input class="form-control middle" id="direccion" name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+          <input class="form-control middle"  name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
           <label for="floatingInput">Direccion</label>
         </div>
         <div class="form-floating mb-3">
-          <select id="rol" class="form-control bottom" name="editrol">
-            <option value="0">Usuario Normal</option>
+          <select class="form-control bottom" name="editrol">
+            <option value="0">Analista de Compra</option>
             <option value="1">Administrador</option>
-            <option value="2">Productor</option>
+            <option value="2">Vendedor</option>
           </select>
           <label for="floatingInput">Rol</label>
         </div>
@@ -254,7 +247,7 @@ window.onload = mapRoles;
                 <td class="table-light tdEdit" type="username" id="username">{{user.username}}</td>
                 <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
                 <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
-                <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}">sdasd</td>
+                <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
                 <td>
                   <div class="cont">
                     <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
