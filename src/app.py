@@ -61,9 +61,7 @@ def update():
                     request.form['editpassword'], 
                     request.form['editnombre'],
                     request.form['editapellido'],
-                    request.form['edittelefonoC'],
-                    request.form['edittelefonoL'],
-                    request.form['editdireccion'],
+                    request.form['editcosecha'],
                     request.form['editrol'])
     return redirect(url_for('admin'))
 
@@ -86,9 +84,7 @@ def admin():
                             request.form['password'], 
                             request.form['nombre'],
                             request.form['apellido'],
-                            request.form['telefonoC'],
-                            request.form['telefonoL'],
-                            request.form['direccion'],
+                            request.form['cosecha'],
                             request.form['rol'])
             users = obtenerUsuarios()
             return render_template('admin.html',users=users)
@@ -151,7 +147,7 @@ def obtenerTiposProductores():
     tiposProductores = db1.session.query(TipoProductor).filter_by().all()
     return tiposProductores
 
-def editarUsuario(id,username = "", password = "",nombres = "",apellidos = "",telefonoCelular = 0,telefonoLocal = 0,direccion = "",rol = -1):
+def editarUsuario(id,username = "", password = "",nombres = "",apellidos = "",cosecha = "",rol = -1):
 
     logged_user = db1.session.query(Usuario).filter_by(id = id).first()
     
@@ -169,14 +165,8 @@ def editarUsuario(id,username = "", password = "",nombres = "",apellidos = "",te
         if apellidos != "" and apellidos != None:
             user.apellidos = apellidos
         
-        if telefonoCelular != 0 and telefonoCelular != None:
-            user.telefonoCelular = telefonoCelular
-        
-        if telefonoLocal != 0 and telefonoLocal != None:
-            user.telefonoLocal = telefonoLocal
-        
-        if direccion != "" and direccion != None:
-            user.direccion = direccion
+        if cosecha != "" and cosecha != None:
+            user.cosecha = cosecha
         
         if rol != -1 and rol != None:
             user.rol = rol
@@ -228,12 +218,12 @@ def editarTipoProductor(id,descripcion = ""):
 
 # Recibe el username y la contraseña del usuario a crear
 # Se llama a la sesion de SQLAlchemy y se crea el usuario
-def agregarUsuario(id,username,password,nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol):
+def agregarUsuario(id,username,password,nombres,apellidos,cosecha,rol):
 
     logged_user = db1.session.query(Usuario).filter_by(id = id).first()
 
     if logged_user == None:
-        user = Usuario(id,username, generate_password_hash(password),nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol)
+        user = Usuario(id,username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
         db1.session.add(user)
         db1.session.commit()
     else:

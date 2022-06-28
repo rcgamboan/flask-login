@@ -9,23 +9,19 @@ class Usuario(db.Base):
     password = Column(String, nullable=False)
     nombres = Column(String, nullable=False)
     apellidos = Column(String, nullable=False)
-    telefonoCelular = Column(String, nullable=False)
-    telefonoLocal = Column(String, nullable=True)
-    direccion = Column(String, nullable=False)
+    cosecha = Column(String, nullable=False)
     rol = Column(Integer, default=0, nullable=False)
     # rol = 0 -> Usuario normal
     # rol = 1 -> admin
     # rol = 2 -> productor
 
-    def __init__(self, id,username, password, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,rol = 0):
+    def __init__(self, id,username, password, nombres,apellidos,cosecha,rol = 0):
         self.id = id
         self.username = username
         self.password = password
         self.nombres = nombres
         self.apellidos = apellidos
-        self.telefonoCelular = telefonoCelular
-        self.telefonoLocal = telefonoLocal
-        self.direccion = direccion
+        self.cosecha = cosecha
         self.rol = rol
 
     def __repr__(self):
