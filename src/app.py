@@ -107,7 +107,7 @@ def productor():
 
     if request.method=='POST':
         
-        new_prod = db1.session.query(Productor).filter_by(nombre = request.form['nombre']).first()
+        new_prod = db1.session.query(Productor).filter_by(nombres = request.form['nombres']).first()
 
         if new_prod == None:
             agregarProductor(request.form["id"], 
@@ -118,15 +118,19 @@ def productor():
                             request.form["direccion"],
                             request.form["tipo"],)
             productores = obtenerProductores()
-            return render_template('productor.html',productores=productores)
+            tipos = obtenerTiposProductores()
+            return render_template('productor.html',productores=productores, tipos=tipos)
 
         else:
             flash("Este producto ya existe ")
             productores = obtenerProductores()
-            return render_template('productor.html',productores=productores)
+            tipos = obtenerTiposProductores()
+            return render_template('productor.html',productores=productores, tipos=tipos)
     else:
         productores = obtenerProductores()
-        return render_template('productor.html',productores=productores)
+        tipos = obtenerTiposProductores()
+        return render_template('productor.html',productores=productores, tipos=tipos)
+
 
 @app.route('/productor/update',methods=['POST'])
 def prov_update():

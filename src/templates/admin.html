@@ -46,7 +46,6 @@
         id = this.cells[0].innerHTML
         "{% for user in users %}"
           if(id === '{{user.id}}'){
-            console.log(id)
             document.querySelector('input[name="editusername"]').value = '{{user.username}}';
             document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
             document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
@@ -115,7 +114,7 @@ window.onload = mapRoles;
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar usuario</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form class="form-signin modal-body" action="/admin" method="POST">
@@ -160,8 +159,8 @@ window.onload = mapRoles;
           <label for="floatingInput">Rol</label>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Agregar usuario</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Agregar Usuario</button>
       </div>
     </form>
     </div>
@@ -174,7 +173,7 @@ window.onload = mapRoles;
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Editar usuario</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form class="form-signin modal-body" action="/admin/update" method="POST">
@@ -219,8 +218,8 @@ window.onload = mapRoles;
           <label for="floatingInput">Rol</label>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Editar usuario</button>
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+        <button type="submit" class="btn btn-primary">Editar Usuario</button>
       </div>
     </form>
     </div>
@@ -230,7 +229,7 @@ window.onload = mapRoles;
 
 {%if users%}
     <div class="row justify-content-md-center">
-      <div class="col-12 col-md-6 table-responsive">
+      <div class="col-12 col-md-8 table-responsive">
         <table class="table mt-2 table-hover" id = "users">
           <thead>
             <th scope="col">Cédula</th>
@@ -248,7 +247,7 @@ window.onload = mapRoles;
                 <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
                 <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
                 <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
-                <td>
+                <td class="table-light tdEdit">
                   <div class="cont">
                     <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
                       data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
@@ -275,5 +274,4 @@ window.onload = mapRoles;
 
 
 {% endblock %}
-
 
