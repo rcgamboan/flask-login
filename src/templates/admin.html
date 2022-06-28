@@ -30,6 +30,7 @@
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = function() {
         id = this.cells[0].innerHTML
+        console.log(id)
         document.querySelector('input[name="id"]').value = id;
         document.querySelector('form[name="ID"]').submit();
       }
@@ -135,20 +136,8 @@ window.onload = mapRoles;
           <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating">
-          <input   class="form-control  middle" id="cedula" name="cedula" placeholder="1234567" required="required">
-          <label for="floatingInput">Cedula</label>
-      </div>
-        <div class="form-floating">
-          <input  class="form-control  middle" id="telefonoL" name="telefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Local</label>
-        </div>
-        <div class="form-floating">
-          <input   class="form-control middle" id="telefonoC" name="telefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Celular</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-          <label for="floatingInput">Direccion</label>
+          <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required" pattern="[a-zA-Z]+\s[a-zA-Z]+-[a-zA-Z]+\s+([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[eE]([+-]?\d+))?">
+          <label for="floatingInput">Cosecha</label>
         </div>
         <div class="form-floating mb-3">
           <select id="rol" class="form-control bottom" name="rol">
@@ -232,11 +221,12 @@ window.onload = mapRoles;
       <div class="col-12 col-md-8 table-responsive">
         <table class="table mt-2 table-hover" id = "users">
           <thead>
-            <th scope="col">Cédula</th>
+            <th scope="col">ID</th>
             <th scope="col">Usuario</th>
             <th scope="col">Nombres</th>
             <th scope="col">Apellidos</th>
             <th scope="col">Rol</th>
+            <th scope="col">Cosecha</th>
             <th scope="col">Acciones</th>
           </thead>
           <tbody>
@@ -247,6 +237,7 @@ window.onload = mapRoles;
                 <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
                 <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
                 <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
+                <td class="table-light tdEdit" type="username" id="cosecha">{{user.cosecha}}</td>
                 <td class="table-light tdEdit">
                   <div class="cont">
                     <button id="editbtn" method="POST" class="edit pencil btn" role="button" 

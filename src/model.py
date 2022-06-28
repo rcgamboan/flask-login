@@ -4,7 +4,7 @@ from sqlalchemy.orm import declarative_base, relationship
 
 class Usuario(db.Base):
     __tablename__ = 'usuarios'
-    id = Column(Integer, primary_key=True)
+    id = Column(Integer, primary_key=True, autoincrement = True)
     username = Column(String, nullable=False, unique=True)
     password = Column(String, nullable=False)
     nombres = Column(String, nullable=False)
@@ -15,8 +15,7 @@ class Usuario(db.Base):
     # rol = 1 -> admin
     # rol = 2 -> productor
 
-    def __init__(self, id,username, password, nombres,apellidos,cosecha,rol = 0):
-        self.id = id
+    def __init__(self,username, password, nombres,apellidos,cosecha,rol = 0):
         self.username = username
         self.password = password
         self.nombres = nombres

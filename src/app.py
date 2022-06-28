@@ -79,8 +79,7 @@ def admin():
         new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
         #si no existe el usuario en la base de datos
         if new_user == None:
-            agregarUsuario(int(request.form['cedula']),
-                            request.form['username'], 
+            agregarUsuario( request.form['username'], 
                             request.form['password'], 
                             request.form['nombre'],
                             request.form['apellido'],
@@ -218,12 +217,12 @@ def editarTipoProductor(id,descripcion = ""):
 
 # Recibe el username y la contraseña del usuario a crear
 # Se llama a la sesion de SQLAlchemy y se crea el usuario
-def agregarUsuario(id,username,password,nombres,apellidos,cosecha,rol):
+def agregarUsuario(username,password,nombres,apellidos,cosecha,rol):
 
-    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
+    logged_user = db1.session.query(Usuario).filter_by(username = username).first()
 
     if logged_user == None:
-        user = Usuario(id,username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
+        user = Usuario(username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
         db1.session.add(user)
         db1.session.commit()
     else:
@@ -239,24 +238,13 @@ def agregarTipoProductor(descripcion):
     db1.session.add(prod)
     db1.session.commit()
 
-# Elimina el usuario por id
-def eliminarUsuario(id):
-    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
-    if logged_user != None:
-        user = db1.session.query(Usuario).get(id)
-        db1.session.delete(user)
-        db1.session.commit()
-    else:
-        flash("El usuario no existe")
-
-
-
 def eliminarUsuario(ID):
-    db1.query(Usuario).filter_by(id=ID).delete()
+    print(ID)
+    db1.session.query(Usuario).filter_by(id=ID).delete()
     db1.session.commit()
 
 def eliminarTipoProductor(ID):
-    db1.query(TipoProductor).filter_by(id=ID).delete()
+    db1.session.query(TipoProductor).filter_by(id=ID).delete()
     db1.session.commit()
 
 if __name__ == '__main__':
