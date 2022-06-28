@@ -44,7 +44,7 @@ body {
 }
 
 .bottom {
-  margin-bottom: 10px;
+  margin-bottom: 16px;
   border-top-left-radius: 0;
   border-top-right-radius: 0;
 }
@@ -67,6 +67,10 @@ body {
   justify-content: center;
   padding: 0px;
   margin: -5px;
+}
+
+.hide{
+  display: none;
 }
 
 form.edit{
@@ -103,4 +107,30 @@ button.edit{
 .pencil:hover{
   background-color: rgb(154, 156, 182) !important;
   color: rgb(225, 225, 225) !important;
+}
+
+/* Keyframes for the fade-in */
+@-webkit-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@-moz-keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+@keyframes fadeIn { from { opacity:0; } to { opacity:1; } }
+
+.fade-in {
+  opacity:0;
+  -webkit-animation:fadeIn ease-in 1;
+  -moz-animation:fadeIn ease-in 1;
+  animation:fadeIn ease-in 1;
+
+  -webkit-animation-fill-mode:forwards;
+  -moz-animation-fill-mode:forwards;
+  animation-fill-mode:forwards;
+
+  -webkit-animation-duration:0.4s;
+  -moz-animation-duration:0.4s;
+  animation-duration:0.4s;
+}
+
+.fade-in.one {
+  -webkit-animation-delay: 0.1s;
+  -moz-animation-delay: 0.1s;
+  animation-delay: 0.1s;
 }

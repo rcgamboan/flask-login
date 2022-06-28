@@ -37,6 +37,28 @@
     }
   }
 
+  function checkPassword(){
+    password1 = document.addform.password
+    password2 = document.addform.password2
+    if(password1.value == password2.value){
+      password1.style.backgroundColor = "#ffffff"
+      password2.style.backgroundColor = "#ffffff"
+      return 0
+    }else{
+      password1.style.backgroundColor = "#f8d7da"
+      password2.style.backgroundColor = "#f8d7da"
+      return 1
+    }
+  }
+
+  function handleSubmit(){
+    if(checkPassword()){
+      document.getElementById('alertId').classList.remove('hide')
+    }else{
+      document.addform.submit();
+    }
+  }
+
   function handleEdit(){
     var table = document.getElementById('users');
     var tbody = table.getElementsByTagName('tbody')[0];
@@ -50,10 +72,7 @@
             document.querySelector('input[name="editusername"]').value = '{{user.username}}';
             document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
             document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
-            document.querySelector('input[name="editcedula"]').value = '{{user.id}}';
-            document.querySelector('input[name="edittelefonoL"]').value = '{{user.telefonoLocal}}';
-            document.querySelector('input[name="edittelefonoC"]').value = '{{user.telefonoCelular}}';
-            document.querySelector('input[name="editdireccion"]').value = '{{user.direccion}}';
+            document.querySelector('input[name="editcosecha"]').value = '{{user.cosecha}}';
             document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
           }
         "{% endfor %}"
@@ -86,7 +105,8 @@
 window.onload = mapRoles;
 </script>
 
-<h2 class="mb-3">Perfiles de Usuarios</h2>
+
+<h2 class="mb-3 fade-in">Perfiles de Usuarios</h2>
 {% with messages = get_flashed_messages()%}
 
 {% if messages %}
@@ -101,13 +121,14 @@ window.onload = mapRoles;
 
 {% endwith %}
 
-<div class="row justify-content-md-center">
+<div class="row justify-content-md-center fade-in">
   <div class="col-12 col-md-4 d-flex justify-content-end">
         <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
         <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
           <i class="fa-solid fa-plus"></i>
         </button>
   </div>
+</div>
 
 
 <!--Modal Agregar usuario-->
@@ -118,14 +139,22 @@ window.onload = mapRoles;
         <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form class="form-signin modal-body" action="/admin" method="POST">
-        <div class="form-floating">
-            <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
-            <label for="floatingInput">Username</label>
+      <form class="form-signin modal-body" action="/admin" method="POST" name="addform">
+        <!--Alert de constraseña incorrecta-->
+        <div id="alertId" class="alert alert-danger alert-dismissible fade show hide" role="alert">
+          Repita nuevamente la contraseña
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control bottom" id="floatingPassword" name="password" placeholder="*******" required="required">
-            <label for="floatingPassword">Password</label>
+            <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
+            <label for="floatingInput">Nombre de Usuario</label>
+        </div>
+        <div class="form-floating">
+            <input type="password" class="form-control middle" id="floatingPassword" name="password" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+            <label for="floatingPassword">Contraseña</label>
+        </div>
+        <div class="form-floating">
+          <input type="password" class="form-control bottom" id="floatingPassword" name="password2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+          <label for="floatingPassword">Repita Contraseña</label>
         </div>
         <div class="form-floating">
           <input class="form-control top" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
@@ -136,7 +165,7 @@ window.onload = mapRoles;
           <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating">
-          <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required" pattern="[a-zA-Z]+\s[a-zA-Z]+-[a-zA-Z]+\s+([+-]?(?=\.\d|\d)(?:\d+)?(?:\.?\d*))(?:[eE]([+-]?\d+))?">
+          <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
           <label for="floatingInput">Cosecha</label>
         </div>
         <div class="form-floating mb-3">
@@ -149,7 +178,7 @@ window.onload = mapRoles;
         </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Agregar Usuario</button>
+        <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleSubmit()">Agregar Usuario</button>
       </div>
     </form>
     </div>
@@ -166,16 +195,13 @@ window.onload = mapRoles;
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
       <form class="form-signin modal-body" action="/admin/update" method="POST">
+        
         <div class="form-floating">
             <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
-            <label for="floatingInput">Username</label>
+            <label for="floatingInput">Nombre de Usuario</label>   
         </div>
         <div class="form-floating">
-            <input type="password" class="form-control bottom"  name="editpassword" placeholder="*******" required="required">
-            <label for="floatingPassword">Password</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control top"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+          <input class="form-control middle"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
           <label for="floatingInput">Nombres</label>
         </div>
         <div class="form-floating">
@@ -183,20 +209,8 @@ window.onload = mapRoles;
           <label for="floatingInput">Apellidos</label>
         </div>
         <div class="form-floating">
-          <input   class="form-control  middle"  name="editcedula" placeholder="1234567" required="required">
-          <label for="floatingInput">Cedula</label>
-      </div>
-        <div class="form-floating">
-          <input  class="form-control  middle"  name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Local</label>
-        </div>
-        <div class="form-floating">
-          <input   class="form-control middle"  name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Celular</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle"  name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-          <label for="floatingInput">Direccion</label>
+          <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
+          <label for="floatingInput">Cosecha</label>
         </div>
         <div class="form-floating mb-3">
           <select class="form-control bottom" name="editrol">
@@ -207,8 +221,8 @@ window.onload = mapRoles;
           <label for="floatingInput">Rol</label>
         </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="submit" class="btn btn-primary">Editar Usuario</button>
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Editar Usuario</button>  
       </div>
     </form>
     </div>
@@ -217,9 +231,9 @@ window.onload = mapRoles;
 {%endfor%}
 
 {%if users%}
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center fade-in">
       <div class="col-12 col-md-8 table-responsive">
-        <table class="table mt-2 table-hover" id = "users">
+        <table class="table mt-2 table-hover " id = "users">
           <thead>
             <th scope="col">ID</th>
             <th scope="col">Usuario</th>

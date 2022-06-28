@@ -56,9 +56,7 @@ def home():
 def update():
     #obtener tipo y con eso crear funciones para eliminar o editar segun corresponda
     #print(request.form['tipo'])
-    editarUsuario(int(request.form['editcedula']),
-                    request.form['editusername'], 
-                    request.form['editpassword'], 
+    editarUsuario(  request.form['editusername'],  
                     request.form['editnombre'],
                     request.form['editapellido'],
                     request.form['editcosecha'],
@@ -146,17 +144,14 @@ def obtenerTiposProductores():
     tiposProductores = db1.session.query(TipoProductor).filter_by().all()
     return tiposProductores
 
-def editarUsuario(id,username = "", password = "",nombres = "",apellidos = "",cosecha = "",rol = -1):
+def editarUsuario(username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
 
-    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
+    logged_user = db1.session.query(Usuario).filter_by(username = username).first()
     
     if logged_user != None:
-        user = db1.session.query(Usuario).filter_by(id = id).first()
+        user = db1.session.query(Usuario).filter_by(username = username).first()
         if username != "" and username != None:
             user.username = username
-        
-        if password != "" and password != None:
-            user.password = generate_password_hash(password)
 
         if nombres != "" and nombres != None:            
             user.nombres = nombres
