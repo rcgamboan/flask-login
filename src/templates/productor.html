@@ -85,7 +85,7 @@
   window.onload = mapTipos;
 </script>
 
-<h2 class="mb-3">Datos Personales del Productor</h2>
+<h2 class="mb-3 fade-in">Datos Personales del Productor</h2>
 {% with messages = get_flashed_messages()%}
 
 {% if messages %}
@@ -100,13 +100,14 @@
 {%endif%}
 {% endwith %}
 
-<div class="row justify-content-md-center">
+<div class="row justify-content-md-center fade-in">
     <div class="col-12 col-md-4 d-flex justify-content-end">
           <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por Nombre...">
           <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarProductor">
             <i class="fa-solid fa-plus"></i>
           </button>
     </div>
+</div>
   
   
   <!--Modal Agregar productor-->
@@ -117,46 +118,48 @@
           <h5 class="modal-title" id="exampleModalLabel">Agregar Productor</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin modal-body" action="/productor" method="POST">
-          <div class="form-floating">
-            <input class="form-control top" id="nombre" name="nombres" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Nombres</label>
-          </div>
-          <div class="form-floating">
-            <input  class="form-control  middle" id="apellido" name="apellidos" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Apellidos</label>
-          </div>
-          <div class="form-floating">
-            <input   class="form-control  middle" id="cedula" name="id" placeholder="1234567" required="required">
-            <label for="floatingInput">Cédula</label>
-        </div>
-          <div class="form-floating">
-            <input  class="form-control  middle" id="telefonoL" name="telefonoLocal" placeholder="02121234567" required="required" pattern="[0-9]{11}">
-            <label for="floatingInput">Teléfono Local</label>
-          </div>
-          <div class="form-floating">
-            <input   class="form-control middle" id="telefonoC" name="telefonoCelular" placeholder="04161234567" required="required" pattern="[0-9]{11}">
-            <label for="floatingInput">Teléfono Celular</label>
-          </div>
-          <div class="form-floating">
-            <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-            <label for="floatingInput">Dirección 1</label>
-          </div>
-          <div class="form-floating mb-3">
-            
-            <select id="tipo" class="form-control bottom" name="tipo">
-            {% for tipo in tipos %}
-              <option value="{{tipo.id}}">{{tipo.direccion}}</option>
-            {%endfor%}
-            </select>
-            
-            <label for="floatingInput">Tipo de Productor</label>
-          </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-primary">Agregar Productor</button>
-        </div>
-      </form>
+        <form class="form-signin" action="/productor" method="POST">
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input class="form-control top" id="nombre" name="nombres" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+                    <label for="floatingInput">Nombres</label>
+                </div>
+                <div class="form-floating">
+                    <input  class="form-control  middle" id="apellido" name="apellidos" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+                    <label for="floatingInput">Apellidos</label>
+                </div>
+                <div class="form-floating">
+                    <input   class="form-control  middle" id="cedula" name="id" placeholder="1234567" required="required">
+                    <label for="floatingInput">Cédula</label>
+                </div>
+                <div class="form-floating">
+                    <input  class="form-control  middle" id="telefonoL" name="telefonoLocal" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+                    <label for="floatingInput">Teléfono Local</label>
+                </div>
+                <div class="form-floating">
+                    <input   class="form-control middle" id="telefonoC" name="telefonoCelular" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+                    <label for="floatingInput">Teléfono Celular</label>
+                </div>
+                <div class="form-floating">
+                    <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                    <label for="floatingInput">Dirección 1</label>
+                </div>
+                <div class="form-floating mb-3">
+                    
+                    <select id="tipo" class="form-control bottom" name="tipo">
+                    {% for tipo in tipos %}
+                    <option value="{{tipo.id}}">{{tipo.direccion}}</option>
+                    {%endfor%}
+                    </select>
+                    
+                    <label for="floatingInput">Tipo de Productor</label>
+                </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            <button type="submit" class="btn btn-primary">Agregar Productor</button>
+            </div>
+        </form>
       </div>
     </div>
   </div>
@@ -222,7 +225,7 @@
 {%endfor%}
 
 {%if productores%}
-    <div class="row justify-content-md-center">
+    <div class="row justify-content-md-center fade-in">
       <div class="col-12 col-md-11 table-responsive">
         <table class="table mt-2 table-hover" id = "productores">
           <thead>

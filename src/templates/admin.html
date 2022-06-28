@@ -139,48 +139,50 @@ window.onload = mapRoles;
         <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form class="form-signin modal-body" action="/admin" method="POST" name="addform">
-        <!--Alert de constraseña incorrecta-->
-        <div id="alertId" class="alert alert-danger alert-dismissible fade show hide" role="alert">
-          Repita nuevamente la contraseña
+      <form class="form-signin" action="/admin" method="POST" name="addform">
+        <div class="modal-body">
+          <!--Alert de constraseña incorrecta-->
+          <div id="alertId" class="alert alert-danger alert-dismissible fade show hide" role="alert">
+            Repita nuevamente la contraseña
+          </div>
+          <div class="form-floating">
+              <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
+              <label for="floatingInput">Nombre de Usuario</label>
+          </div>
+          <div class="form-floating">
+              <input type="password" class="form-control middle" id="floatingPassword" name="password" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+              <label for="floatingPassword">Contraseña</label>
+          </div>
+          <div class="form-floating">
+            <input type="password" class="form-control middle" id="floatingPassword" name="password2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+            <label for="floatingPassword">Repita Contraseña</label>
+          </div>
+          <div class="form-floating">
+            <input class="form-control middle" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Nombres</label>
+          </div>
+          <div class="form-floating">
+            <input  class="form-control  middle" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Apellidos</label>
+          </div>
+          <div class="form-floating">
+            <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
+            <label for="floatingInput">Cosecha</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select id="rol" class="form-control bottom" name="rol">
+              <option value="0">Analista de Compra</option>
+              <option value="1">Administrador</option>
+              <option value="2">Vendedor</option>
+            </select>
+            <label for="floatingInput">Rol</label>
+          </div>
         </div>
-        <div class="form-floating">
-            <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
-            <label for="floatingInput">Nombre de Usuario</label>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleSubmit()">Agregar Usuario</button>
         </div>
-        <div class="form-floating">
-            <input type="password" class="form-control middle" id="floatingPassword" name="password" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
-            <label for="floatingPassword">Contraseña</label>
-        </div>
-        <div class="form-floating">
-          <input type="password" class="form-control bottom" id="floatingPassword" name="password2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
-          <label for="floatingPassword">Repita Contraseña</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control top" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Nombres</label>
-        </div>
-        <div class="form-floating">
-          <input  class="form-control  middle" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Apellidos</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
-          <label for="floatingInput">Cosecha</label>
-        </div>
-        <div class="form-floating mb-3">
-          <select id="rol" class="form-control bottom" name="rol">
-            <option value="0">Analista de Compra</option>
-            <option value="1">Administrador</option>
-            <option value="2">Vendedor</option>
-          </select>
-          <label for="floatingInput">Rol</label>
-        </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-        <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleSubmit()">Agregar Usuario</button>
-      </div>
-    </form>
+      </form>
     </div>
   </div>
 </div>
@@ -194,37 +196,38 @@ window.onload = mapRoles;
         <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
-      <form class="form-signin modal-body" action="/admin/update" method="POST">
-        
-        <div class="form-floating">
-            <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
-            <label for="floatingInput">Nombre de Usuario</label>   
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Nombres</label>
-        </div>
-        <div class="form-floating">
-          <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Apellidos</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
-          <label for="floatingInput">Cosecha</label>
-        </div>
-        <div class="form-floating mb-3">
-          <select class="form-control bottom" name="editrol">
-            <option value="0">Analista de Compra</option>
-            <option value="1">Administrador</option>
-            <option value="2">Vendedor</option>
-          </select>
-          <label for="floatingInput">Rol</label>
-        </div>
-      <div class="modal-footer">
+      <form class="form-signin" action="/admin/update" method="POST">
+        <div class="modal-body">
+          <div class="form-floating">
+              <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
+              <label for="floatingInput">Nombre de Usuario</label>   
+          </div>
+          <div class="form-floating">
+            <input class="form-control middle"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Nombres</label>
+          </div>
+          <div class="form-floating">
+            <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Apellidos</label>
+          </div>
+          <div class="form-floating">
+            <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
+            <label for="floatingInput">Cosecha</label>
+          </div>
+          <div class="form-floating mb-3">
+            <select class="form-control bottom" name="editrol">
+              <option value="0">Analista de Compra</option>
+              <option value="1">Administrador</option>
+              <option value="2">Vendedor</option>
+            </select>
+            <label for="floatingInput">Rol</label>
+          </div>
+        </div> 
+        <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
           <button type="submit" class="btn btn-primary">Editar Usuario</button>  
-      </div>
-    </form>
+        </div>
+      </form>
     </div>
   </div>
 </div>
