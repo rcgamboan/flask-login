@@ -27,15 +27,18 @@ def index():
 # si todos los datos concuerdan se redirecciona a home o a la pagina de admin segun corresponda
 @app.route('/login',methods=['GET','POST'])
 def login():
+
     if 'username' in session:
         return redirect(url_for('home'))
     else:
+
         if request.method=='POST':
             logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-            setSession(logged_user)
+            
         
             if logged_user != None:
-
+                setSession(logged_user)
+                
                 if check_password_hash(logged_user.password,request.form['password']):
 
                     return render_template('home.html')
