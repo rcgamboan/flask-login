@@ -2,29 +2,39 @@ html,
 body {
   height: 100%;
 }
+a.disabled{
+  pointer-events: none;
+  cursor: default;
+}
 
 body {
   display: flex;
   align-items: center;
   background-color: #f5f5f5;
 }
-
+.menuLogo{
+  color: #2b2b2b;
+}
 .sidebar{
   box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
   background-color: #f5f5f5 !important;
 }
 
 .nav-item{
+  background-color: #f5f5f5;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   transition: 0.5s;
+  width: 100% !important;
 }
 .nav-item:hover{
-  box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
-  transform: translateX(50px);
+  background-color: rgb(13,110,253);
+  box-shadow: rgba(99, 99, 99, 0.9) 0px 2px 8px 0px;
   transition: 0.5s;
 }
 
-
+.logout{
+  width: 100%;
+}
 .upList{
   display: flex;
   flex-direction: column !important;

@@ -12,12 +12,17 @@
     {% block menu %}
     <script>
         function setTab(){
-            links = document.getElementsByTagName('li')
+            list = document.getElementById('menuList')
+            links = list.getElementsByTagName('li')
             url = document.location.href 
             for (i = 0; i < links.length; i++){
+                button = links[i].getElementsByTagName('button')
                 a = links[i].getElementsByTagName('a')
+                console.log(a[0].href)
                 if(url == a[0].href){
-                    links[i].style.transform = "translateX(50px)";
+                    links[i].style.transform = "translateX(50px)"
+                    button[0].style.backgroundColor = "rgb(13,110,253)"
+                    button[0].style.color = "#f5f5f5"
                 }
             }
         }
@@ -25,77 +30,99 @@
         window.onload = setTab;
     </script>
 
+    {% if 'username' in session%}
     <div class="d-flex flex-column p-3 bg-light sidebar " style="width: 280px; height: 100%;">
-        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 link-dark text-decoration-none justify-content-md-center">
-            <span class="fs-2 fw-bold ">Menú {{ session['rol'] }}</span>
+        <a href="/" class="d-flex align-items-center link-dark text-decoration-none justify-content-md-center mb-3 ">
+            <span class="fs-1 fw-bold menuLogo">MENÚ</span>
         </a>
-        <hr>
-        <ul class="nav nav-pills flex-column mb-auto upList" id="msgText">
+        <ul class="nav nav-pills flex-column mb-auto upList justify-content-md-center" id="menuList">
 
             {% if session['rol'] == 0 %}
-            <li class="nav-item btn btn-light mb-2 menuitem">
-                <a href="{{ url_for('productor') }}" class="nav-link link-dark" aria-current="page">
-                    Datos del productor
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="{{ url_for('productor') }}" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
+                        Datos del productor
+                    </button>
                 </a>
             </li>
-            <li class="nav-item btn btn-light mb-2 menuitem">
-                <a href="#" class="nav-link link-dark">
-                    Tipos de Productor
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
+                        Tipos de Productor
+                    </button>
                 </a>
             </li>
             {% else %}
-            <li class="nav-item btn btn-light mb-2 disabled">
-                <a href="{{ url_for('productor') }}" class="nav-link link-dark" aria-current="page">
-                    Datos del productor
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100 disabled">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                         Datos del productor
+                    </button>
                 </a>
             </li>
-            <li class="nav-item btn btn-light mb-2 disabled">
-                <a href="#" class="nav-link link-dark">
-                    Tipos de Productor
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100 disabled">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                        Tipos de Productor
+                    </button>
                 </a>
             </li>
             {% endif %}
 
             {% if session['rol'] == 1 %}
-            <li class="nav-item btn btn-light mb-2 menuitem">
-                <a href="{{ url_for('admin') }}" class="nav-link link-dark" aria-current="page">
-                    Perfiles de Usuarios
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="{{ url_for('admin') }}" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
+                        Perfiles de Usuarios
+                    </button>
                 </a>
             </li>
             {% else %}
             <!--volver a poner disabled-->
-            <li class="nav-item btn btn-light mb-2 disabled">
-                <a href="{{ url_for('admin') }}" class="nav-link link-dark" aria-current="page">
-                    Perfiles de Usuarios
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100 disabled">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                        Perfiles de Usuarios
+                    </button>
                 </a>
             </li>
             {% endif %}
 
             {% if session['rol'] == 2 %}
-            <li class="nav-item btn btn-light mb-2 menuitem">
-            <a href="#" class="nav-link link-dark">
-                Logger de Eventos
-            </a>
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
+                        Logger de Eventos
+                    </button>
+                </a>
             </li>
             {%else%}
-            <li class="nav-item btn btn-light mb-2 menuitem disabled">
-                <a href="#" class="nav-link link-dark">
-                    Logger de Eventos
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100 disabled">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                        Logger de Eventos
+                    </button>
                 </a>
             </li>
             {%endif%}
         </ul>
         <ul class="nav nav-pills flex-column upList">
-            <li class="btn btn-danger mb-2 menuitem align-baseline">
-                <a href="/logout" class="nav-link link-light">
-                    Cerrar Sesión
+            <li>
+                <h5>
+                    {{ session['nombres'] + ' ' + session['apellidos']}}
+                </h5>
+            </li>
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="/logout" class="w-100">
+                    <button class="btn btn-outline-danger px-4 py-3 logout">
+                        Cerrar Sesión
+                    </button>
                 </a>
             </li>
         </ul>
-        <hr>
     </div>
+    {%endif%}
     <main class="form-signin w-100 m-auto text-center">
-        {{session}}
         {% block body %}
         <h1>¡Bienvenido <strong>{{ session['nombres'] + ' ' + session['apellidos']}}</strong>!</h1>
         {% endblock %}
