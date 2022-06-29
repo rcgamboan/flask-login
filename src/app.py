@@ -35,12 +35,10 @@ def login():
         if request.method=='POST':
             logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
             
-        
             if logged_user != None:
-                setSession(logged_user)
                 
                 if check_password_hash(logged_user.password,request.form['password']):
-
+                    setSession(logged_user)
                     return render_template('home.html')
 
                 else:
