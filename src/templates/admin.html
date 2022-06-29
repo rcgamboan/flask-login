@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends './home.html' %}
 
 {% block title %}Home{% endblock %}
 
@@ -12,6 +12,7 @@
     var table = document.getElementById('users');
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
+    setTab()
     for (i = 0; i < rows.length; i++){
         if(rows[i].cells[4].getAttribute('value') == 0){
           rows[i].cells[4].innerHTML = "Analista de Compra"
@@ -103,10 +104,11 @@
 }
 
 window.onload = mapRoles;
+
 </script>
 
 
-<h2 class="mb-3 fade-in">Perfiles de Usuarios</h2>
+<h2 class="mb-3 fade-in" onload = "setTab()">Perfiles de Usuarios</h2>
 {% with messages = get_flashed_messages()%}
 
 {% if messages %}

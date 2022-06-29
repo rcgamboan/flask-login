@@ -6,6 +6,99 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
 {% endblock %}
 
-{% block body %}
-<h1>Bienvenido!</h1>
-{% endblock %}
+
+
+<body>
+    {% block menu %}
+    <script>
+        function setTab(){
+            links = document.getElementsByTagName('li')
+            url = document.location.href 
+            for (i = 0; i < links.length; i++){
+                a = links[i].getElementsByTagName('a')
+                if(url == a[0].href){
+                    links[i].style.transform = "translateX(50px)";
+                }
+            }
+        }
+        
+        window.onload = setTab;
+    </script>
+
+    <div class="d-flex flex-column p-3 bg-light sidebar " style="width: 280px; height: 100%;">
+        <a href="/" class="d-flex align-items-center mb-3 mb-md-0 link-dark text-decoration-none justify-content-md-center">
+            <span class="fs-2 fw-bold ">Menú {{ session['rol'] }}</span>
+        </a>
+        <hr>
+        <ul class="nav nav-pills flex-column mb-auto upList" id="msgText">
+
+            {% if session['rol'] == 0 %}
+            <li class="nav-item btn btn-light mb-2 menuitem">
+                <a href="{{ url_for('productor') }}" class="nav-link link-dark" aria-current="page">
+                    Datos del productor
+                </a>
+            </li>
+            <li class="nav-item btn btn-light mb-2 menuitem">
+                <a href="#" class="nav-link link-dark">
+                    Tipos de Productor
+                </a>
+            </li>
+            {% else %}
+            <li class="nav-item btn btn-light mb-2 disabled">
+                <a href="{{ url_for('productor') }}" class="nav-link link-dark" aria-current="page">
+                    Datos del productor
+                </a>
+            </li>
+            <li class="nav-item btn btn-light mb-2 disabled">
+                <a href="#" class="nav-link link-dark">
+                    Tipos de Productor
+                </a>
+            </li>
+            {% endif %}
+
+            {% if session['rol'] == 1 %}
+            <li class="nav-item btn btn-light mb-2 menuitem">
+                <a href="{{ url_for('admin') }}" class="nav-link link-dark" aria-current="page">
+                    Perfiles de Usuarios
+                </a>
+            </li>
+            {% else %}
+            <!--volver a poner disabled-->
+            <li class="nav-item btn btn-light mb-2 disabled">
+                <a href="{{ url_for('admin') }}" class="nav-link link-dark" aria-current="page">
+                    Perfiles de Usuarios
+                </a>
+            </li>
+            {% endif %}
+
+            {% if session['rol'] == 2 %}
+            <li class="nav-item btn btn-light mb-2 menuitem">
+            <a href="#" class="nav-link link-dark">
+                Logger de Eventos
+            </a>
+            </li>
+            {%else%}
+            <li class="nav-item btn btn-light mb-2 menuitem disabled">
+                <a href="#" class="nav-link link-dark">
+                    Logger de Eventos
+                </a>
+            </li>
+            {%endif%}
+        </ul>
+        <ul class="nav nav-pills flex-column upList">
+            <li class="btn btn-danger mb-2 menuitem align-baseline">
+                <a href="/logout" class="nav-link link-light">
+                    Cerrar Sesión
+                </a>
+            </li>
+        </ul>
+        <hr>
+    </div>
+    <main class="form-signin w-100 m-auto text-center">
+        {{session}}
+        {% block body %}
+        <h1>¡Bienvenido <strong>{{ session['nombres'] + ' ' + session['apellidos']}}</strong>!</h1>
+        {% endblock %}
+    </main>
+    {% endblock %}
+</body>

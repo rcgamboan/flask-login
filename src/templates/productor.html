@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends './home.html' %}
 
 {% block title %}Home{% endblock %}
 
@@ -9,6 +9,7 @@
 {% block body %}
 <script>
     function mapTipos(){
+      setTab()
       var table = document.getElementById('productores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');

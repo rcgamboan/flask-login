@@ -1,4 +1,4 @@
-{% extends './base.html' %}
+{% extends './home.html' %}
 
 {% block title %}Login{% endblock %}
 
@@ -7,6 +7,9 @@
 {% endblock %}
 
 {% block body %}
+<script>
+  window.onload = setTab;
+</script>
 <div class="row justify-content-md-center">
   <div class="col-12 col-md-auto">
     <form class="form-signin" action="/login" method="POST">
@@ -23,8 +26,10 @@
         </div>
         {% endfor %}
         {% endif %}
+        
 
         {% endwith %}
+        
         <h1 class="h3 mb-3 fw-normal">Introduzca sus datos</h1>
 
         <div class="form-floating">

@@ -1,5 +1,5 @@
 
-from flask import Flask, flash, redirect, render_template, request, url_for, flash
+from flask import Flask, flash, redirect, render_template, request, url_for, flash, session
 from werkzeug.security import check_password_hash , generate_password_hash
 from config import config
 import sqlite3 as sql
@@ -10,9 +10,13 @@ from model import Usuario, Productor, TipoProductor
 app = Flask(__name__)
 
 # Si se trata de acceder al directorio raiz de la pagina se redirecciona a login
+# al menos que haya una sesion iniciada, en ese caso, se redirecciona al home
 @app.route('/')
 def index():
-    return redirect(url_for('login'))
+    if 'username' in session:
+        return redirect(url_for('home'))
+    else:
+        return redirect(url_for('login'))
 
 # Para la pagina de login, recibe los datos del username y password
 # cada vez que se presiona el boton en la pagina de login
@@ -23,34 +27,46 @@ def index():
 # si todos los datos concuerdan se redirecciona a home o a la pagina de admin segun corresponda
 @app.route('/login',methods=['GET','POST'])
 def login():
-    if request.method=='POST':
-        logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-
-        if logged_user != None:
-
-            if check_password_hash(logged_user.password,request.form['password']):
-
-                if logged_user.rol == 0:
-                    return render_template('home.html',nombre=logged_user.nombres)
-                elif logged_user.rol == 1:
-                    return redirect(url_for('admin'))
-                elif logged_user.rol == 2:
-                    return redirect(url_for('productor'))
-                else:
-                    return redirect(url_for('login'))
-            else:
-                flash("Alguno de los datos es incorrecto")
-                return render_template('auth/login.html')
-        else:
-            flash("El usuario no existe")
-            return render_template('auth/login.html')    
+    if 'username' in session:
+        return redirect(url_for('home'))
     else:
-        return render_template('auth/login.html')
+        if request.method=='POST':
+            logged_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+            setSession(logged_user)
+        
+            if logged_user != None:
+
+                if check_password_hash(logged_user.password,request.form['password']):
+
+                    return render_template('home.html')
+
+                else:
+                    flash("Alguno de los datos es incorrecto")
+                    return render_template('auth/login.html')
+            else:
+                flash("El usuario no existe")
+                return render_template('auth/login.html')    
+        else:
+            return render_template('auth/login.html')
+
+@app.route('/logout')
+def logout():
+    session.pop('id', None)
+    session.pop('username', None)
+    session.pop('nombres', None)
+    session.pop('apellidos', None)
+    session.pop('cosecha', None)
+    session.pop('rol', None)
+    
+    return redirect('/')
 
 # Pagina /home, devuelve la plantilla home.html
 @app.route('/home')
 def home():
-    return render_template('home.html')
+    if 'username' in session:
+        return render_template('home.html')
+    else:
+        return redirect(url_for('login'))
 
 @app.route('/admin/update',methods=['POST'])
 def update():
@@ -72,27 +88,32 @@ def delete():
 # Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
 @app.route('/admin',methods=['GET','POST','PUT'])
 def admin():
+    if 'username' in session:
+        if session['rol'] == 1:
+            if request.method=='POST':
+                new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+                #si no existe el usuario en la base de datos
+                if new_user == None:
+                    agregarUsuario( request.form['username'], 
+                                    request.form['password'], 
+                                    request.form['nombre'],
+                                    request.form['apellido'],
+                                    request.form['cosecha'],
+                                    request.form['rol'])
+                    users = obtenerUsuarios()
+                    return render_template('admin.html',users=users)
 
-    if request.method=='POST':
-        new_user = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-        #si no existe el usuario en la base de datos
-        if new_user == None:
-            agregarUsuario( request.form['username'], 
-                            request.form['password'], 
-                            request.form['nombre'],
-                            request.form['apellido'],
-                            request.form['cosecha'],
-                            request.form['rol'])
-            users = obtenerUsuarios()
-            return render_template('admin.html',users=users)
-
+                else:
+                    flash("Este nombre de usuario ya existe ")
+                    users = obtenerUsuarios()
+                    return render_template('admin.html',users=users)   
+            else:
+                users = obtenerUsuarios()
+                return render_template('admin.html',users=users)
         else:
-            flash("Este nombre de usuario ya existe ")
-            users = obtenerUsuarios()
-            return render_template('admin.html',users=users)   
+            return redirect(url_for('home'))
     else:
-        users = obtenerUsuarios()
-        return render_template('admin.html',users=users)
+        return redirect(url_for('login'))
 
 # Se obtienen los datos de los productores
 @app.route('/productor',methods=['GET','POST','PUT'])
@@ -150,6 +171,14 @@ def editarUsuario(username = "", nombres = "",apellidos = "",cosecha = "",rol = 
     
     if logged_user != None:
         user = db1.session.query(Usuario).filter_by(username = username).first()
+
+        if user.username == session['username']:
+            session['username'] = username
+            session['nombres'] = nombres
+            session['apellidos'] = apellidos
+            session['cosecha'] = cosecha
+            session['rol'] = int(rol)
+
         if username != "" and username != None:
             user.username = username
 
@@ -164,6 +193,8 @@ def editarUsuario(username = "", nombres = "",apellidos = "",cosecha = "",rol = 
         
         if rol != -1 and rol != None:
             user.rol = rol
+
+        
 
         db1.session.commit()
     else:
@@ -241,6 +272,16 @@ def eliminarUsuario(ID):
 def eliminarTipoProductor(ID):
     db1.session.query(TipoProductor).filter_by(id=ID).delete()
     db1.session.commit()
+
+#Carga los datos de usuario loggeado a la sesion actual en cache
+def setSession(logged_user):
+    session['id'] = logged_user.id
+    session['username'] = logged_user.username
+    session['nombres'] = logged_user.nombres
+    session['apellidos'] = logged_user.apellidos
+    session['cosecha'] = logged_user.cosecha
+    session['rol'] = logged_user.rol
+    
 
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)

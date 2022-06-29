@@ -16,9 +16,22 @@ body {
 
 .nav-item{
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
+  transition: 0.5s;
 }
 .nav-item:hover{
   box-shadow: rgba(99, 99, 99, 0.6) 0px 2px 8px 0px;
+  transform: translateX(50px);
+  transition: 0.5s;
+}
+
+
+.upList{
+  display: flex;
+  flex-direction: column !important;
+}
+
+.upList>:last-child{
+  margin-top: auto !important;
 }
 
 .form-signin {
