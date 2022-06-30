@@ -82,7 +82,7 @@ def update():
 
 @app.route('/admin/delete',methods=['POST'])
 def delete():
-    eliminarUsuario(request.form['id'])
+    eliminarUsuario(request.form['user_id'])
     return redirect(url_for('admin'))
 
 

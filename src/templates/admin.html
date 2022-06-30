@@ -31,7 +31,7 @@
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = function() {
         id = this.cells[0].innerHTML
-        document.querySelector('input[name="id"]').value = id;
+        document.querySelector('input[name="user_id"]').value = id;
         document.querySelector('form[name="ID"]').submit();
       }
     }
@@ -267,7 +267,7 @@ window.onload = mapRoles;
                         </div>
                       </button>
                       <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
-                        <input type="hidden" name="id" value="">
+                        <input type="hidden" name="user_id" value="">
                         <div >
                           <i class="fa-solid fa-trash"></i>
                         </div>
