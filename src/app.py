@@ -120,31 +120,38 @@ def admin():
 @app.route('/productor',methods=['GET','POST','PUT'])
 def productor():
 
-    if request.method=='POST':
-        
-        new_prod = db1.session.query(Productor).filter_by(id = request.form['id']).first()
+    if 'username' in session:
+        if session['rol'] == 0:
+            if request.method=='POST':
+                
+                new_prod = db1.session.query(Productor).filter_by(id = request.form['id']).first()
 
-        if new_prod == None:
-            agregarProductor(request.form["id"], 
-                            request.form["nombres"],
-                            request.form["apellidos"],
-                            request.form["telefonoCelular"],
-                            request.form["telefonoLocal"],
-                            request.form["direccion"],
-                            request.form["tipo"],)
-            productores = obtenerProductores()
-            tipos = obtenerTiposProductores()
-            return render_template('productor.html',productores=productores, tipos=tipos)
+                if new_prod == None:
+                    agregarProductor(request.form["id"], 
+                                    request.form["nombres"],
+                                    request.form["apellidos"],
+                                    request.form["telefonoCelular"],
+                                    request.form["telefonoLocal"],
+                                    request.form["direccion"],
+                                    request.form["tipo"],)
+                    productores = obtenerProductores()
+                    tipos = obtenerTiposProductores()
+                    return render_template('productor.html',productores=productores, tipos=tipos)
 
+                else:
+                    flash("El productor ya existe ")
+                    productores = obtenerProductores()
+                    tipos = obtenerTiposProductores()
+                    return render_template('productor.html',productores=productores, tipos=tipos)
+            else:
+                productores = obtenerProductores()
+                tipos = obtenerTiposProductores()
+                return render_template('productor.html',productores=productores, tipos=tipos)
         else:
-            flash("El productor ya existe ")
-            productores = obtenerProductores()
-            tipos = obtenerTiposProductores()
-            return render_template('productor.html',productores=productores, tipos=tipos)
+            return redirect(url_for('home'))
     else:
-        productores = obtenerProductores()
-        tipos = obtenerTiposProductores()
-        return render_template('productor.html',productores=productores, tipos=tipos)
+       return redirect(url_for('login'))
+
 
 @app.route('/productor/update',methods=['POST'])
 def prod_update():
@@ -168,27 +175,34 @@ def prod_eliminar():
 @app.route('/tipoProductor', methods=['GET','POST','PUT'])
 def tipo_prod():
 
-    if request.method=='POST':
-        
-        new_tipo = db1.session.query(TipoProductor).filter_by(direccion = request.form['direccion']).first()
-        
-        if new_tipo == None:
-            agregarTipoProductor(request.form['direccion'])
-            tipos = obtenerTiposProductores()
-            return render_template('tipo.html', tipos=tipos)
+    if 'username' in session:
+        if session['rol'] == 0:
+            if request.method=='POST':
+                
+                new_tipo = db1.session.query(TipoProductor).filter_by(direccion = request.form['direccion']).first()
+                
+                if new_tipo == None:
+                    agregarTipoProductor(request.form['direccion'])
+                    tipos = obtenerTiposProductores()
+                    return render_template('tipo.html', tipos=tipos)
 
+                else:
+                    flash("El tipo de productor ya existe ")
+                    tipos = obtenerTiposProductores()
+                    return render_template('tipo.html', tipos=tipos)
+            else:
+                tipos = obtenerTiposProductores()
+                return render_template('tipo.html', tipos=tipos)
         else:
-            flash("El tipo de productor ya existe ")
-            tipos = obtenerTiposProductores()
-            return render_template('tipo.html', tipos=tipos)
+            return redirect(url_for('home'))
     else:
-        tipos = obtenerTiposProductores()
-        return render_template('tipo.html', tipos=tipos)
+       return redirect(url_for('login'))
+
 
 @app.route('/tipoProductor/update',methods=['POST'])
 def tipo_prod_update():
 
-    print(request.form['editid'])
+    #print(request.form['editid'])
     editarTipoProductor(
         request.form['editid'],
         request.form['editdescripcion'],
@@ -293,7 +307,7 @@ def editarTipoProductor(id,direccion = ""):
 
 # Recibe el username y la contraseña del usuario a crear
 # Se llama a la sesion de SQLAlchemy y se crea el usuario
-def agregarUsuario(username,password,nombres,apellidos,cosecha,rol):
+def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
 
     logged_user = db1.session.query(Usuario).filter_by(username = username).first()
 
@@ -302,7 +316,10 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol):
         db1.session.add(user)
         db1.session.commit()
     else:
-        flash("El usuario ya se encuentra registrado")
+        if inicio != 1:
+            return
+        else:
+            flash("El usuario ya se encuentra registrado")
 
 def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
     prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo)
@@ -316,16 +333,32 @@ def agregarTipoProductor(descripcion):
     db1.session.commit()
 
 def eliminarUsuario(ID):
-    db1.session.query(Usuario).filter_by(id=ID).delete()
-    db1.session.commit()
+    
+    if int(session['id']) == int(ID):
+        flash("No se puede eliminar esta cuenta mientras tiene una sesion activa")
+        return
+    else:
+        admins = db1.session.query(Usuario).filter_by(rol=1).all()
+        if len(admins) == 1:
+            flash("No se puede eliminar esta cuenta ya que no hay otros administradores")
+            return
+        else:
+            db1.session.query(Usuario).filter_by(id=ID).delete()
+            db1.session.commit()
 
 def eliminarProductor(ID):
     db1.session.query(Productor).filter_by(id=ID).delete()
     db1.session.commit()
 
 def eliminarTipoProductor(ID):
-    db1.session.query(TipoProductor).filter_by(id=ID).delete()
-    db1.session.commit()
+    productores =  db1.session.query(Productor).filter_by(tipo=ID).all()
+    print(productores)
+    if len(productores) > 0:
+        flash("No se puede eliminar ya que existe por lo menos un productor asociado a este tipo")
+        return
+    else:
+        db1.session.query(TipoProductor).filter_by(id=ID).delete()
+        db1.session.commit()
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
@@ -340,5 +373,6 @@ def setSession(logged_user):
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
+    agregarUsuario("admin","admin","admin","admin","Enero - Marzo 2022",1,0)
     app.run()
 
