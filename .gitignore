@@ -1,0 +1,16 @@
+src/tests/usuarios.sqlite
+src/tests/__pycache__/test_database.cpython-310.pyc
+src/tests/__pycache__/test_model.cpython-310.pyc
+src/tests/__pycache__/test_productor.cpython-310.pyc
+src/tests/__pycache__/test_tipo_productor.cpython-310.pyc
+src/tests/__pycache__/test_usuario.cpython-310.pyc
+src/usuarios.sqlite
+src/__pycache__/config.cpython-310.pyc
+src/__pycache__/database.cpython-310.pyc
+src/__pycache__/model.cpython-310.pyc
+src/tests/usuarios.sqlite
+src/usuarios.sqlite
+src/__pycache__/config.cpython-310.pyc
+src/__pycache__/database.cpython-310.pyc
+src/__pycache__/model.cpython-310.pyc
+src/tests/usuarios.sqlite
