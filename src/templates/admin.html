@@ -31,7 +31,6 @@
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = function() {
         id = this.cells[0].innerHTML
-        console.log(id)
         document.querySelector('input[name="id"]').value = id;
         document.querySelector('form[name="ID"]').submit();
       }
@@ -75,6 +74,7 @@
             document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
             document.querySelector('input[name="editcosecha"]').value = '{{user.cosecha}}';
             document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
+            document.querySelector('input[name="id"]').value = '{{user.id}}';
           }
         "{% endfor %}"
       }
@@ -107,181 +107,182 @@ window.onload = mapRoles;
 
 </script>
 
+<main class="form-signin w-100 mb-auto mt-3 text-center">
+  <h2 class=" my-3 fade-in display-6">Perfiles de <b class="fw-bold">Usuarios</b></h2>
+  {% with messages = get_flashed_messages()%}
 
-<h2 class="mb-3 fade-in" onload = "setTab()">Perfiles de Usuarios</h2>
-{% with messages = get_flashed_messages()%}
-
-{% if messages %}
-<br/>
-{% for message in messages%}
-<div class="alert alert-primary alert-dismissible" role="alert">
-    <strong>{{ message }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
-{% endfor %}
-{% endif %}
-
-{% endwith %}
-
-<div class="row justify-content-md-center fade-in">
-  <div class="col-12 col-md-4 d-flex justify-content-end">
-        <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
-        <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
-          <i class="fa-solid fa-plus"></i>
-        </button>
+  {% if messages %}
+  <br/>
+  {% for message in messages%}
+  <div class="alert alert-primary alert-dismissible" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
   </div>
-</div>
+  {% endfor %}
+  {% endif %}
 
+  {% endwith %}
 
-<!--Modal Agregar usuario-->
-<div class="modal fade" id="AgregarUsuario" tabindex="-1" role="dialog" aria-labelledby="Agregar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form class="form-signin" action="/admin" method="POST" name="addform">
-        <div class="modal-body">
-          <!--Alert de constraseña incorrecta-->
-          <div id="alertId" class="alert alert-danger alert-dismissible fade show hide" role="alert">
-            Repita nuevamente la contraseña
-          </div>
-          <div class="form-floating">
-              <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
-              <label for="floatingInput">Nombre de Usuario</label>
-          </div>
-          <div class="form-floating">
-              <input type="password" class="form-control middle" id="floatingPassword" name="password" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
-              <label for="floatingPassword">Contraseña</label>
-          </div>
-          <div class="form-floating">
-            <input type="password" class="form-control middle" id="floatingPassword" name="password2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
-            <label for="floatingPassword">Repita Contraseña</label>
-          </div>
-          <div class="form-floating">
-            <input class="form-control middle" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Nombres</label>
-          </div>
-          <div class="form-floating">
-            <input  class="form-control  middle" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Apellidos</label>
-          </div>
-          <div class="form-floating">
-            <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
-            <label for="floatingInput">Cosecha</label>
-          </div>
-          <div class="form-floating mb-3">
-            <select id="rol" class="form-control bottom" name="rol">
-              <option value="0">Analista de Compra</option>
-              <option value="1">Administrador</option>
-              <option value="2">Vendedor</option>
-            </select>
-            <label for="floatingInput">Rol</label>
-          </div>
-        </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleSubmit()">Agregar Usuario</button>
-        </div>
-      </form>
+  <div class="row justify-content-md-center fade-in">
+    <div class="col-12 col-md-4 d-flex justify-content-end">
+          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
+          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
+            <i class="fa-solid fa-plus"></i>
+          </button>
     </div>
   </div>
-</div>
 
-<!--Modal Editar usuario-->
-{%for user in users%}
-<div class="modal fade" id="EditarUsuario" tabindex="-1" role="dialog" aria-labelledby="Editar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form class="form-signin" action="/admin/update" method="POST">
-        <div class="modal-body">
-          <div class="form-floating">
-              <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
-              <label for="floatingInput">Nombre de Usuario</label>   
-          </div>
-          <div class="form-floating">
-            <input class="form-control middle"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Nombres</label>
-          </div>
-          <div class="form-floating">
-            <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-            <label for="floatingInput">Apellidos</label>
-          </div>
-          <div class="form-floating">
-            <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
-            <label for="floatingInput">Cosecha</label>
-          </div>
-          <div class="form-floating mb-3">
-            <select class="form-control bottom" name="editrol">
-              <option value="0">Analista de Compra</option>
-              <option value="1">Administrador</option>
-              <option value="2">Vendedor</option>
-            </select>
-            <label for="floatingInput">Rol</label>
-          </div>
-        </div> 
-        <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Editar Usuario</button>  
+
+  <!--Modal Agregar usuario-->
+  <div class="modal fade" id="AgregarUsuario" tabindex="-1" role="dialog" aria-labelledby="Agregar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Agregar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-      </form>
+        <form class="form-signin" action="/admin" method="POST" name="addform">
+          <div class="modal-body">
+            <!--Alert de constraseña incorrecta-->
+            <div id="alertId" class="alert alert-danger alert-dismissible fade show hide" role="alert">
+              Repita nuevamente la contraseña
+            </div>
+            <div class="form-floating">
+                <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
+                <label for="floatingInput">Nombre de Usuario</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control middle" id="floatingPassword" name="password" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+                <label for="floatingPassword">Contraseña</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control middle" id="floatingPassword" name="password2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+              <label for="floatingPassword">Repita Contraseña</label>
+            </div>
+            <div class="form-floating">
+              <input class="form-control middle" id="nombre" name="nombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+              <label for="floatingInput">Nombres</label>
+            </div>
+            <div class="form-floating">
+              <input  class="form-control  middle" id="apellido" name="apellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+              <label for="floatingInput">Apellidos</label>
+            </div>
+            <div class="form-floating">
+              <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
+              <label for="floatingInput">Cosecha</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select id="rol" class="form-control bottom" name="rol">
+                <option value="0">Analista de Compra</option>
+                <option value="1">Administrador</option>
+                <option value="2">Vendedor</option>
+              </select>
+              <label for="floatingInput">Rol</label>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleSubmit()">Agregar Usuario</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
-</div>
-{%endfor%}
 
-{%if users%}
-    <div class="row justify-content-md-center fade-in">
-      <div class="col-12 col-md-8 table-responsive">
-        <table class="table mt-2 table-hover " id = "users">
-          <thead>
-            <th scope="col">ID</th>
-            <th scope="col">Usuario</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Rol</th>
-            <th scope="col">Cosecha</th>
-            <th scope="col">Acciones</th>
-          </thead>
-          <tbody>
-            {%for user in users%}
-            <tr class=" deleteOut tdEdit">
-                <th scope="row" id="{{user.id}}">{{user.id}}</th>
-                <td class="table-light tdEdit" type="username" id="username">{{user.username}}</td>
-                <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
-                <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
-                <td class="table-light tdEdit" type="username" id="cosecha">{{user.cosecha}}</td>
-                <td class="table-light tdEdit">
-                  <div class="cont">
-                    <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                      data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
-                      <div>
-                        <i class="fa-solid fa-pencil"></i>
-                      </div>
-                    </button>
-                    <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
-                      <input type="hidden" name="id" value="">
-                      <div >
-                        <i class="fa-solid fa-trash"></i>
-                      </div>
-                    </form>
-                  </div>
-                </td>
-            </tr>
-            {%endfor%}
-          </tbody>
-        </table>
+  <!--Modal Editar usuario-->
+  {%for user in users%}
+  <div class="modal fade" id="EditarUsuario" tabindex="-1" role="dialog" aria-labelledby="Editar usuario" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Editar Usuario</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="form-signin" action="/admin/update" method="POST">
+          <div class="modal-body">
+            <input name="id" type="hidden" value="">
+            <div class="form-floating">
+                <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}" value="{{user.username}}">
+                <label for="floatingInput">Nombre de Usuario</label>   
+            </div>
+            <div class="form-floating">
+              <input class="form-control middle"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+              <label for="floatingInput">Nombres</label>
+            </div>
+            <div class="form-floating">
+              <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+              <label for="floatingInput">Apellidos</label>
+            </div>
+            <div class="form-floating">
+              <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
+              <label for="floatingInput">Cosecha</label>
+            </div>
+            <div class="form-floating mb-3">
+              <select class="form-control bottom" name="editrol">
+                <option value="0">Analista de Compra</option>
+                <option value="1">Administrador</option>
+                <option value="2">Vendedor</option>
+              </select>
+              <label for="floatingInput">Rol</label>
+            </div>
+          </div> 
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Editar Usuario</button>  
+          </div>
+        </form>
       </div>
     </div>
-{%endif%}
-</div>
+  </div>
+  {%endfor%}
 
+  {%if users%}
+      <div class="row justify-content-md-center fade-in">
+        <div class="col-12 col-md-8 table-responsive">
+          <table class="table mt-2 table-hover " id = "users">
+            <thead>
+              <th scope="col">ID</th>
+              <th scope="col">Usuario</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Rol</th>
+              <th scope="col">Cosecha</th>
+              <th scope="col">Acciones</th>
+            </thead>
+            <tbody>
+              {%for user in users%}
+              <tr class=" deleteOut tdEdit">
+                  <th scope="row" id="{{user.id}}">{{user.id}}</th>
+                  <td class="table-light tdEdit" type="username" id="username">{{user.username}}</td>
+                  <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
+                  <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
+                  <td class="table-light tdEdit" type="username" id="cosecha">{{user.cosecha}}</td>
+                  <td>
+                    <div class="cont">
+                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
+                        <div>
+                          <i class="fa-solid fa-pencil"></i>
+                        </div>
+                      </button>
+                      <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                        <input type="hidden" name="id" value="">
+                        <div >
+                          <i class="fa-solid fa-trash"></i>
+                        </div>
+                      </form>
+                    </div>
+                  </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  {%endif%}
+  </div>
+</main>
 
 {% endblock %}
 

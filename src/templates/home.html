@@ -18,9 +18,8 @@
             for (i = 0; i < links.length; i++){
                 button = links[i].getElementsByTagName('button')
                 a = links[i].getElementsByTagName('a')
-                console.log(a[0].href)
                 if(url == a[0].href){
-                    links[i].style.transform = "translateX(50px)"
+                    links[i].style.transform = "translateX(35px)"
                     button[0].style.backgroundColor = "rgb(13,110,253)"
                     button[0].style.color = "#f5f5f5"
                 }
@@ -31,10 +30,26 @@
     </script>
 
     {% if 'username' in session%}
-    <div class="d-flex flex-column p-3 bg-light sidebar " style="width: 280px; height: 100%;">
-        <a href="/" class="d-flex align-items-center link-dark text-decoration-none justify-content-md-center mb-3 ">
-            <span class="fs-1 fw-bold menuLogo">MENÚ</span>
-        </a>
+    <div class="d-flex flex-column p-3 bg-light sidebar " style="width: 17%; height: 100%;">
+        <ul  role="button" onclick="window.location = '/'"class="nav d-flex mb-3 mr-3 justify-content-center fade-in" name="home">
+            <li class=" d-flex centerList flex-column">
+                <i class="fa-solid fa-circle-user display-4 m-3"></i>
+            </li>
+            <li class=" justify-content-center flex-column centerList mx-2" >
+                <h6 class="text-left centerList">
+                    {{ session['nombres'] + ' ' + session['apellidos']}}
+                </h6>
+                <h6 class="text-left fw-light centerList">
+                    {% if session['rol'] == 0%}
+                    Analista de Compras
+                    {%elif session['rol'] == 1 %}
+                    Administrador
+                    {%else%}
+                    Vendedor
+                    {%endif%}
+                </h6>
+            </li>
+        </ul>
         <ul class="nav nav-pills flex-column mb-auto upList justify-content-md-center" id="menuList">
 
             {% if session['rol'] == 0 %}
@@ -46,7 +61,7 @@
                 </a>
             </li>
             <li class="align-items-center justify-content-md-center fade-in">
-                <a href="#" class="w-100">
+                <a href="{{ url_for('tipo_prod') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
                         Tipos de Productor
                     </button>
@@ -78,7 +93,6 @@
                 </a>
             </li>
             {% else %}
-            <!--volver a poner disabled-->
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="#" class="w-100 disabled">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
@@ -105,13 +119,9 @@
                 </a>
             </li>
             {%endif%}
+            
         </ul>
         <ul class="nav nav-pills flex-column upList">
-            <li>
-                <h5>
-                    {{ session['nombres'] + ' ' + session['apellidos']}}
-                </h5>
-            </li>
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="/logout" class="w-100">
                     <button class="btn btn-outline-danger px-4 py-3 logout">
@@ -122,10 +132,11 @@
         </ul>
     </div>
     {%endif%}
-    <main class="form-signin w-100 m-auto text-center">
         {% block body %}
-        <h1>¡Bienvenido <strong>{{ session['nombres'] + ' ' + session['apellidos']}}</strong>!</h1>
+        <main class="form-signin w-100 m-auto text-center">
+        <img src="\static\img\Onboarding-pana.svg" alt="Bienvenido" width="450" height="350" class="wimg">
+        <h2 class="fade-in display-6 mb-5">¡Bienvenido <b class="fw-bold">{{ session['nombres'] + ' ' + session['apellidos']}}</b>!</h2>
+        </main>
         {% endblock %}
-    </main>
     {% endblock %}
 </body>

@@ -1,0 +1,177 @@
+{% extends './home.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<script>
+    function handleDelete(){
+      var table = document.getElementById('tipos');
+      var tbody = table.getElementsByTagName('tbody')[0];
+      var rows = tbody.getElementsByTagName('tr');
+      for (i = 0; i < rows.length; i++){
+        rows[i].onclick = function() {
+          id = this.cells[0].innerHTML
+          document.querySelector('input[name="tipoid"]').value = id;
+          document.querySelector('form[name="ID"]').submit();
+        }
+      }
+    }
+  
+    function handleEdit(){
+      var table = document.getElementById('tipos');
+      var tbody = table.getElementsByTagName('tbody')[0];
+      var rows = tbody.getElementsByTagName('tr');
+      var id
+      for (i = 0; i < rows.length; i++){
+        rows[i].onclick = async function() {
+          id = this.cells[0].innerHTML
+          "{% for tipo in tipos %}"
+            if(id === '{{tipo.id}}'){
+              document.querySelector('input[name="editdescripcion"]').value = '{{tipo.direccion}}';
+              document.querySelector('input[name="editid"]').value = '{{tipo.id}}'
+            }
+          "{% endfor %}"
+        }
+      }
+    }
+  
+    //Busca por nombre y apellido al escribir un caracter
+    function search() {
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("tipos");
+    tr = table.getElementsByTagName("tr");
+
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0]
+
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+</script>
+<main class="form-signin w-100 mb-auto mt-3 text-center">
+    <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Tipos</b> de Productor</h2>
+    {% with messages = get_flashed_messages()%}
+
+    {% if messages %}
+    <br/>
+    {% for message in messages%}
+    <div class="alert alert-primary alert-dismissible" role="alert">
+        <strong>{{ message }}</strong>
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+
+    {% endfor %}
+    {%endif%}
+    {% endwith %}
+
+    <div class="row justify-content-md-center fade-in">
+        <div class="col-12 col-md-4 d-flex justify-content-end">
+            <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por Descripción...">
+            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarTipo">
+                <i class="fa-solid fa-plus"></i>
+            </button>
+        </div>
+    </div>
+    
+    
+    <!--Modal Agregar bottom-->
+    <div class="modal fade" id="AgregarTipo" tabindex="-1" role="dialog" aria-labelledby="Agregar Productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Tipo de Productor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form class="form-signin" action="/tipoProductor" method="POST">
+                <div class="modal-body">
+                    <div class="form-floating">
+                        <input class="form-control" id="direccion" name="direccion" placeholder="Revendedor 1" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                        <label for="floatingInput">Descripción</label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Agregar Tipo de Productor</button>
+                </div>
+            </form>
+        </div>
+        </div>
+    </div>
+
+    <!--Modal Editar bottom-->
+    {%for tipo in tipos%}
+    <div class="modal fade" id="EditarTipo" tabindex="-1" role="dialog" aria-labelledby="Editar Tipo" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+        <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Editar Tipo de Productor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="form-signin modal-body" action="/tipoProductor/update" method="POST">
+            <input type="hidden"  name="editid" required="required" value="">
+            <div class="form-floating">
+                <input class="form-control" id="direccion" name="editdescripcion" placeholder="Revendedor 1" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                <label for="floatingInput">Descripción</label>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                <button type="submit" class="btn btn-primary">Editar Productor</button>
+            </div>
+        </form>
+        </div>
+    </div>
+    </div>
+    {%endfor%}
+
+    {%if tipos%}
+        <div class="row justify-content-md-center fade-in">
+        <div class="col-12 col-md-5 table-responsive">
+            <table class="table mt-2 table-hover" id = "tipos">
+            <thead>
+                <th scope="col">ID</th>
+                <th scope="col">Descripción</th>
+                <th scope="col">Acciones</th>
+            </thead>
+            <tbody>
+                {%for tipo in tipos%}
+                <tr class=" deleteOut tdEdit">
+                    <th scope="row">{{tipo.id}}</th>
+                    <td class="table-light tdEdit" >{{tipo.direccion}}</td>
+                    <td >
+                        <div class="cont">
+                        <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                            data-bs-toggle="modal" data-bs-target="#EditarTipo" onclick="handleEdit()">
+                            <div>
+                            <i class="fa-solid fa-pencil"></i>
+                            </div>
+                        </button>
+                        <form name="ID" action="/tipoProductor/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                            <input type="hidden" name="tipoid" value="1">
+                            <div >
+                            <i class="fa-solid fa-trash"></i>
+                            </div>
+                        </form>
+                        </div>
+                    </td>
+                </tr>
+                {%endfor%}
+            </tbody>
+            </table>
+        </div>
+        </div>
+    {%endif%}
+</main>
+{% endblock %}

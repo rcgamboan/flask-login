@@ -23,36 +23,36 @@
     }
   
     function handleDelete(){
-      var table = document.getElementById('users');
+      var table = document.getElementById('productores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
       for (i = 0; i < rows.length; i++){
         rows[i].onclick = function() {
           id = this.cells[0].innerHTML
-          document.querySelector('input[name="id"]').value = id;
+          document.querySelector('input[name="prodid"]').value = id;
           document.querySelector('form[name="ID"]').submit();
         }
       }
     }
   
     function handleEdit(){
-      var table = document.getElementById('users');
+      var table = document.getElementById('productores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
       var id
       for (i = 0; i < rows.length; i++){
         rows[i].onclick = async function() {
           id = this.cells[0].innerHTML
-          "{% for user in users %}"
-            if(id === '{{user.id}}'){
-              document.querySelector('input[name="editusername"]').value = '{{user.username}}';
-              document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
-              document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
-              document.querySelector('input[name="editcedula"]').value = '{{user.id}}';
-              document.querySelector('input[name="edittelefonoL"]').value = '{{user.telefonoLocal}}';
-              document.querySelector('input[name="edittelefonoC"]').value = '{{user.telefonoCelular}}';
-              document.querySelector('input[name="editdireccion"]').value = '{{user.direccion}}';
-              document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
+          "{% for productor in productores %}"
+            if(id === '{{productor.id}}'){
+              document.querySelector('input[name="editnombre"]').value = '{{productor.nombres}}';
+              document.querySelector('input[name="editapellido"]').value = '{{productor.apellidos}}';
+              document.querySelector('input[name="editcedula"]').value = '{{productor.id}}';
+              document.querySelector('input[name="edittelefonoL"]').value = '{{productor.telefonoLocal}}';
+              document.querySelector('input[name="edittelefonoC"]').value = '{{productor.telefonoCelular}}';
+              document.querySelector('input[name="editdireccion"]').value = '{{productor.direccion}}';
+              document.querySelector('select[name="edittipo"]').value = '{{productor.tipo}}';
+
             }
           "{% endfor %}"
         }
@@ -86,192 +86,185 @@
   window.onload = mapTipos;
 </script>
 
-<h2 class="mb-3 fade-in">Datos Personales del Productor</h2>
-{% with messages = get_flashed_messages()%}
+<main class="form-signin w-100 mb-auto mt-3 text-center">
+  <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Datos Personales</b> del Productor</h2>
+  {% with messages = get_flashed_messages()%}
 
-{% if messages %}
-<br/>
-{% for message in messages%}
-<div class="alert alert-primary alert-dismissible" role="alert">
-    <strong>{{ message }}</strong>
-    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-</div>
+  {% if messages %}
+  <br/>
+  {% for message in messages%}
+  <div class="alert alert-primary alert-dismissible" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
 
-{% endfor %}
-{%endif%}
-{% endwith %}
+  {% endfor %}
+  {%endif%}
+  {% endwith %}
 
-<div class="row justify-content-md-center fade-in">
-    <div class="col-12 col-md-4 d-flex justify-content-end">
-          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por Nombre...">
-          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarProductor">
-            <i class="fa-solid fa-plus"></i>
-          </button>
+  <div class="row justify-content-md-center fade-in">
+      <div class="col-12 col-md-4 d-flex justify-content-end">
+            <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por Nombre...">
+            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarProductor">
+              <i class="fa-solid fa-plus"></i>
+            </button>
+      </div>
+  </div>
+    
+    
+    <!--Modal Agregar productor-->
+    <div class="modal fade" id="AgregarProductor" tabindex="-1" role="dialog" aria-labelledby="Agregar Productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Productor</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <form class="form-signin" action="/productor" method="POST">
+              <div class="modal-body">
+                  <div class="form-floating">
+                      <input class="form-control top" id="nombre" name="nombres" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+                      <label for="floatingInput">Nombres</label>
+                  </div>
+                  <div class="form-floating">
+                      <input  class="form-control  middle" id="apellido" name="apellidos" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+                      <label for="floatingInput">Apellidos</label>
+                  </div>
+                  <div class="form-floating">
+                      <input   class="form-control  middle" id="cedula" name="id" placeholder="1234567" required="required">
+                      <label for="floatingInput">Cédula</label>
+                  </div>
+                  <div class="form-floating">
+                      <input  class="form-control  middle" id="telefonoL" name="telefonoLocal" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+                      <label for="floatingInput">Teléfono Local</label>
+                  </div>
+                  <div class="form-floating">
+                      <input   class="form-control middle" id="telefonoC" name="telefonoCelular" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+                      <label for="floatingInput">Teléfono Celular</label>
+                  </div>
+                  <div class="form-floating">
+                      <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                      <label for="floatingInput">Dirección 1</label>
+                  </div>
+                  <div class="form-floating mb-3">
+                      
+                      <select id="tipo" class="form-control bottom" name="tipo">
+                      {% for tipo in tipos %}
+                      <option value="{{tipo.id}}">{{tipo.direccion}}</option>
+                      {%endfor%}
+                      </select>
+                      
+                      <label for="floatingInput">Tipo de Productor</label>
+                  </div>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Agregar Productor</button>
+              </div>
+          </form>
+        </div>
+      </div>
     </div>
-</div>
-  
-  
-  <!--Modal Agregar productor-->
-  <div class="modal fade" id="AgregarProductor" tabindex="-1" role="dialog" aria-labelledby="Agregar Productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+
+  <!--Modal Editar productor-->
+  {%for productor in productores%}
+  <div class="modal fade" id="EditarProductor" tabindex="-1" role="dialog" aria-labelledby="Editar productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Agregar Productor</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Editar Productor</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin" action="/productor" method="POST">
-            <div class="modal-body">
-                <div class="form-floating">
-                    <input class="form-control top" id="nombre" name="nombres" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-                    <label for="floatingInput">Nombres</label>
-                </div>
-                <div class="form-floating">
-                    <input  class="form-control  middle" id="apellido" name="apellidos" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-                    <label for="floatingInput">Apellidos</label>
-                </div>
-                <div class="form-floating">
-                    <input   class="form-control  middle" id="cedula" name="id" placeholder="1234567" required="required">
-                    <label for="floatingInput">Cédula</label>
-                </div>
-                <div class="form-floating">
-                    <input  class="form-control  middle" id="telefonoL" name="telefonoLocal" placeholder="02121234567" required="required" pattern="[0-9]{11}">
-                    <label for="floatingInput">Teléfono Local</label>
-                </div>
-                <div class="form-floating">
-                    <input   class="form-control middle" id="telefonoC" name="telefonoCelular" placeholder="04161234567" required="required" pattern="[0-9]{11}">
-                    <label for="floatingInput">Teléfono Celular</label>
-                </div>
-                <div class="form-floating">
-                    <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-                    <label for="floatingInput">Dirección 1</label>
-                </div>
-                <div class="form-floating mb-3">
-                    
-                    <select id="tipo" class="form-control bottom" name="tipo">
-                    {% for tipo in tipos %}
-                    <option value="{{tipo.id}}">{{tipo.direccion}}</option>
-                    {%endfor%}
-                    </select>
-                    
-                    <label for="floatingInput">Tipo de Productor</label>
-                </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="submit" class="btn btn-primary">Agregar Productor</button>
-            </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-<!--Modal Editar productor-->
-{%for productor in productores%}
-<div class="modal fade" id="EditarProductor" tabindex="-1" role="dialog" aria-labelledby="Editar productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Editar Productor</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-      <form class="form-signin modal-body" action="/admin/update" method="POST">
-        <div class="form-floating">
-            <input type="username" class="form-control top"  name="editusername" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
-            <label for="floatingInput">Username</label>
-        </div>
-        <div class="form-floating">
-            <input type="password" class="form-control bottom"  name="editpassword" placeholder="*******" required="required">
-            <label for="floatingPassword">Password</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control top"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Nombres</label>
-        </div>
-        <div class="form-floating">
-          <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
-          <label for="floatingInput">Apellidos</label>
-        </div>
-        <div class="form-floating">
-          <input   class="form-control  middle"  name="editcedula" placeholder="1234567" required="required">
-          <label for="floatingInput">Cedula</label>
-      </div>
-        <div class="form-floating">
-          <input  class="form-control  middle"  name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Local</label>
-        </div>
-        <div class="form-floating">
-          <input   class="form-control middle"  name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
-          <label for="floatingInput">Telefono Celular</label>
-        </div>
-        <div class="form-floating">
-          <input class="form-control middle"  name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-          <label for="floatingInput">Direccion</label>
-        </div>
-        <div class="form-floating mb-3">
-          <select class="form-control bottom" name="editrol">
-            <option value="0">Analista de Compra</option>
-            <option value="1">Administrador</option>
-            <option value="2">Vendedor</option>
-          </select>
-          <label for="floatingInput">Rol</label>
-        </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-        <button type="submit" class="btn btn-primary">Editar usuario</button>
-      </div>
-    </form>
-    </div>
-  </div>
-</div>
-{%endfor%}
-
-{%if productores%}
-    <div class="row justify-content-md-center fade-in">
-      <div class="col-12 col-md-11 table-responsive">
-        <table class="table mt-2 table-hover" id = "productores">
-          <thead>
-            <th scope="col">Cédula</th>
-            <th scope="col">Apellidos</th>
-            <th scope="col">Nombres</th>
-            <th scope="col">Teléfono Local</th>
-            <th scope="col">Celular</th>
-            <th scope="col">Tipo-Productor</th>
-            <th scope="col">Direccion 1</th>
-            <th scope="col">Direccion 2</th>
-            <th scope="col">Acciones</th>
-          </thead>
-          <tbody>
-            {%for productor in productores%}
-            <tr class=" deleteOut tdEdit">
-                <th scope="row">{{productor.id}}</th>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{productor.apellidos}}</td>
-                <td class="table-light tdEdit" type="username" id="nombre">{{productor.nombres}}</td>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoLocal}}</td>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoCelular}}</td>
-                <td class="table-light tdEdit" type="username" id="apellidos" value="{{productor.tipo}}"></td>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
-                <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
-                <td >
-                    <div class="cont">
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
-                        <div>
-                          <i class="fa-solid fa-pencil"></i>
-                        </div>
-                      </button>
-                      <form name="ID" action="/productor/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
-                        <input type="hidden" name="id" value="">
-                        <div >
-                          <i class="fa-solid fa-trash"></i>
-                        </div>
-                      </form>
-                    </div>
-                  </td>
-            </tr>
+        <form class="form-signin modal-body" action="/productor/update" method="POST">
+          <input type="hidden"  name="editcedula" required="required" value="">
+          <div class="form-floating">
+            <input class="form-control top"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Nombres</label>
+          </div>
+          <div class="form-floating">
+            <input  class="form-control  middle"  name="editapellido" placeholder="Perez Guzman" required="required" pattern="[A-Za-z ]{1,20}">
+            <label for="floatingInput">Apellidos</label>
+          </div>
+          <div class="form-floating">
+            <input  class="form-control  middle"  name="edittelefonoL" placeholder="02121234567" required="required" pattern="[0-9]{11}">
+            <label for="floatingInput">Telefono Local</label>
+          </div>
+          <div class="form-floating">
+            <input   class="form-control middle"  name="edittelefonoC" placeholder="04161234567" required="required" pattern="[0-9]{11}">
+            <label for="floatingInput">Telefono Celular</label>
+          </div>
+          <div class="form-floating">
+            <input class="form-control middle"  name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+            <label for="floatingInput">Direccion</label>
+          </div>
+          <div class="form-floating mb-3">
+                      
+            <select id="tipo" class="form-control bottom" name="edittipo">
+            {% for tipo in tipos %}
+            <option value="{{tipo.id}}">{{tipo.direccion}}</option>
             {%endfor%}
-          </tbody>
-        </table>
+            </select>
+            
+            <label for="floatingInput">Tipo de Productor</label>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+          <button type="submit" class="btn btn-primary">Editar Productor</button>
+        </div>
+      </form>
       </div>
     </div>
-{%endif%}
+  </div>
+  {%endfor%}
+
+  {%if productores%}
+      <div class="row justify-content-md-center fade-in">
+        <div class="col-12 col-md-11 table-responsive">
+          <table class="table mt-2 table-hover" id = "productores">
+            <thead>
+              <th scope="col">Cédula</th>
+              <th scope="col">Apellidos</th>
+              <th scope="col">Nombres</th>
+              <th scope="col">Teléfono Local</th>
+              <th scope="col">Celular</th>
+              <th scope="col">Tipo-Productor</th>
+              <th scope="col">Direccion 1</th>
+              <th scope="col">Direccion 2</th>
+              <th scope="col">Acciones</th>
+            </thead>
+            <tbody>
+              {%for productor in productores%}
+              <tr class=" deleteOut tdEdit">
+                  <th scope="row">{{productor.id}}</th>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.apellidos}}</td>
+                  <td class="table-light tdEdit" type="username" id="nombre">{{productor.nombres}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoLocal}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoCelular}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos" value="{{productor.tipo}}"></td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
+                  <td >
+                      <div class="cont">
+                        <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                          data-bs-toggle="modal" data-bs-target="#EditarProductor" onclick="handleEdit()">
+                          <div>
+                            <i class="fa-solid fa-pencil"></i>
+                          </div>
+                        </button>
+                        <form name="ID" action="/productor/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                          <input type="hidden" name="prodid" value="1">
+                          <div >
+                            <i class="fa-solid fa-trash"></i>
+                          </div>
+                        </form>
+                      </div>
+                    </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  {%endif%}
+</main>
 {% endblock %}

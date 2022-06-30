@@ -58,10 +58,10 @@ class TipoProductor(db.Base):
     direccion = Column(String, nullable=False)
     productor = relationship("Productor")
 
-    def __init__(self, descripcion):
-        self.descripcion = descripcion
+    def __init__(self, direccion):
+        self.direccion= direccion
 
     def __repr__(self):
-        return f'TipoProductor({self.descripcion})'
+        return f'TipoProductor({self.direccion})'
     def __str__(self):
-        return self.descripcion
+        return self.direccion

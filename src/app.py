@@ -71,9 +71,9 @@ def home():
 
 @app.route('/admin/update',methods=['POST'])
 def update():
-    #obtener tipo y con eso crear funciones para eliminar o editar segun corresponda
-    #print(request.form['tipo'])
-    editarUsuario(  request.form['editusername'],  
+
+    editarUsuario(  request.form['id'],
+                    request.form['editusername'],  
                     request.form['editnombre'],
                     request.form['editapellido'],
                     request.form['editcosecha'],
@@ -114,7 +114,7 @@ def admin():
         else:
             return redirect(url_for('home'))
     else:
-        return redirect(url_for('login'))
+       return redirect(url_for('login'))
 
 # Se obtienen los datos de los productores
 @app.route('/productor',methods=['GET','POST','PUT'])
@@ -122,7 +122,7 @@ def productor():
 
     if request.method=='POST':
         
-        new_prod = db1.session.query(Productor).filter_by(nombres = request.form['nombres']).first()
+        new_prod = db1.session.query(Productor).filter_by(id = request.form['id']).first()
 
         if new_prod == None:
             agregarProductor(request.form["id"], 
@@ -137,7 +137,7 @@ def productor():
             return render_template('productor.html',productores=productores, tipos=tipos)
 
         else:
-            flash("Este producto ya existe ")
+            flash("El productor ya existe ")
             productores = obtenerProductores()
             tipos = obtenerTiposProductores()
             return render_template('productor.html',productores=productores, tipos=tipos)
@@ -146,10 +146,59 @@ def productor():
         tipos = obtenerTiposProductores()
         return render_template('productor.html',productores=productores, tipos=tipos)
 
-
 @app.route('/productor/update',methods=['POST'])
-def prov_update():
+def prod_update():
+
+    editarProductor(
+        request.form['editcedula'],
+        request.form['editnombre'],
+        request.form['editapellido'],
+        request.form['edittelefonoC'],
+        request.form['edittelefonoL'],
+        request.form['editdireccion'],
+        request.form['edittipo']
+    )
     return redirect(url_for('productor'))
+
+@app.route('/productor/delete',methods=['POST'])
+def prod_eliminar():
+    eliminarProductor(request.form['prodid'])
+    return redirect(url_for('productor'))
+
+@app.route('/tipoProductor', methods=['GET','POST','PUT'])
+def tipo_prod():
+
+    if request.method=='POST':
+        
+        new_tipo = db1.session.query(TipoProductor).filter_by(direccion = request.form['direccion']).first()
+        
+        if new_tipo == None:
+            agregarTipoProductor(request.form['direccion'])
+            tipos = obtenerTiposProductores()
+            return render_template('tipo.html', tipos=tipos)
+
+        else:
+            flash("El tipo de productor ya existe ")
+            tipos = obtenerTiposProductores()
+            return render_template('tipo.html', tipos=tipos)
+    else:
+        tipos = obtenerTiposProductores()
+        return render_template('tipo.html', tipos=tipos)
+
+@app.route('/tipoProductor/update',methods=['POST'])
+def tipo_prod_update():
+
+    print(request.form['editid'])
+    editarTipoProductor(
+        request.form['editid'],
+        request.form['editdescripcion'],
+    )
+    return redirect(url_for('tipo_prod'))
+
+@app.route('/tipoProductor/delete',methods=['POST'])
+def tipo_prod_eliminar():
+    eliminarTipoProductor(request.form['tipoid'])
+    return redirect(url_for('tipo_prod'))
 
 # Metodo que retorna todos los registros de la tabla productores
 def obtenerProductores():
@@ -166,12 +215,12 @@ def obtenerTiposProductores():
     tiposProductores = db1.session.query(TipoProductor).filter_by().all()
     return tiposProductores
 
-def editarUsuario(username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
+def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
 
-    logged_user = db1.session.query(Usuario).filter_by(username = username).first()
+    logged_user = db1.session.query(Usuario).filter_by(id = id).first()
     
     if logged_user != None:
-        user = db1.session.query(Usuario).filter_by(username = username).first()
+        user = db1.session.query(Usuario).filter_by(id = id).first()
 
         if user.username == session['username']:
             session['username'] = username
@@ -229,14 +278,14 @@ def editarProductor(id,nombres = "",apellidos = "",telefonoCelular = "",telefono
     else:
         flash("El productor no existe")
 
-def editarTipoProductor(id,descripcion = ""):
+def editarTipoProductor(id,direccion = ""):
 
     tipoProductor = db1.session.query(TipoProductor).filter_by(id = id).first()
     
     if tipoProductor != None:
         
-        if descripcion != "" and descripcion != None:            
-            tipoProductor.descripcion = descripcion
+        if direccion != "" and direccion != None:            
+            tipoProductor.direccion = direccion
 
         db1.session.commit()
     else:
@@ -261,13 +310,17 @@ def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direcci
     db1.session.commit()
 
 def agregarTipoProductor(descripcion):
-    prod = TipoProductor(descripcion)
-    db1.session.add(prod)
+    tipo = TipoProductor(descripcion)
+    print(tipo)
+    db1.session.add(tipo)
     db1.session.commit()
 
 def eliminarUsuario(ID):
-    print(ID)
     db1.session.query(Usuario).filter_by(id=ID).delete()
+    db1.session.commit()
+
+def eliminarProductor(ID):
+    db1.session.query(Productor).filter_by(id=ID).delete()
     db1.session.commit()
 
 def eliminarTipoProductor(ID):
