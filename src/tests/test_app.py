@@ -55,6 +55,7 @@ class TestUsuario(unittest.TestCase):
     def test_eliminar_sin_id(self):
         self.assertIsNone(eliminarUsuario())
     
+    
     # Prueba eliminar usuario existente
     def test_eliminar_existente(self):
         agregarUsuario("test_eliminar0","test_eliminar0","nombre4","apellido4","cosecha1",0)
@@ -162,16 +163,24 @@ class TestTipoProductor(unittest.TestCase):
     
     # Prueba eliminar existente
     def test_eliminar_existente(self):
-        agregarTipoProductor("vendedor2")
-        prod = test_db.session.query(TipoProductor).filter_by(descripcion = "vendedor2").first()
-        self.assertEqual(prod.descripcion,"vendedor2")
+        agregarTipoProductor("revendedor2")
+        prod = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor2").first()
+        self.assertEqual(prod.descripcion,"revendedor2")
         eliminarTipoProductor(prod.id)
-        productor = test_db.session.query(TipoProductor).filter_by(id = prod.id).first()
+        productor = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor2").first()
+        print(productor)
         self.assertIsNone(productor)
     
     # Prueba eliminar no existente
     def test_eliminar_no_existente(self):
         self.assertIsNone(eliminarTipoProductor(99999))
+    
+    def test_eliminar_con_productor_asociado(self):
+        agregarTipoProductor("revendedor1")
+        tipo = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor1").first()
+        agregarProductor(10,"pedro","perez","1234","1234","caracas",tipo.id)
+        self.assertIsNone(eliminarTipoProductor(tipo.id))
+        eliminarProductor(10)
     
     # Prueba editar no existente
     def test_editar_sin_id(self):
