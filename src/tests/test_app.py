@@ -168,7 +168,6 @@ class TestTipoProductor(unittest.TestCase):
         self.assertEqual(prod.descripcion,"revendedor2")
         eliminarTipoProductor(prod.id)
         productor = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor2").first()
-        print(productor)
         self.assertIsNone(productor)
     
     # Prueba eliminar no existente
