@@ -51,6 +51,7 @@
               document.querySelector('input[name="edittelefonoL"]').value = '{{productor.telefonoLocal}}';
               document.querySelector('input[name="edittelefonoC"]').value = '{{productor.telefonoCelular}}';
               document.querySelector('input[name="editdireccion"]').value = '{{productor.direccion}}';
+              document.querySelector('input[name="editdireccion2"]').value = '{{productor.direccion2}}';
               document.querySelector('select[name="edittipo"]').value = '{{productor.tipo}}';
 
             }
@@ -146,6 +147,10 @@
                       <input class="form-control middle" id="direccion" name="direccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
                       <label for="floatingInput">Dirección 1</label>
                   </div>
+                  <div class="form-floating">
+                    <input class="form-control middle" id="direccion2" name="direccion2" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                    <label for="floatingInput">Dirección 2</label>
+                </div>
                   <div class="form-floating mb-3">
                       
                       <select id="tipo" class="form-control bottom" name="tipo">
@@ -197,6 +202,10 @@
             <input class="form-control middle"  name="editdireccion" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
             <label for="floatingInput">Direccion</label>
           </div>
+          <div class="form-floating">
+            <input class="form-control middle"  name="editdireccion2" placeholder="Av. Libertador, Edificio A, Piso 4" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+            <label for="floatingInput">Direccion2</label>
+          </div>
           <div class="form-floating mb-3">
                       
             <select id="tipo" class="form-control bottom" name="edittipo">
@@ -242,7 +251,7 @@
                   <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoCelular}}</td>
                   <td class="table-light tdEdit" type="username" id="apellidos" value="{{productor.tipo}}"></td>
                   <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion2}}</td>
                   <td >
                       <div class="cont">
                         <button id="editbtn" method="POST" class="edit pencil btn" role="button" 

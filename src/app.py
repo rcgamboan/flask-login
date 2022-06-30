@@ -133,6 +133,7 @@ def productor():
                                     request.form["telefonoCelular"],
                                     request.form["telefonoLocal"],
                                     request.form["direccion"],
+                                    request.form["direccion2"],
                                     request.form["tipo"],)
                     productores = obtenerProductores()
                     tipos = obtenerTiposProductores()
@@ -163,6 +164,7 @@ def prod_update():
         request.form['edittelefonoC'],
         request.form['edittelefonoL'],
         request.form['editdireccion'],
+        request.form['editdireccion2'],
         request.form['edittipo']
     )
     return redirect(url_for('productor'))
@@ -264,7 +266,7 @@ def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol
     else:
         flash("El usuario no existe")
 
-def editarProductor(id,nombres = "",apellidos = "",telefonoCelular = "",telefonoLocal = "",direccion = "",tipo = ""):
+def editarProductor(id,nombres = "",apellidos = "",telefonoCelular = "",telefonoLocal = "",direccion = "",direccion2 = "",tipo = ""):
 
     productor = db1.session.query(Productor).filter_by(id = id).first()
     
@@ -284,6 +286,9 @@ def editarProductor(id,nombres = "",apellidos = "",telefonoCelular = "",telefono
         
         if direccion != "" and direccion != None:
             productor.direccion = direccion
+        
+        if direccion2 != "" and direccion2 != None:
+            productor.direccion2 = direccion2
         
         if tipo != "" and tipo != None:
             productor.tipo = tipo
@@ -321,10 +326,16 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
         else:
             flash("El usuario ya se encuentra registrado")
 
-def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
-    prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo)
-    db1.session.add(prod)
-    db1.session.commit()
+def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
+
+    tipos = db1.session.query(TipoProductor).filter_by().all()
+    if len(tipos) == 0:
+        flash("Debe agregar un tipo de productor primero")
+        return
+    else:
+        prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo)
+        db1.session.add(prod)
+        db1.session.commit()
 
 def agregarTipoProductor(descripcion):
     tipo = TipoProductor(descripcion)

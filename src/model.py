@@ -11,7 +11,7 @@ class Usuario(db.Base):
     apellidos = Column(String, nullable=False)
     cosecha = Column(String, nullable=False)
     rol = Column(Integer, default=0, nullable=False)
-    # rol = 0 -> Usuario normal
+    # rol = 0 -> analista
     # rol = 1 -> admin
     # rol = 2 -> productor
 
@@ -36,15 +36,17 @@ class Productor(db.Base):
     telefonoCelular = Column(String, nullable=False)
     telefonoLocal = Column(String, nullable=True)
     direccion = Column(String, nullable=False)
+    direccion2 = Column(String, nullable=True)
     tipo = Column(Integer, ForeignKey("tipoproductor.id"))
 
-    def __init__(self, id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,tipo):
+    def __init__(self, id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
         self.id = id
         self.nombres = nombres
         self.apellidos = apellidos
         self.telefonoCelular = telefonoCelular
         self.telefonoLocal = telefonoLocal
         self.direccion = direccion
+        self.direccion2 = direccion2
         self.tipo = tipo
 
     def __repr__(self):
