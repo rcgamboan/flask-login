@@ -9,6 +9,24 @@
 {% block body %}
 <script>
   window.onload = setTab;
+
+  function handleChangePassword(){
+    document.addform.submit();
+  }
+
+  function checkPassword(){
+    password1 = document.addform.newpassword
+    password2 = document.addform.newpassword2
+    if(password1.value == password2.value){
+      password1.style.backgroundColor = "#ffffff"
+      password2.style.backgroundColor = "#ffffff"
+      return 0
+    }else{
+      password1.style.backgroundColor = "#f8d7da"
+      password2.style.backgroundColor = "#f8d7da"
+      return 1
+    }
+  }
 </script>
 <main class="form-signin w-100 m-auto text-center">
   <div class="row justify-content-md-center mb-4">
@@ -48,7 +66,47 @@
             <div class="col-8 col-md-auto">
               <button class="w-100 btn btn-lg btn-secondary mb-3" type="reset">Limpiar</button>
             </div>
+          </div>
+          <div class="col-8 col-md-auto">
+            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#CambiarPassword">Cambiar Contraseña</button>
+          </div>
       </form>
+    </div>
+  </div>
+
+  <!--Modal cambiar password-->
+  <div class="modal fade" id="CambiarPassword" tabindex="-1" role="dialog" aria-labelledby="Cambiar Password" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="exampleModalLabel">Cambiar Contraseña</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="form-signin" action="/login/update" method="POST" name="addform">
+          <div class="modal-body">
+            <div class="form-floating">
+                <input type="username" class="form-control top" id="username" name="username" placeholder="usuario" required="required" pattern="[A-Za-z0-9]{1,20}">
+                <label for="floatingInput">Nombre de Usuario</label>
+            </div>
+            <div class="form-floating">
+                <input type="password" class="form-control middle" id="floatingPassword" name="oldpassword" placeholder="*******" required="required" minlength="8">
+                <label for="floatingPassword">Contraseña anterior</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control middle" id="floatingPassword" name="newpassword" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+              <label for="floatingPassword">Nueva Contraseña</label>
+            </div>
+            <div class="form-floating">
+              <input type="password" class="form-control middle" id="floatingPassword" name="newpassword2" placeholder="*******" required="required" minlength="8" onkeyup="checkPassword()">
+              <label for="floatingPassword">Repita Nueva Contraseña</label>
+          </div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="button" class="btn btn-primary" name="submitbtn" onclick="handleChangePassword()">Cambiar Contraseña</button>
+          </div>
+        </form>
+      </div>
     </div>
   </div>
 </main>

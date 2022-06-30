@@ -50,6 +50,15 @@ def login():
         else:
             return render_template('auth/login.html')
 
+@app.route('/login/update',methods=['POST'])
+def updatePasswd():
+
+    cambiarPassword(request.form['username'],
+                    request.form['oldpassword'],  
+                    request.form['newpassword'],
+                    )
+    return redirect(url_for('admin'))
+
 @app.route('/logout')
 def logout():
     session.pop('id', None)
@@ -370,6 +379,24 @@ def eliminarTipoProductor(ID):
     else:
         db1.session.query(TipoProductor).filter_by(id=ID).delete()
         db1.session.commit()
+
+def cambiarPassword(username,oldPassword,newPassword):
+
+    usuario = db1.session.query(Usuario).filter_by(username=username).first()
+
+    if usuario == None:
+        flash("El usuario no existe")
+        return
+    else:
+
+        if check_password_hash(usuario.password,oldPassword):
+
+            usuario.password = generate_password_hash(newPassword)
+            db1.session.commit()
+        else:
+            flash("Contraseña incorrecta")
+            return
+
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
