@@ -358,13 +358,8 @@ def eliminarUsuario(ID):
         flash("No se puede eliminar esta cuenta mientras tiene una sesion activa")
         return
     else:
-        admins = db1.session.query(Usuario).filter_by(rol=1).all()
-        if len(admins) == 1:
-            flash("No se puede eliminar esta cuenta ya que no hay otros administradores")
-            return
-        else:
-            db1.session.query(Usuario).filter_by(id=ID).delete()
-            db1.session.commit()
+        db1.session.query(Usuario).filter_by(id=ID).delete()
+        db1.session.commit()
 
 def eliminarProductor(ID):
     db1.session.query(Productor).filter_by(id=ID).delete()
