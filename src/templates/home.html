@@ -134,8 +134,8 @@
     {%endif%}
         {% block body %}
         <main class="form-signin w-100 m-auto text-center">
-        <img src="\static\img\Onboarding-pana.svg" alt="Bienvenido" width="450" height="350" class="wimg fade-in">
-        <h2 class="fade-in display-6 mb-5">¡Bienvenido <b class="fw-bold">{{ session['nombres'] + ' ' + session['apellidos']}}</b>!</h2>
+        <h2 class="fade-in display-6">¡Bienvenido <b class="fw-bold">{{ session['nombres'] + ' ' + session['apellidos']}}</b>!</h2>
+        <img src="\static\img\Onboarding-pana.svg" alt="Bienvenido" width="450" height="350" class="wimg fade-in mb-5">
         </main>
         {% endblock %}
     {% endblock %}

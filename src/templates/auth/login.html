@@ -6,6 +6,7 @@
 <link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
 {% endblock %}
 
+
 {% block body %}
 <script>
   window.onload = setTab;
@@ -28,49 +29,48 @@
     }
   }
 </script>
+
 <main class="form-signin w-100 m-auto text-center">
-  <div class="row justify-content-md-center mb-4">
-    <div class="col-12 col-md-auto">
-      <form class="form-signin" action="/login" method="POST">
-          <img class="mb-4" src="{{ url_for('static',filename='img/logoUSB.png') }}" alt="" width="72" height="57">
-
-          {% with messages = get_flashed_messages()%}
-
-          {% if messages %}
-          <br/>
-          {% for message in messages%}
-          <div class="alert alert-primary alert-dismissible" role="alert">
-              <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-              <strong>{{ message }}</strong>
+  <div class="row justify-content-md-center">
+    <div class="card blurred-box" style="width: 25rem;">
+      <div class="col-12 col-md-auto">
+          <div class="card-header mb-4 text-left">
+            <h1 class="display-6 my-3 inic">Iniciar Sesión</h1>
           </div>
-          {% endfor %}
-          {% endif %}
-          
+            {% with messages = get_flashed_messages()%}
 
-          {% endwith %}
-          
-          <h1 class="h3 mb-3 fw-normal">Introduzca sus datos</h1>
-
+            {% if messages %}
+            <br/>
+            {% for message in messages%}
+            <div class="alert alert-primary alert-dismissible" role="alert">
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                <strong>{{ message }}</strong>
+            </div>
+            {% endfor %}
+            {% endif %}
+            {% endwith %}
+        <form class="form-signin" action="/login" method="POST">
           <div class="form-floating">
             <input type="username" class="form-control top" id="username" name="username" placeholder="Username">
             <label for="floatingInput">Nombre de Usuario</label>
           </div>
-          <div class="form-floating mb-3">
+          <div class="form-floating mb-5">
             <input type="password" class="form-control bottom" id="floatingPassword" name="password" placeholder="Password">
             <label for="floatingPassword">Contraseña</label>
           </div>
-          <div class="row justify-content-around">
-            <div class="col-8 col-md-auto">
-              <button class="w-100 btn btn-lg btn-primary mb-2" type="Enviar">Enviar</button>
+          <div class="row justify-content-around d-flex">
+            <div class="col-12 col-md-12">
+              <button class="w-100 btn btn-lg btn-primary mb-2" type="Enviar">Iniciar Sesión</button>
             </div>
-            <div class="col-8 col-md-auto">
-              <button class="w-100 btn btn-lg btn-secondary mb-3" type="reset">Limpiar</button>
+            <div class="col-12 col-md-12">
+              <button class="w-100 btn btn-lg btn-outline-primary mb-2" type="reset">Limpiar</button>
             </div>
           </div>
           <div class="col-8 col-md-auto">
-            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#CambiarPassword">Cambiar Contraseña</button>
+            <button type="button" class="btn btn-link my-2 mx-3 " data-bs-toggle="modal" data-bs-target="#CambiarPassword">Cambiar Contraseña</button>
           </div>
-      </form>
+        </form>
+      </div>
     </div>
   </div>
 
