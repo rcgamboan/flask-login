@@ -136,17 +136,23 @@ def productor():
                 new_prod = db1.session.query(Productor).filter_by(id = request.form['id']).first()
 
                 if new_prod == None:
-                    agregarProductor(request.form["id"], 
-                                    request.form["nombres"],
-                                    request.form["apellidos"],
-                                    request.form["telefonoCelular"],
-                                    request.form["telefonoLocal"],
-                                    request.form["direccion"],
-                                    request.form["direccion2"],
-                                    request.form["tipo"],)
-                    productores = obtenerProductores()
                     tipos = obtenerTiposProductores()
-                    return render_template('productor.html',productores=productores, tipos=tipos)
+                    if tipos != []:
+                        agregarProductor(request.form["id"], 
+                                        request.form["nombres"],
+                                        request.form["apellidos"],
+                                        request.form["telefonoCelular"],
+                                        request.form["telefonoLocal"],
+                                        request.form["direccion"],
+                                        request.form["direccion2"],
+                                        request.form["tipo"],)
+                        productores = obtenerProductores()
+                        tipos = obtenerTiposProductores()
+                        return render_template('productor.html',productores=productores, tipos=tipos)
+                    else:
+                        flash("No se puede agregar un productor, agregue un tipo de productor")
+                        tipos = obtenerTiposProductores()
+                        return redirect(url_for('tipo_prod'))
 
                 else:
                     flash("El productor ya existe ")

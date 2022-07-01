@@ -12,6 +12,7 @@ body {
   align-items: center;
   background-color: #f5f5f5;
 }
+
 .wimg{
   margin-top: -15f0px;
 }
@@ -28,15 +29,23 @@ body {
   box-shadow: none;
   color: #898989
 }
+
 .nav-item{
   background-color: #f5f5f5;
   box-shadow: rgba(99, 99, 99, 0.2) 0px 2px 8px 0px;
   transition: 0.5s;
   width: 100% !important;
 }
+
 .nav-item:hover{
   background-color: rgb(13,110,253);
   box-shadow: rgba(99, 99, 99, 0.9) 0px 2px 8px 0px;
+  transition: 0.5s;
+}
+.nav-item:active{
+  background-color: rgb(13,110,253);
+  box-shadow: rgba(99, 99, 99, 0.9) 0px 2px 8px 0px;
+  transform: translateX(35px);
   transition: 0.5s;
 }
 .modal-footer{
@@ -160,9 +169,9 @@ button.edit{
   -moz-animation-fill-mode:forwards;
   animation-fill-mode:forwards;
 
-  -webkit-animation-duration:0.4s;
-  -moz-animation-duration:0.4s;
-  animation-duration:0.4s;
+  -webkit-animation-duration:0.3s;
+  -moz-animation-duration:0.3s;
+  animation-duration:0.3s;
 }
 
 .fade-in.one {
