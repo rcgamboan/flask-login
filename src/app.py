@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash , generate_password_hash
 from config import config
 import sqlite3 as sql
 import database as db1
-from model import Usuario, Productor, TipoProductor
+from model import Compra, Usuario, Recolector, TipoRecolector, Cosecha
 
 
 app = Flask(__name__)
@@ -126,19 +126,19 @@ def admin():
        return redirect(url_for('login'))
 
 # Se obtienen los datos de los productores
-@app.route('/productor',methods=['GET','POST','PUT'])
-def productor():
+@app.route('/recolector',methods=['GET','POST','PUT'])
+def recolector():
 
     if 'username' in session:
         if session['rol'] == 0:
             if request.method=='POST':
                 
-                new_prod = db1.session.query(Productor).filter_by(id = request.form['id']).first()
+                new_prod = db1.session.query(Recolector).filter_by(id = request.form['id']).first()
 
                 if new_prod == None:
-                    tipos = obtenerTiposProductores()
+                    tipos = obtenerTiposRecolectores()
                     if tipos != []:
-                        agregarProductor(request.form["id"], 
+                        agregarRecolector(request.form["id"], 
                                         request.form["nombres"],
                                         request.form["apellidos"],
                                         request.form["telefonoCelular"],
@@ -146,33 +146,33 @@ def productor():
                                         request.form["direccion"],
                                         request.form["direccion2"],
                                         request.form["tipo"],)
-                        productores = obtenerProductores()
-                        tipos = obtenerTiposProductores()
-                        return render_template('productor.html',productores=productores, tipos=tipos)
+                        recolectores = obtenerRecolectores()
+                        tipos = obtenerTiposRecolectores()
+                        return render_template('recolector.html',recolectores=recolectores, tipos=tipos)
                     else:
-                        flash("No se puede agregar un productor, agregue un tipo de productor")
-                        tipos = obtenerTiposProductores()
+                        flash("No se puede agregar un recolector, agregue un tipo de recolector")
+                        tipos = obtenerTiposRecolectores()
                         return redirect(url_for('tipo_prod'))
 
                 else:
-                    flash("El productor ya existe ")
-                    productores = obtenerProductores()
-                    tipos = obtenerTiposProductores()
-                    return render_template('productor.html',productores=productores, tipos=tipos)
+                    flash("El recolector ya existe ")
+                    recolectores = obtenerRecolectores()
+                    tipos = obtenerTiposRecolectores()
+                    return render_template('recolector.html',recolectores=recolectores, tipos=tipos)
             else:
-                productores = obtenerProductores()
-                tipos = obtenerTiposProductores()
-                return render_template('productor.html',productores=productores, tipos=tipos)
+                recolectores = obtenerRecolectores()
+                tipos = obtenerTiposRecolectores()
+                return render_template('recolector.html',recolectores=recolectores, tipos=tipos)
         else:
             return redirect(url_for('home'))
     else:
        return redirect(url_for('login'))
 
 
-@app.route('/productor/update',methods=['POST'])
+@app.route('/recolector/update',methods=['POST'])
 def prod_update():
 
-    editarProductor(
+    editarRecolector(
         request.form['editcedula'],
         request.form['editnombre'],
         request.form['editapellido'],
@@ -182,33 +182,33 @@ def prod_update():
         request.form['editdireccion2'],
         request.form['edittipo']
     )
-    return redirect(url_for('productor'))
+    return redirect(url_for('recolector'))
 
-@app.route('/productor/delete',methods=['POST'])
+@app.route('/recolector/delete',methods=['POST'])
 def prod_eliminar():
-    eliminarProductor(request.form['prodid'])
-    return redirect(url_for('productor'))
+    eliminarRecolector(request.form['prodid'])
+    return redirect(url_for('recolector'))
 
-@app.route('/tipoProductor', methods=['GET','POST','PUT'])
+@app.route('/tipoRecolector', methods=['GET','POST','PUT'])
 def tipo_prod():
 
     if 'username' in session:
         if session['rol'] == 0:
             if request.method=='POST':
                 
-                new_tipo = db1.session.query(TipoProductor).filter_by(direccion = request.form['direccion']).first()
+                new_tipo = db1.session.query(TipoRecolector).filter_by(direccion = request.form['direccion']).first()
                 
                 if new_tipo == None:
-                    agregarTipoProductor(request.form['direccion'])
-                    tipos = obtenerTiposProductores()
+                    agregarTipoRecolector(request.form['direccion'])
+                    tipos = obtenerTiposRecolectores()
                     return render_template('tipo.html', tipos=tipos)
 
                 else:
                     flash("El tipo de productor ya existe ")
-                    tipos = obtenerTiposProductores()
+                    tipos = obtenerTiposRecolectores()
                     return render_template('tipo.html', tipos=tipos)
             else:
-                tipos = obtenerTiposProductores()
+                tipos = obtenerTiposRecolectores()
                 return render_template('tipo.html', tipos=tipos)
         else:
             return redirect(url_for('home'))
@@ -216,35 +216,39 @@ def tipo_prod():
        return redirect(url_for('login'))
 
 
-@app.route('/tipoProductor/update',methods=['POST'])
+@app.route('/tipoRecolector/update',methods=['POST'])
 def tipo_prod_update():
 
     #print(request.form['editid'])
-    editarTipoProductor(
+    editarTipoRecolector(
         request.form['editid'],
         request.form['editdescripcion'],
     )
     return redirect(url_for('tipo_prod'))
 
-@app.route('/tipoProductor/delete',methods=['POST'])
+@app.route('/tipoRecolector/delete',methods=['POST'])
 def tipo_prod_eliminar():
-    eliminarTipoProductor(request.form['tipoid'])
+    eliminarTipoRecolector(request.form['tipoid'])
     return redirect(url_for('tipo_prod'))
 
 # Metodo que retorna todos los registros de la tabla productores
-def obtenerProductores():
-    productores = db1.session.query(Productor).filter_by().all()
-    return productores
+def obtenerRecolectores():
+    recolectores = db1.session.query(Recolector).filter_by().all()
+    return recolectores
 
 # Metodo que retorna todos los registros de la tabla usuarios
 def obtenerUsuarios():
     usuarios = db1.session.query(Usuario).filter_by().all()
     return usuarios
 
-# Metodo que retorna todos los registros de la tabla tipoproductor
-def obtenerTiposProductores():
-    tiposProductores = db1.session.query(TipoProductor).filter_by().all()
-    return tiposProductores
+# Metodo que retorna todos los registros de la tabla tipoRecolector
+def obtenerTiposRecolectores():
+    tiposRecolectores = db1.session.query(TipoRecolector).filter_by().all()
+    return tiposRecolectores
+
+def obtenerCosechas():
+    cosechas = db1.session.query(Cosecha).filter_by().all()
+    return cosechas
 
 def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
 
@@ -281,45 +285,67 @@ def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol
     else:
         flash("El usuario no existe")
 
-def editarProductor(id,nombres = "",apellidos = "",telefonoCelular = "",telefonoLocal = "",direccion = "",direccion2 = "",tipo = ""):
+def editarRecolector(id,nombres = "",apellidos = "",telefonoCelular = "",telefonoLocal = "",direccion = "",direccion2 = "",tipo = ""):
 
-    productor = db1.session.query(Productor).filter_by(id = id).first()
+    recolector = db1.session.query(Recolector).filter_by(id = id).first()
     
-    if productor != None:
+    if recolector != None:
         
         if nombres != "" and nombres != None:            
-            productor.nombres = nombres
+            recolector.nombres = nombres
 
         if apellidos != "" and apellidos != None:
-            productor.apellidos = apellidos
+            recolector.apellidos = apellidos
         
         if telefonoCelular != "" and telefonoCelular != None:
-            productor.telefonoCelular = telefonoCelular
+            recolector.telefonoCelular = telefonoCelular
         
         if telefonoLocal != "" and telefonoLocal != None:
-            productor.telefonoLocal = telefonoLocal
+            recolector.telefonoLocal = telefonoLocal
         
         if direccion != "" and direccion != None:
-            productor.direccion = direccion
+            recolector.direccion = direccion
         
         if direccion2 != "" and direccion2 != None:
-            productor.direccion2 = direccion2
+            recolector.direccion2 = direccion2
         
         if tipo != "" and tipo != None:
-            productor.tipo = tipo
+            recolector.tipo = tipo
 
         db1.session.commit()
     else:
-        flash("El productor no existe")
+        flash("El recolector no existe")
 
-def editarTipoProductor(id,direccion = ""):
+def editarTipoRecolector(id,direccion = "",precio = 0):
 
-    tipoProductor = db1.session.query(TipoProductor).filter_by(id = id).first()
+    tipoRecolector = db1.session.query(TipoRecolector).filter_by(id = id).first()
     
-    if tipoProductor != None:
+    if tipoRecolector != None:
         
         if direccion != "" and direccion != None:            
-            tipoProductor.direccion = direccion
+            tipoRecolector.direccion = direccion
+        
+        if precio != 0 and precio != None:            
+            tipoRecolector.precio = precio
+
+        db1.session.commit()
+    else:
+        flash("El tipo no existe")
+
+def editarCosecha(id,descripcion = "", inicio = "", fin = ""):
+
+    cosecha = db1.session.query(Cosecha).filter_by(id = id).first()
+    
+    if cosecha != None:
+        
+        if descripcion != "" and descripcion != None:            
+            cosecha.descripcion = descripcion
+        
+        if inicio != "" and inicio != None:            
+            cosecha.inicio = inicio
+        
+        if fin != "" and fin != None:            
+            cosecha.fin = fin
 
         db1.session.commit()
     else:
@@ -341,20 +367,26 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
         else:
             flash("El usuario ya se encuentra registrado")
 
-def agregarProductor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
+def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
 
-    tipos = db1.session.query(TipoProductor).filter_by().all()
+    tipos = db1.session.query(TipoRecolector).filter_by().all()
     if len(tipos) == 0:
         flash("Debe agregar un tipo de productor primero")
         return
     else:
-        prod = Productor(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo)
+        prod = Recolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo)
         db1.session.add(prod)
         db1.session.commit()
 
-def agregarTipoProductor(descripcion):
-    tipo = TipoProductor(descripcion)
-    print(tipo)
+def agregarTipoRecolector(descripcion,precio):
+    tipo = TipoRecolector(descripcion,precio)
+    #print(tipo)
+    db1.session.add(tipo)
+    db1.session.commit()
+
+def agregarCosecha(descripcion, inicio, fin):
+    tipo = Cosecha(descripcion,inicio,fin)
+    #print(tipo)
     db1.session.add(tipo)
     db1.session.commit()
 
@@ -367,18 +399,28 @@ def eliminarUsuario(ID):
         db1.session.query(Usuario).filter_by(id=ID).delete()
         db1.session.commit()
 
-def eliminarProductor(ID):
-    db1.session.query(Productor).filter_by(id=ID).delete()
+def eliminarRecolector(ID):
+    db1.session.query(Recolector).filter_by(id=ID).delete()
     db1.session.commit()
 
-def eliminarTipoProductor(ID):
-    productores =  db1.session.query(Productor).filter_by(tipo=ID).all()
-    print(productores)
-    if len(productores) > 0:
+def eliminarTipoRecolector(ID):
+    recolectores =  db1.session.query(Recolector).filter_by(tipo=ID).all()
+    print(recolectores)
+    if len(recolectores) > 0:
         flash("No se puede eliminar ya que existe por lo menos un productor asociado a este tipo")
         return
     else:
-        db1.session.query(TipoProductor).filter_by(id=ID).delete()
+        db1.session.query(TipoRecolector).filter_by(id=ID).delete()
+        db1.session.commit()
+
+def eliminarCosecha(ID):
+    cosechas =  db1.session.query(Cosecha).filter_by(tipo=ID).all()
+    #print(cosechas)
+    if len(cosechas) > 0:
+        flash("No se puede eliminar ya que existe por lo menos un productor asociado a este tipo")
+        return
+    else:
+        db1.session.query(Cosecha).filter_by(id=ID).delete()
         db1.session.commit()
 
 def cambiarPassword(username,oldPassword,newPassword):
@@ -398,6 +440,27 @@ def cambiarPassword(username,oldPassword,newPassword):
             flash("Contraseña incorrecta")
             return
 
+def cambiarPrecio(id,precioAnterior, aumento):
+    tipoRec = db1.session.query(TipoRecolector).filter_by(id=id).first()
+
+    if tipoRec == None:
+        flash("El usuario no existe")
+        return
+    else:
+
+        tipoRec.precio = precioAnterior + (aumento / 100)
+        db1.session.commit()
+
+def generarCompra(fecha, cedula,tipo,precio,cacao,cantidad,humedad):
+    recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
+
+    if cantidad > recolector.cantidad:
+        return None
+    else:    
+        compra = Compra(fecha, cedula,tipo,precio,cacao,cantidad,humedad)
+        db1.session.add(compra)
+        recolector.cantidad -= cantidad
+        db1.session.commit()
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
