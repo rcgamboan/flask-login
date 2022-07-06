@@ -1,5 +1,6 @@
 
 from flask import Flask, flash, redirect, render_template, request, url_for, flash, session
+from sqlalchemy import null
 from werkzeug.security import check_password_hash , generate_password_hash
 from config import config
 import sqlite3 as sql
@@ -384,10 +385,14 @@ def agregarTipoRecolector(descripcion,precio):
     db1.session.add(tipo)
     db1.session.commit()
 
-def agregarCosecha(descripcion, inicio, fin):
-    tipo = Cosecha(descripcion,inicio,fin)
-    #print(tipo)
-    db1.session.add(tipo)
+def agregarCosecha(descripcion, inicio = "", fin = ""):
+    if inicio == "" or fin == "":
+
+        cosecha = Cosecha(descripcion)
+    else:
+        cosecha = Cosecha(descripcion,inicio,fin)
+    
+    db1.session.add(cosecha)
     db1.session.commit()
 
 def eliminarUsuario(ID):
@@ -475,6 +480,7 @@ def setSession(logged_user):
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
-    agregarUsuario("admin","admin","admin","admin","Enero - Marzo 2022",1,0)
+    agregarCosecha(descripcion="Enero - Marzo 2022")
+    agregarUsuario("admin","admin","admin","admin",0,1,0)
     app.run()
 
