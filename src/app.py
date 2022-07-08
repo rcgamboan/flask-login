@@ -1,4 +1,4 @@
-
+import datetime
 from flask import Flask, flash, redirect, render_template, request, url_for, flash, session
 from sqlalchemy import null
 from werkzeug.security import check_password_hash , generate_password_hash
@@ -385,12 +385,8 @@ def agregarTipoRecolector(descripcion,precio):
     db1.session.add(tipo)
     db1.session.commit()
 
-def agregarCosecha(descripcion, inicio = "", fin = ""):
-    if inicio == "" or fin == "":
-
-        cosecha = Cosecha(descripcion)
-    else:
-        cosecha = Cosecha(descripcion,inicio,fin)
+def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now()):
+    cosecha = Cosecha(descripcion,inicio,fin)
     
     db1.session.add(cosecha)
     db1.session.commit()
@@ -456,13 +452,13 @@ def cambiarPrecio(id,precioAnterior, aumento):
         tipoRec.precio = precioAnterior + (aumento / 100)
         db1.session.commit()
 
-def generarCompra(fecha, cedula,tipo,precio,cacao,cantidad,humedad):
+def generarCompra(fecha, cedula,tipo,cacao,cantidad,humedad):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
-
+    tipo_rec = db1.session.query(TipoRecolector).filter_by(id=cedula).first()
     if cantidad > recolector.cantidad:
         return None
     else:    
-        compra = Compra(fecha, cedula,tipo,precio,cacao,cantidad,humedad)
+        compra = Compra(fecha, cedula,tipo,tipo_rec.precio,cacao,cantidad,humedad)
         db1.session.add(compra)
         recolector.cantidad -= cantidad
         db1.session.commit()
@@ -480,7 +476,7 @@ def setSession(logged_user):
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
-    agregarCosecha(descripcion="Enero - Marzo 2022")
+    agregarCosecha("Enero - Marzo 2022")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
     app.run()
 

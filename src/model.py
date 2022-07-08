@@ -1,4 +1,3 @@
-from http.client import INSUFFICIENT_STORAGE
 import database as db
 import datetime
 from sqlalchemy import Column, Integer, String, Float, ForeignKey, Date
@@ -99,7 +98,7 @@ class Compra(db.Base):
     fecha = Column(Date, default=datetime.datetime.now())
     cedula = Column(Integer, ForeignKey("recolector.id"))
     tipo = Column(Integer, ForeignKey("tiporecolector.id"))
-    precio = Column(Integer, ForeignKey("tiporecolector.precio"))
+    precio = Column(Integer, default=0)
     cacao = Column(String, nullable=False)
     cantidad = Column(Integer, nullable=False)
     monto = Column(Integer, nullable=False)
