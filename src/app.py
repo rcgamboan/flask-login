@@ -379,7 +379,7 @@ def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direcc
         db1.session.add(prod)
         db1.session.commit()
 
-def agregarTipoRecolector(descripcion,precio):
+def agregarTipoRecolector(descripcion,precio=0):
     tipo = TipoRecolector(descripcion,precio)
     #print(tipo)
     db1.session.add(tipo)

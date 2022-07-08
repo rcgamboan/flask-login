@@ -10,7 +10,7 @@
 <script>
     function mapTipos(){
       setTab()
-      var table = document.getElementById('productores');
+      var table = document.getElementById('recolectores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
       for (i = 0; i < rows.length; i++){
@@ -23,7 +23,7 @@
     }
   
     function handleDelete(){
-      var table = document.getElementById('productores');
+      var table = document.getElementById('recolectores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
       for (i = 0; i < rows.length; i++){
@@ -36,23 +36,23 @@
     }
   
     function handleEdit(){
-      var table = document.getElementById('productores');
+      var table = document.getElementById('recolectores');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
       var id
       for (i = 0; i < rows.length; i++){
         rows[i].onclick = async function() {
           id = this.cells[0].innerHTML
-          "{% for productor in productores %}"
-            if(id === '{{productor.id}}'){
-              document.querySelector('input[name="editnombre"]').value = '{{productor.nombres}}';
-              document.querySelector('input[name="editapellido"]').value = '{{productor.apellidos}}';
-              document.querySelector('input[name="editcedula"]').value = '{{productor.id}}';
-              document.querySelector('input[name="edittelefonoL"]').value = '{{productor.telefonoLocal}}';
-              document.querySelector('input[name="edittelefonoC"]').value = '{{productor.telefonoCelular}}';
-              document.querySelector('input[name="editdireccion"]').value = '{{productor.direccion}}';
-              document.querySelector('input[name="editdireccion2"]').value = '{{productor.direccion2}}';
-              document.querySelector('select[name="edittipo"]').value = '{{productor.tipo}}';
+          "{% for recolector in recolectores %}"
+            if(id === '{{recolector.id}}'){
+              document.querySelector('input[name="editnombre"]').value = '{{recolector.nombres}}';
+              document.querySelector('input[name="editapellido"]').value = '{{recolector.apellidos}}';
+              document.querySelector('input[name="editcedula"]').value = '{{recolector.id}}';
+              document.querySelector('input[name="edittelefonoL"]').value = '{{recolector.telefonoLocal}}';
+              document.querySelector('input[name="edittelefonoC"]').value = '{{recolector.telefonoCelular}}';
+              document.querySelector('input[name="editdireccion"]').value = '{{recolector.direccion}}';
+              document.querySelector('input[name="editdireccion2"]').value = '{{recolector.direccion2}}';
+              document.querySelector('select[name="edittipo"]').value = '{{recolector.tipo}}';
 
             }
           "{% endfor %}"
@@ -65,7 +65,7 @@
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("productores");
+    table = document.getElementById("recolectores");
     tr = table.getElementsByTagName("tr");
 
     for (i = 0; i < tr.length; i++) {
@@ -88,7 +88,7 @@
 </script>
 
 <main class="form-signin w-100 mb-auto mt-3 text-center">
-  <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Datos Personales</b> del Productor</h2>
+  <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Datos Personales</b> del Recolector</h2>
   {% with messages = get_flashed_messages()%}
 
   {% if messages %}
@@ -106,22 +106,22 @@
   <div class="row justify-content-md-center fade-in">
       <div class="col-12 col-md-4 d-flex justify-content-end">
             <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por Nombre...">
-            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarProductor">
+            <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarRecolector">
               <i class="fa-solid fa-plus"></i>
             </button>
       </div>
   </div>
     
     
-    <!--Modal Agregar productor-->
-    <div class="modal fade" id="AgregarProductor" tabindex="-1" role="dialog" aria-labelledby="Agregar Productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <!--Modal Agregar Recolector-->
+    <div class="modal fade" id="AgregarRecolector" tabindex="-1" role="dialog" aria-labelledby="Agregar Recolector" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Agregar Productor</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Recolector</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
           </div>
-          <form class="form-signin" action="/productor" method="POST">
+          <form class="form-signin" action="/recolector" method="POST">
               <div class="modal-body">
                   <div class="form-floating">
                       <input class="form-control top" id="nombre" name="nombres" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
@@ -159,28 +159,28 @@
                       {%endfor%}
                       </select>
                       
-                      <label for="floatingInput">Tipo de Productor</label>
+                      <label for="floatingInput">Tipo de Recolector</label>
                   </div>
               </div>
               <div class="modal-footer">
               <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Agregar Productor</button>
+              <button type="submit" class="btn btn-primary">Agregar Recolector</button>
               </div>
           </form>
         </div>
       </div>
     </div>
 
-  <!--Modal Editar productor-->
-  {%for productor in productores%}
-  <div class="modal fade" id="EditarProductor" tabindex="-1" role="dialog" aria-labelledby="Editar productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <!--Modal Editar recolector-->
+  {%for recolector in recolectores%}
+  <div class="modal fade" id="EditarRecolector" tabindex="-1" role="dialog" aria-labelledby="Editar recolector" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
       <div class="modal-content">
         <div class="modal-header">
-          <h5 class="modal-title" id="exampleModalLabel">Editar Productor</h5>
+          <h5 class="modal-title" id="exampleModalLabel">Editar Recolector</h5>
           <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin modal-body" action="/productor/update" method="POST">
+        <form class="form-signin modal-body" action="/recolector/update" method="POST">
           <input type="hidden"  name="editcedula" required="required" value="">
           <div class="form-floating">
             <input class="form-control top"  name="editnombre" placeholder="Juan Carlos" required="required" pattern="[A-Za-z ]{1,20}">
@@ -214,11 +214,11 @@
             {%endfor%}
             </select>
             
-            <label for="floatingInput">Tipo de Productor</label>
+            <label for="floatingInput">Tipo de Recolector</label>
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-          <button type="submit" class="btn btn-primary">Editar Productor</button>
+          <button type="submit" class="btn btn-primary">Editar Recolector</button>
         </div>
       </form>
       </div>
@@ -226,41 +226,41 @@
   </div>
   {%endfor%}
 
-  {%if productores%}
+  {%if recolectores%}
       <div class="row justify-content-md-center fade-in">
         <div class="col-12 col-md-11 table-responsive">
-          <table class="table mt-2 table-hover" id = "productores">
+          <table class="table mt-2 table-hover" id = "recolectores">
             <thead>
               <th scope="col">Cédula</th>
               <th scope="col">Apellidos</th>
               <th scope="col">Nombres</th>
               <th scope="col">Teléfono Local</th>
               <th scope="col">Celular</th>
-              <th scope="col">Tipo-Productor</th>
+              <th scope="col">Tipo-Recolector</th>
               <th scope="col">Direccion 1</th>
               <th scope="col">Direccion 2</th>
               <th scope="col">Acciones</th>
             </thead>
             <tbody>
-              {%for productor in productores%}
+              {%for recolector in recolectores%}
               <tr class=" deleteOut tdEdit">
-                  <th scope="row">{{productor.id}}</th>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.apellidos}}</td>
-                  <td class="table-light tdEdit" type="username" id="nombre">{{productor.nombres}}</td>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoLocal}}</td>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.telefonoCelular}}</td>
-                  <td class="table-light tdEdit" type="username" id="apellidos" value="{{productor.tipo}}"></td>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion}}</td>
-                  <td class="table-light tdEdit" type="username" id="apellidos">{{productor.direccion2}}</td>
+                  <th scope="row">{{recolector.id}}</th>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{recolector.apellidos}}</td>
+                  <td class="table-light tdEdit" type="username" id="nombre">{{recolector.nombres}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{recolector.telefonoLocal}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{recolector.telefonoCelular}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos" value="{{recolector.tipo}}"></td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{recolector.direccion}}</td>
+                  <td class="table-light tdEdit" type="username" id="apellidos">{{recolector.direccion2}}</td>
                   <td >
                       <div class="cont">
                         <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                          data-bs-toggle="modal" data-bs-target="#EditarProductor" onclick="handleEdit()">
+                          data-bs-toggle="modal" data-bs-target="#EditarRecolector" onclick="handleEdit()">
                           <div>
                             <i class="fa-solid fa-pencil"></i>
                           </div>
                         </button>
-                        <form name="ID" action="/productor/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                        <form name="ID" action="/recolector/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
                           <input type="hidden" name="prodid" value="1">
                           <div >
                             <i class="fa-solid fa-trash"></i>

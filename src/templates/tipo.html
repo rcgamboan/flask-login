@@ -62,7 +62,7 @@
   }
 </script>
 <main class="form-signin w-100 mb-auto mt-3 text-center">
-    <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Tipos</b> de Productor</h2>
+    <h2 class=" my-3 fade-in display-6"><b class="fw-bold">Tipos</b> de Recolector</h2>
     {% with messages = get_flashed_messages()%}
 
     {% if messages %}
@@ -88,14 +88,14 @@
     
     
     <!--Modal Agregar bottom-->
-    <div class="modal fade" id="AgregarTipo" tabindex="-1" role="dialog" aria-labelledby="Agregar Productor" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal fade" id="AgregarTipo" tabindex="-1" role="dialog" aria-labelledby="Agregar Recolector" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
         <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Agregar Tipo de Productor</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Agregar Tipo de Recolector</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <form class="form-signin" action="/tipoProductor" method="POST">
+            <form class="form-signin" action="/tipoRecolector" method="POST">
                 <div class="modal-body">
                     <div class="form-floating">
                         <input class="form-control" id="direccion" name="direccion" placeholder="Revendedor 1" required="required" pattern="[A-Za-z0-9 ]{1,40}">
@@ -104,7 +104,7 @@
                 </div>
                 <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                <button type="submit" class="btn btn-primary">Agregar Tipo de Productor</button>
+                <button type="submit" class="btn btn-primary">Agregar Tipo de Recolector</button>
                 </div>
             </form>
         </div>
@@ -117,10 +117,10 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
         <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Editar Tipo de Productor</h5>
+            <h5 class="modal-title" id="exampleModalLabel">Editar Tipo de Recolector</h5>
             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin modal-body" action="/tipoProductor/update" method="POST">
+        <form class="form-signin modal-body" action="/tipoRecolector/update" method="POST">
             <input type="hidden"  name="editid" required="required" value="">
             <div class="form-floating">
                 <input class="form-control" id="direccion" name="editdescripcion" placeholder="Revendedor 1" required="required" pattern="[A-Za-z0-9 ]{1,40}">
@@ -128,7 +128,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary">Editar Productor</button>
+                <button type="submit" class="btn btn-primary">Editar Recolector</button>
             </div>
         </form>
         </div>
@@ -158,7 +158,7 @@
                             <i class="fa-solid fa-pencil"></i>
                             </div>
                         </button>
-                        <form name="ID" action="/tipoProductor/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                        <form name="ID" action="/tipoRecolector/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
                             <input type="hidden" name="tipoid" value="1">
                             <div >
                             <i class="fa-solid fa-trash"></i>
