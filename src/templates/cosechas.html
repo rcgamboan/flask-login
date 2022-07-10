@@ -1,0 +1,163 @@
+{% extends './home.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<script>
+  function handleDelete(){
+    var table = document.getElementById('users');
+    var tbody = table.getElementsByTagName('tbody')[0];
+    var rows = tbody.getElementsByTagName('tr');
+    for (i = 0; i < rows.length; i++){
+      rows[i].onclick = function() {
+        id = this.cells[0].innerHTML
+        document.querySelector('input[name="user_id"]').value = id;
+        document.querySelector('form[name="ID"]').submit();
+      }
+    }
+  }
+
+  function checkPassword(){
+    password1 = document.addform.password
+    password2 = document.addform.password2
+    if(password1.value == password2.value){
+      password1.style.backgroundColor = "#ffffff"
+      password2.style.backgroundColor = "#ffffff"
+      return 0
+    }else{
+      password1.style.backgroundColor = "#f8d7da"
+      password2.style.backgroundColor = "#f8d7da"
+      return 1
+    }
+  }
+
+  function handleSubmit(){
+    if(checkPassword()){
+      document.getElementById('alertId').classList.remove('hide')
+    }else{
+      document.addform.submit();
+    }
+  }
+
+  function handleEdit(){
+    var table = document.getElementById('users');
+    var tbody = table.getElementsByTagName('tbody')[0];
+    var rows = tbody.getElementsByTagName('tr');
+    var id
+    for (i = 0; i < rows.length; i++){
+      rows[i].onclick = async function() {
+        id = this.cells[0].innerHTML
+        "{% for user in users %}"
+          if(id === '{{user.id}}'){
+            document.querySelector('input[name="editusername"]').value = '{{user.username}}';
+            document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
+            document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
+            document.querySelector('input[name="editcosecha"]').value = '{{user.cosecha}}';
+            document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
+            document.querySelector('input[name="id"]').value = '{{user.id}}';
+          }
+        "{% endfor %}"
+      }
+    }
+  }
+
+  function search() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("users");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        txtValue = td.textContent || td.innerText;
+        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  window.onload = mapRoles;
+
+</script>
+
+<main class="form-signin w-100 mb-auto mt-3 text-center">
+  <h2 class=" my-3 fade-in display-6">Portafolio de <b class="fw-bold">Cosechas</b></h2>
+  {% with messages = get_flashed_messages()%}
+
+  {% if messages %}
+  <br/>
+  {% for message in messages%}
+  <div class="alert alert-primary alert-dismissible" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% endwith %}
+
+  <div class="row justify-content-md-center fade-in">
+    <div class="col-12 col-md-4 d-flex justify-content-end">
+          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
+          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+    </div>
+  </div>
+
+  {%if cosechas%}
+      <div class="row justify-content-md-center fade-in">
+        <div class="col-12 col-md-8 table-responsive">
+          <table class="table mt-2 table-hover " id = "users">
+            <thead>
+              <th scope="col">ID</th>
+              <th scope="col">Descripción</th>
+              <th scope="col">Inicio</th>
+              <th scope="col">Cierre</th>
+              <th scope="col">Acciones</th>
+            </thead>
+            <tbody>
+              {%for cosecha in cosechas%}
+              <tr class=" deleteOut tdEdit">
+                  <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
+                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.descripcion}}</td>
+                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.inicio}}</td>
+                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.fin}}</td>
+                  <td>
+                    <div class="cont">
+                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
+                        <div>
+                          <i class="fa-solid fa-pencil"></i>
+                        </div>
+                      </button>
+                      <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                        <input type="hidden" name="user_id" value="">
+                        <div >
+                          <i class="fa-solid fa-trash"></i>
+                        </div>
+                      </form>
+                    </div>
+                  </td>
+              </tr>
+              {%endfor%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+  {%endif%}
+  </div>
+</main>
+
+{% endblock %}

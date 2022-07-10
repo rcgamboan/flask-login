@@ -38,6 +38,19 @@
         }
       }
     }
+
+    function handlePrecio(){
+      var table = document.getElementById('tipos');
+      var tbody = table.getElementsByTagName('tbody')[0];
+      var rows = tbody.getElementsByTagName('tr');
+      for (i = 0; i < rows.length; i++){
+        rows[i].onclick = function() {
+          id = this.cells[0].innerHTML
+          document.querySelector('input[name="editid"]').value = id;
+          document.querySelector('form[name="precio"]').submit();
+        }
+      }
+    }
   
     //Busca por nombre y apellido al escribir un caracter
     function search() {
@@ -143,13 +156,20 @@
             <thead>
                 <th scope="col">ID</th>
                 <th scope="col">Descripción</th>
+                <th scope="col">Precio (%)</th>
                 <th scope="col">Acciones</th>
             </thead>
             <tbody>
                 {%for tipo in tipos%}
                 <tr class=" deleteOut tdEdit">
                     <th scope="row">{{tipo.id}}</th>
-                    <td class="table-light tdEdit" >{{tipo.direccion}}</td>
+                    <td class="table-light" >{{tipo.direccion}}</td>
+                    <td class="table-light col-3" >
+                        <form name="precio" action="/tipoRecolector/updatePrecio" method="POST">
+                          <input type="hidden"  name="editid" required="required" value="1">
+                          <input type="number" name="editprecio" class="form-control count" value="{{tipo.precio}}" step="0.05" onchange="handlePrecio()">
+                        </form>
+                    </td>
                     <td >
                         <div class="cont">
                         <button id="editbtn" method="POST" class="edit pencil btn" role="button" 

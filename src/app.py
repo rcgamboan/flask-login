@@ -126,6 +126,34 @@ def admin():
     else:
        return redirect(url_for('login'))
 
+# Se obtienen los datos de las cosechas
+@app.route('/cosechas',methods=['GET','POST','PUT'])
+def cosechas():
+    if 'username' in session:
+        if session['rol'] == 1:
+            if request.method=='POST':
+                new_cosecha = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
+                #si no existe el usuario en la base de datos
+                if new_cosecha == None:
+                    agregarCosecha( request.form['descripcion'], 
+                                    request.form['inicio'], 
+                                    request.form['fin'])
+                    cosechas = obtenerCosechas()
+                    return render_template('cosechas.html',cosechas=cosechas)
+
+                else:
+                    flash("Esta cosecha ya existe ")
+                    cosechas = obtenerCosechas()
+                    return render_template('cosechas.html',cosechas=cosechas)   
+            else:
+                cosechas = obtenerCosechas()
+                return render_template('cosechas.html',cosechas=cosechas)
+        else:
+            return redirect(url_for('home'))
+    else:
+       return redirect(url_for('login'))
+
+
 # Se obtienen los datos de los productores
 @app.route('/recolector',methods=['GET','POST','PUT'])
 def recolector():
@@ -205,7 +233,7 @@ def tipo_prod():
                     return render_template('tipo.html', tipos=tipos)
 
                 else:
-                    flash("El tipo de productor ya existe ")
+                    flash("El tipo de recolector ya existe ")
                     tipos = obtenerTiposRecolectores()
                     return render_template('tipo.html', tipos=tipos)
             else:
@@ -220,10 +248,18 @@ def tipo_prod():
 @app.route('/tipoRecolector/update',methods=['POST'])
 def tipo_prod_update():
 
-    #print(request.form['editid'])
     editarTipoRecolector(
         request.form['editid'],
         request.form['editdescripcion'],
+    )
+    return redirect(url_for('tipo_prod'))
+
+@app.route('/tipoRecolector/updatePrecio',methods=['POST'])
+def tipo_prod_update_precio():
+
+    cambiarPrecio(
+        request.form['editid'],
+        request.form['editprecio'],
     )
     return redirect(url_for('tipo_prod'))
 
@@ -441,7 +477,7 @@ def cambiarPassword(username,oldPassword,newPassword):
             flash("Contraseña incorrecta")
             return
 
-def cambiarPrecio(id,precioAnterior, aumento):
+def cambiarPrecio(id,precioNuevo):
     tipoRec = db1.session.query(TipoRecolector).filter_by(id=id).first()
 
     if tipoRec == None:
@@ -449,7 +485,7 @@ def cambiarPrecio(id,precioAnterior, aumento):
         return
     else:
 
-        tipoRec.precio = precioAnterior + (aumento / 100)
+        tipoRec.precio = precioNuevo
         db1.session.commit()
 
 def generarCompra(fecha, cedula,tipo,cacao,cantidad,humedad):

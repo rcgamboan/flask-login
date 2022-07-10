@@ -56,14 +56,14 @@
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="{{ url_for('recolector') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
-                        Datos del recolector
+                        Datos del Recolector
                     </button>
                 </a>
             </li>
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="{{ url_for('tipo_prod') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
-                        Tipos de recolector
+                        Tipos de Recolector
                     </button>
                 </a>
             </li>
@@ -71,14 +71,14 @@
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="#" class="w-100 disabled">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
-                         Datos del recolector
+                         Datos del Recolector
                     </button>
                 </a>
             </li>
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="#" class="w-100 disabled">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
-                        Tipos de recolector
+                        Tipos de Recolector
                     </button>
                 </a>
             </li>
@@ -92,11 +92,25 @@
                     </button>
                 </a>
             </li>
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="{{ url_for('cosechas') }}" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
+                        Portafolio de Cosechas
+                    </button>
+                </a>
+            </li>
             {% else %}
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="#" class="w-100 disabled">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
                         Perfiles de Usuarios
+                    </button>
+                </a>
+            </li>
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="{{ url_for('cosechas') }}" class="w-100">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                        Portafolio de Cosechas
                     </button>
                 </a>
             </li>

@@ -200,4 +200,16 @@ button.edit{
   border: 0px;
 }
 
+.table-light{
+  vertical-align: middle;
+}
+
+th{
+  vertical-align: middle;
+}
+
+td{
+  text-align: center;
+  vertical-align: middle;
+}
 
