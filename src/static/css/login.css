@@ -122,8 +122,7 @@ body {
 
 form.edit{
   display: flex !important;
-  flex: 0 0 auto !important;
-  width: 40% !important;
+  flex: 1 0 0%;
   justify-content: center !important;
   padding: 6px 20px !important;
   border-radius: 40rem !important;
@@ -131,15 +130,14 @@ form.edit{
 
 button.edit{
   display: flex !important;
-  flex: 0 0 auto !important;
-  width: 40% !important;
+  flex: 1 0 0%;
   justify-content: center !important;
-  padding: 6px 7px !important;
+  padding: 6px 20px !important;
   border-radius: 40rem !important;
 }
 
 .trash{
-  margin-left: 3.5px !important;
+  margin: 0 6px !important;
 
 }
 .trash:hover {
@@ -148,12 +146,12 @@ button.edit{
 }
 
 .pencil{
-  margin-right: 3.5px !important;
+  margin: 0 6px !important;
 }
 
 .pencil:hover{
-  background-color: rgb(154, 156, 182) !important;
-  color: rgb(225, 225, 225) !important;
+  background-color: rgb(13,110,253) !important;
+  color: rgb(205, 224, 254) !important;
 }
 
 /* Keyframes for the fade-in */
