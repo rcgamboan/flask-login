@@ -80,12 +80,17 @@ class Cosecha(db.Base):
     inicio = Column(Date, default=datetime.datetime.now())
     fin = Column(Date, default=datetime.datetime.now())
     numCosecha = relationship("Usuario")
+    activa = Column(Integer, nullable = False)
     
 
-    def __init__(self, descripcion, inicio, fin):
+    def __init__(self, descripcion, inicio, fin,activa=1):
         self.descripcion= descripcion
         self.inicio = inicio
         self.fin = fin
+        self.activa = activa
+        
+    # activa : 1 -> activa
+    #          0 -> inactiva
 
     def __repr__(self):
         return f'Cosecha({self.descripcion,self.inicio,self.fin})'

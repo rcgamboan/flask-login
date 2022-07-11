@@ -383,7 +383,7 @@ def editarTipoRecolector(id,direccion = "",precio = 0):
     else:
         flash("El tipo no existe")
 
-def editarCosecha(id,descripcion = "", inicio = "", fin = ""):
+def editarCosecha(id,descripcion = "", inicio = "", fin = "", activa=-1):
 
     cosecha = db1.session.query(Cosecha).filter_by(id = id).first()
     
@@ -397,6 +397,10 @@ def editarCosecha(id,descripcion = "", inicio = "", fin = ""):
         
         if fin != "" and fin != None:            
             cosecha.fin = fin
+        
+        if activa != -1 and activa != None:            
+            cosecha.activa = activa
+
 
         db1.session.commit()
     else:
@@ -435,11 +439,21 @@ def agregarTipoRecolector(descripcion,precio=0):
     db1.session.add(tipo)
     db1.session.commit()
 
-def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now()):
-    cosecha = Cosecha(descripcion,inicio,fin)
+def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now(),activa = 1):
+    cosecha = Cosecha(descripcion,inicio,fin,activa)
     
     db1.session.add(cosecha)
     db1.session.commit()
+
+def activarCosecha(id):
+    cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
+    if cosecha.activa == 1:
+
+        cosecha.activa = 0
+    else:
+        cosecha.activa = 0
+    db1.session.commit()
+
 
 def eliminarUsuario(ID):
     
