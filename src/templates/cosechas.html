@@ -9,37 +9,15 @@
 {% block body %}
 <script>
   function handleDelete(){
-    var table = document.getElementById('users');
+    var table = document.getElementById('cosechas');
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = function() {
         id = this.cells[0].innerHTML
-        document.querySelector('input[name="user_id"]').value = id;
-        document.querySelector('form[name="ID"]').submit();
+        document.querySelector('input[name="cosecha_id"]').value = id;
+        document.querySelector('form[name="delete"]').submit();
       }
-    }
-  }
-
-  function checkPassword(){
-    password1 = document.addform.password
-    password2 = document.addform.password2
-    if(password1.value == password2.value){
-      password1.style.backgroundColor = "#ffffff"
-      password2.style.backgroundColor = "#ffffff"
-      return 0
-    }else{
-      password1.style.backgroundColor = "#f8d7da"
-      password2.style.backgroundColor = "#f8d7da"
-      return 1
-    }
-  }
-
-  function handleSubmit(){
-    if(checkPassword()){
-      document.getElementById('alertId').classList.remove('hide')
-    }else{
-      document.addform.submit();
     }
   }
 
@@ -52,13 +30,8 @@
       rows[i].onclick = async function() {
         id = this.cells[0].innerHTML
         var form = document.querySelector('form[name="editCosecha' + id + '"]')
-        console.log(form[0])
         form[0].value = id;
         form.submit();
-        
-        // document.querySelector('input[name="editid"]').value = id;
-        // document.querySelector('input[name="editid"]').value = id;
-        // document.querySelector('form[name="editCosecha"]').submit();
       }
     }
   }
@@ -68,15 +41,19 @@
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("users");
+    table = document.getElementById("cosechas");
     tr = table.getElementsByTagName("tr");
 
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
       td = tr[i].getElementsByTagName("td")[0];
+
+      // descripcion = td.querySelector('input[name="editDescripcion"]').value
+      // console.log(descripcion)
+      // console.log(descripcion)
       if (td) {
-        txtValue = td.textContent || td.innerText;
-        if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        descripcion = td.querySelector('input[name="editDescripcion"]').value
+        if (descripcion.toUpperCase().indexOf(filter) > -1) {
           tr[i].style.display = "";
         } else {
           tr[i].style.display = "none";
@@ -84,9 +61,6 @@
       }
     }
   }
-
-  window.onload = mapRoles;
-
 </script>
 
 <main class="form-signin w-100 mb-auto mt-3 text-center">
@@ -107,12 +81,44 @@
 
   <div class="row justify-content-md-center fade-in">
     <div class="col-12 col-md-4 d-flex justify-content-end">
-          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por usuario...">
-          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarUsuario">
+          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por descripción...">
+          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarCosecha">
             <i class="fa-solid fa-plus"></i>
           </button>
     </div>
   </div>
+
+  <!--Modal Agregar cosecha-->
+  <div class="modal fade" id="AgregarCosecha" tabindex="-1" role="dialog" aria-labelledby="Agregar Cosecha" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Agregar Cosecha</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <form class="form-signin" action="/cosechas" method="POST">
+            <div class="modal-body">
+                <div class="form-floating">
+                    <input class="form-control  top" id="descripcion" name="descripcion" placeholder="Enero Marzo 2022" required="required">
+                    <label for="floatingInput">Descripción</label>
+                </div>
+                <div class="form-floating">
+                    <input type="date" class="form-control  middle" id="inicio" name="inicio" placeholder="12/01/2022" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                    <label for="floatingInput">Inicio</label>
+                </div>
+                <div class="form-floating">
+                  <input type="date" class="form-control  bottom" id="fin" name="fin" placeholder="12/01/2023" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                  <label for="floatingInput">Cierre</label>
+              </div>
+            </div>
+            <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <button type="submit" class="btn btn-primary">Agregar Cosecha</button>
+            </div>
+        </form>
+    </div>
+    </div>
+</div>
 
   {%if cosechas%}
       <div class="row justify-content-md-center fade-in">
@@ -166,8 +172,8 @@
                           <i class="fa-solid fa-file-arrow-up"></i>
                         </div>
                       </button>
-                      <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();" title="Eliminar Cosecha">
-                        <input type="hidden" name="user_id" value="" >
+                      <form name="delete" action="/cosechas/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();" title="Eliminar Cosecha">
+                        <input type="hidden" name="cosecha_id" value="" >
                         <div >
                           <i class="fa-solid fa-trash"></i>
                         </div>
