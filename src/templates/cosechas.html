@@ -44,23 +44,15 @@
   }
 
   function handleEdit(){
-    var table = document.getElementById('users');
+    var table = document.getElementById('cosechas');
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
     var id
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = async function() {
         id = this.cells[0].innerHTML
-        "{% for user in users %}"
-          if(id === '{{user.id}}'){
-            document.querySelector('input[name="editusername"]').value = '{{user.username}}';
-            document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
-            document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
-            document.querySelector('input[name="editcosecha"]').value = '{{user.cosecha}}';
-            document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
-            document.querySelector('input[name="id"]').value = '{{user.id}}';
-          }
-        "{% endfor %}"
+        document.querySelector('input[name="editid"]').value = id;
+        document.querySelector('form[name="editCosecha"]').submit();
       }
     }
   }
@@ -119,7 +111,7 @@
   {%if cosechas%}
       <div class="row justify-content-md-center fade-in">
         <div class="col-12 col-md-11 table-responsive">
-          <table class="table mt-2 table-hover " id = "users">
+          <table class="table mt-2 table-hover " id = "cosechas">
             <thead>
               <th scope="col">ID</th>
               <th scope="col">Descripción</th>
@@ -131,37 +123,46 @@
               {%for cosecha in cosechas%}
               <tr class=" deleteOut tdEdit">
                   <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
-                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.descripcion}}</td>
-                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.inicio}}</td>
-                  <td class="table-light tdEdit" type="username" id="username">{{cosecha.fin}}</td>
-                  <td class="col-4">
+                  <form name="editCosecha" action="/cosechas/update" method="POST">
+                    <input type="hidden" name="editid" required="required" value="1">
+                    <td class="table-light tdEdit" type="username" id="username">
+                      <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}">
+                    </td>
+                    <td class="table-light">
+                      <input type="date" name="editInicio" class="form-control" value="{{cosecha.inicio}}">
+                    </td>
+                    <td class="table-light">
+                      <input type="date" name="editFin" class="form-control" value="{{cosecha.fin}}">
+                    </td>  
+                  </form>
+                  <td class="col-3">
                     <div class="cont">
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="">
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Generar Compras">
                         <div>
                           <i class="fa-solid fa-file-lines"></i>
                         </div>
                       </button>
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()">
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()" title="Editar Cosecha">
                         <div>
                           <i class="fa-solid fa-pencil"></i>
                         </div>
                       </button>
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="">
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Habilitar Cosecha">
                         <div>
                           <i class="fas fa-play"></i>
                         </div>
                       </button>
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="">
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Listar Compras">
                         <div>
                           <i class="fa-solid fa-file-arrow-up"></i>
                         </div>
                       </button>
-                      <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
-                        <input type="hidden" name="user_id" value="">
+                      <form name="ID" action="/admin/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();" title="Eliminar Cosecha">
+                        <input type="hidden" name="user_id" value="" >
                         <div >
                           <i class="fa-solid fa-trash"></i>
                         </div>

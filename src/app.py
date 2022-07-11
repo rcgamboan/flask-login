@@ -153,6 +153,17 @@ def cosechas():
     else:
        return redirect(url_for('login'))
 
+@app.route('/cosechas/update',methods=['POST'])
+def cosechas_update():
+
+    editarCosecha(
+        request.form['editid'],
+        request.form['editDescripcion'],
+        datetime.datetime.strptime(request.form['editInicio'],"%Y-%m-%d"),
+        datetime.datetime.strptime(request.form['editFin'],"%Y-%m-%d")
+    )
+    return redirect(url_for('cosechas'))
+
 
 # Se obtienen los datos de los productores
 @app.route('/recolector',methods=['GET','POST','PUT'])
