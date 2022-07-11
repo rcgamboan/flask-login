@@ -132,12 +132,12 @@ def cosechas():
     if 'username' in session:
         if session['rol'] == 1:
             if request.method=='POST':
-                new_cosecha = db1.session.query(Usuario).filter_by(username = request.form['username']).first()
-                #si no existe el usuario en la base de datos
+                new_cosecha = db1.session.query(Cosecha).filter_by(descripcion = request.form['descripcion']).first()
+                #si no existe la cosecha en la db
                 if new_cosecha == None:
                     agregarCosecha( request.form['descripcion'], 
-                                    request.form['inicio'], 
-                                    request.form['fin'])
+                                    datetime.datetime.strptime(request.form['inicio'],"%Y-%m-%d"),
+                                    datetime.datetime.strptime(request.form['fin'],"%Y-%m-%d"))
                     cosechas = obtenerCosechas()
                     return render_template('cosechas.html',cosechas=cosechas)
 
@@ -164,6 +164,10 @@ def cosechas_update():
     )
     return redirect(url_for('cosechas'))
 
+@app.route('/cosechas/delete',methods=['POST'])
+def cosechas_eliminar():
+    eliminarCosecha(request.form['cosecha_id'])
+    return redirect(url_for('cosechas'))
 
 # Se obtienen los datos de los productores
 @app.route('/recolector',methods=['GET','POST','PUT'])
@@ -456,7 +460,7 @@ def eliminarRecolector(ID):
 
 def eliminarTipoRecolector(ID):
     recolectores =  db1.session.query(Recolector).filter_by(tipo=ID).all()
-    print(recolectores)
+
     if len(recolectores) > 0:
         flash("No se puede eliminar ya que existe por lo menos un productor asociado a este tipo")
         return
@@ -465,10 +469,11 @@ def eliminarTipoRecolector(ID):
         db1.session.commit()
 
 def eliminarCosecha(ID):
-    cosechas =  db1.session.query(Cosecha).filter_by(tipo=ID).all()
-    #print(cosechas)
+    cosechas =  db1.session.query(Usuario).filter_by(cosecha=ID).all()
+
+    print(cosechas)
     if len(cosechas) > 0:
-        flash("No se puede eliminar ya que existe por lo menos un productor asociado a este tipo")
+        flash("No se puede eliminar ya que existe por lo menos un recolector asociado a esta cosecha")
         return
     else:
         db1.session.query(Cosecha).filter_by(id=ID).delete()
