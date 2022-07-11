@@ -1,10 +1,13 @@
-from pydoc import describe
+import datetime
 import unittest
 import test_database as test_db
 from test_usuario import agregarUsuario, editarUsuario, login, eliminarUsuario
-from test_productor import editarProductor, agregarProductor, eliminarProductor
-from test_tipo_productor import editarTipoProductor, agregarTipoProductor, eliminarTipoProductor
-from test_model import Usuario, Productor, TipoProductor
+from test_recolector import editarRecolector, agregarRecolector, eliminarRecolector
+from test_tipo_recolector import editarTipoRecolector, agregarTipoRecolector, eliminarTipoRecolector
+from test_model import Usuario, Recolector, TipoRecolector, Cosecha, Compra
+from test_cosecha import agregarCosecha, activarCosecha, editarCosecha
+from test_compra import generarCompra
+
 
 class TestUsuario(unittest.TestCase):
 
@@ -21,11 +24,13 @@ class TestUsuario(unittest.TestCase):
         self.assertIsNone( login("prueba0","prueba0"))
     
     def test_login1(self):
-        agregarUsuario("rgcn","rgcn","nombre","apellido","cosecha1",1)
+        agregarCosecha("prueba")
+        agregarUsuario("rgcn","rgcn","nombre","apellido",0,1,)
         self.assertIsNotNone( login("rgcn","rgcn"))
     
     def test_login2(self):
-        agregarUsuario("prueba2","prueba2","nombre2","apellido2","cosecha1",0)
+        agregarCosecha("prueba1")
+        agregarUsuario("prueba2","prueba2","nombre2","apellido2",0,0)
         self.assertIsNotNone(login("prueba2","prueba2"))
 
     def test_agregar_sin_username(self):
@@ -47,7 +52,8 @@ class TestUsuario(unittest.TestCase):
         self.assertIsNone(agregarUsuario(username="test_ag",password="test_ag",nombres="nombre",apellidos="apellido",cosecha="cosecha1"))
 
     def test_agregar0(self):
-        agregarUsuario("test0","test0","nombre4","apellido4","cosecha1",0)
+        agregarCosecha("prueba1")
+        agregarUsuario("test0","test0","nombre4","apellido4",0,0)
         usuarioDB = test_db.session.query(Usuario).filter_by(username = "test0").first()
         self.assertEqual("test0" , usuarioDB.username)
     
@@ -87,118 +93,149 @@ class TestUsuario(unittest.TestCase):
     def test_eliminar_no_existente(self):
         self.assertIsNone(editarUsuario(99999,password="prueba_eliminar"))
 
-class TestProductor(unittest.TestCase):
+class TestRecolector(unittest.TestCase):
 
     def test_agregar_sin_direccion(self):
-        self.assertIsNone(agregarProductor(id=12345, nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",tipo=1))
+        self.assertIsNone(agregarRecolector(id=12345, nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",tipo=1))
 
     def test_agregar_sin_telefonos(self):
-        self.assertIsNone(agregarProductor(id=12345, nombres="pepe",apellidos="perez",direccion="caracas",tipo=1))
+        self.assertIsNone(agregarRecolector(id=12345, nombres="pepe",apellidos="perez",direccion="caracas",tipo=1))
 
     def test_agregar_sin_nombre(self):
-        self.assertIsNone(agregarProductor(id=12345,apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
+        self.assertIsNone(agregarRecolector(id=12345,apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
     
     def test_agregar_sin_apellidos(self):
-        self.assertIsNone(agregarProductor(id=12345, nombres="pepe",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
+        self.assertIsNone(agregarRecolector(id=12345, nombres="pepe",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
 
     def test_agregar_sin_tipo(self):
-        self.assertIsNone(agregarProductor(id=12345, nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas"))
+        self.assertIsNone(agregarRecolector(id=12345, nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas"))
 
     def test_agregar_sin_id(self):
-        self.assertIsNone(agregarProductor(nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
+        self.assertIsNone(agregarRecolector(nombres="pepe",apellidos="perez",telefonoCelular="1234",telefonoLocal="1234",direccion="caracas",tipo=1))
 
     def test_agregar0(self):
-        agregarProductor(12345,"test0","test0","1234","1234","caracas",0)
-        productorDB = test_db.session.query(Productor).filter_by(id = 12345).first()
-        self.assertEqual(12345 , productorDB.id)
+        agregarRecolector(12345,"test0","test0","1234","1234","caracas","valencia",0)
+        RecolectorDB = test_db.session.query(Recolector).filter_by(id = 12345).first()
+        self.assertEqual(12345 , RecolectorDB.id)
     
     # Prueba eliminar usuario sin suministrar id
     def test_eliminar_sin_id(self):
-        self.assertIsNone(eliminarProductor())
+        self.assertIsNone(eliminarRecolector())
     
     # Prueba eliminar usuario existente
     def test_eliminar_existente(self):
-        agregarProductor(123456,"test_eliminar0","test_eliminar0","1234","1234","caracas",0)
-        prod = test_db.session.query(Productor).filter_by(id = 123456).first()
+        agregarRecolector(123456,"test_eliminar0","test_eliminar0","1234","1234","caracas","valencia",0)
+        prod = test_db.session.query(Recolector).filter_by(id = 123456).first()
         self.assertEqual(prod.id,123456)
-        eliminarProductor(prod.id)
-        productorDB = test_db.session.query(Productor).filter_by(id = 123456).first()
-        self.assertIsNone(productorDB)
+        eliminarRecolector(prod.id)
+        RecolectorDB = test_db.session.query(Recolector).filter_by(id = 123456).first()
+        self.assertIsNone(RecolectorDB)
     
     # Prueba eliminar usuario no existente
     def test_eliminar_no_existente(self):
-        self.assertIsNone(eliminarProductor(99999))
+        self.assertIsNone(eliminarRecolector(99999))
     
     # Prueba editar sin suministrar id
     def test_editar_sin_id(self):
-        self.assertIsNone(editarProductor(nombres="prueba_eliminar"))
+        self.assertIsNone(editarRecolector(nombres="prueba_eliminar"))
 
     # Prueba editar usuario existente
     # Se agrega un usuario y se modifica su username
     def test_editar_existente(self):
-        agregarProductor(1234567,"test_editar0","test_editar0","1234","1234","caracas",0)
-        prod = test_db.session.query(Productor).filter_by(id = 1234567).first()
+        agregarRecolector(1234567,"test_editar0","test_editar0","1234","1234","caracas","valencia",0)
+        prod = test_db.session.query(Recolector).filter_by(id = 1234567).first()
         self.assertEqual(prod.id,1234567)
-        editarProductor(prod.id,direccion="valencia")
-        productorDB = test_db.session.query(Productor).filter_by(id = 1234567).first()
-        self.assertEqual(productorDB.direccion,"valencia")
+        editarRecolector(prod.id,direccion="valencia")
+        RecolectorDB = test_db.session.query(Recolector).filter_by(id = 1234567).first()
+        self.assertEqual(RecolectorDB.direccion,"valencia")
     
     # Prueba editar usuario no existente
     def test_eliminar_no_existente(self):
-        self.assertIsNone(editarProductor(99999,direccion="prueba_eliminar"))
+        self.assertIsNone(editarRecolector(99999,direccion="prueba_eliminar"))
+    
+    def test_editar_sin_id(self):
+        self.assertIsNone(editarCosecha())
 
-class TestTipoProductor(unittest.TestCase):
+
+class TestTipoRecolector(unittest.TestCase):
 
     def test_agregar_sin_descripcion(self):
-        self.assertIsNone(agregarTipoProductor())
+        self.assertIsNone(agregarTipoRecolector())
 
     def test_agregar0(self):
-        agregarTipoProductor("vendedor1")
-        tipo_productor = test_db.session.query(TipoProductor).filter_by(descripcion = "vendedor1").first()
-        self.assertEqual("vendedor1" , tipo_productor.descripcion)
+        agregarTipoRecolector("vendedor1")
+        tipo_Recolector = test_db.session.query(TipoRecolector).filter_by(direccion = "vendedor1").first()
+        self.assertEqual("vendedor1" , tipo_Recolector.direccion)
     
     # Prueba eliminar sin suministrar id
     def test_eliminar_sin_id(self):
-        self.assertIsNone(eliminarTipoProductor())
+        self.assertIsNone(eliminarTipoRecolector())
     
     # Prueba eliminar existente
     def test_eliminar_existente(self):
-        agregarTipoProductor("revendedor2")
-        prod = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor2").first()
-        self.assertEqual(prod.descripcion,"revendedor2")
-        eliminarTipoProductor(prod.id)
-        productor = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor2").first()
-        self.assertIsNone(productor)
+        agregarTipoRecolector("revendedor2")
+        prod = test_db.session.query(TipoRecolector).filter_by(direccion = "revendedor2").first()
+        self.assertEqual(prod.direccion,"revendedor2")
+        eliminarTipoRecolector(prod.id)
+        Recolector = test_db.session.query(TipoRecolector).filter_by(direccion = "revendedor2").first()
+        self.assertIsNone(Recolector)
     
     # Prueba eliminar no existente
     def test_eliminar_no_existente(self):
-        self.assertIsNone(eliminarTipoProductor(99999))
+        self.assertIsNone(eliminarTipoRecolector(99999))
     
-    def test_eliminar_con_productor_asociado(self):
-        agregarTipoProductor("revendedor1")
-        tipo = test_db.session.query(TipoProductor).filter_by(descripcion = "revendedor1").first()
-        agregarProductor(10,"pedro","perez","1234","1234","caracas",tipo.id)
-        self.assertIsNone(eliminarTipoProductor(tipo.id))
-        eliminarProductor(10)
+    def test_eliminar_con_Recolector_asociado(self):
+        agregarTipoRecolector("revendedor1")
+        tipo = test_db.session.query(TipoRecolector).filter_by(direccion = "revendedor1").first()
+        agregarRecolector(10,"pedro","perez","1234","1234","caracas",tipo.id)
+        self.assertIsNone(eliminarTipoRecolector(tipo.id))
+        eliminarRecolector(10)
     
     # Prueba editar no existente
     def test_editar_sin_id(self):
-        self.assertIsNone(editarTipoProductor(descripcion="prueba_eliminar"))
+        self.assertIsNone(editarTipoRecolector(direccion="prueba_eliminar"))
 
     # Prueba editar existente
     def test_editar_existente(self):
-        agregarTipoProductor("vendedor3")
-        prod = test_db.session.query(TipoProductor).filter_by(descripcion = "vendedor3").first()
-        self.assertEqual(prod.descripcion,"vendedor3")
-        editarTipoProductor(prod.id,descripcion="vendedor3")
-        productorDB = test_db.session.query(TipoProductor).filter_by(descripcion = "vendedor3").first()
-        self.assertEqual(productorDB.descripcion,"vendedor3")
+        agregarTipoRecolector("vendedor3")
+        prod = test_db.session.query(TipoRecolector).filter_by(direccion = "vendedor3").first()
+        self.assertEqual(prod.direccion,"vendedor3")
+        editarTipoRecolector(prod.id,direccion="vendedor3")
+        RecolectorDB = test_db.session.query(TipoRecolector).filter_by(direccion = "vendedor3").first()
+        self.assertEqual(RecolectorDB.direccion,"vendedor3")
     
     # Prueba editar usuario no existente
     def test_eliminar_no_existente(self):
-        self.assertIsNone(editarTipoProductor(99999,descripcion="prueba_eliminar"))
+        self.assertIsNone(editarTipoRecolector(99999,direccion="prueba_eliminar"))
 
-  
+class TestCosecha(unittest.TestCase):
+
+    def test_agregar_sin_descripcion(self):
+        self.assertIsNone(agregarCosecha())
+
+    def test_agregar0(self):
+        agregarCosecha("prueba3")
+        cosecha = test_db.session.query(Cosecha).filter_by(descripcion = "prueba3").first()
+        self.assertEqual("prueba3" , cosecha.descripcion)
+    
+    def test_agregar_existente(self):
+        agregarCosecha("prueba3")
+        self.assertIsNone(agregarCosecha("prueba3"))
+    
+    def test_editar_existente(self):
+        agregarCosecha("prueba4")
+        prod = test_db.session.query(Cosecha).filter_by(descripcion = "prueba4").first()
+        editarCosecha(id=prod.id,descripcion="prueba5")
+        RecolectorDB = test_db.session.query(Cosecha).filter_by(descripcion="prueba5").first()
+        self.assertEqual(RecolectorDB.descripcion,"prueba5")
+
+class TestCompra(unittest.TestCase):
+
+    def test_generar_compra(self):
+        agregarTipoRecolector("prueba1")
+        agregarRecolector(9999,"pedro","perez","1234","1234","caracas","valencia",0)
+        generarCompra(datetime.datetime.now(),999,0,0,"","","")
+        self.assertIsNotNone( test_db.session.query(Compra).filter_by(cedula = 999).first())
 
 if __name__ == '__main__':
     test_db.Base.metadata.create_all(test_db.engine)
