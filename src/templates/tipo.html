@@ -43,11 +43,15 @@
       var table = document.getElementById('tipos');
       var tbody = table.getElementsByTagName('tbody')[0];
       var rows = tbody.getElementsByTagName('tr');
+      
       for (i = 0; i < rows.length; i++){
         rows[i].onclick = function() {
           id = this.cells[0].innerHTML
-          document.querySelector('input[name="editid"]').value = id;
-          document.querySelector('form[name="precio"]').submit();
+            var form = document.querySelector('form[name="precio' + id + '"]')
+            var precio = form.querySelector('input[name="editprecio"]').value
+            form.querySelector('input[name="editidprecio"]').value = id
+            form.submit();
+
         }
       }
     }
@@ -165,8 +169,8 @@
                     <th scope="row">{{tipo.id}}</th>
                     <td class="table-light" >{{tipo.direccion}}</td>
                     <td class="table-light col-3" >
-                        <form name="precio" action="/tipoRecolector/updatePrecio" method="POST">
-                          <input type="hidden"  name="editid" required="required" value="1">
+                        <form name="precio{{tipo.id}}" action="/tipoRecolector/updatePrecio" method="POST">
+                          <input type="hidden"  name="editidprecio" required="required" value="1">
                           <input type="number" name="editprecio" class="form-control count" value="{{tipo.precio}}" step="0.05" onchange="handlePrecio()">
                         </form>
                     </td>

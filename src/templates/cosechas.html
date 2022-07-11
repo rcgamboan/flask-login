@@ -47,12 +47,18 @@
     var table = document.getElementById('cosechas');
     var tbody = table.getElementsByTagName('tbody')[0];
     var rows = tbody.getElementsByTagName('tr');
-    var id
+
     for (i = 0; i < rows.length; i++){
       rows[i].onclick = async function() {
         id = this.cells[0].innerHTML
-        document.querySelector('input[name="editid"]').value = id;
-        document.querySelector('form[name="editCosecha"]').submit();
+        var form = document.querySelector('form[name="editCosecha' + id + '"]')
+        console.log(form[0])
+        form[0].value = id;
+        form.submit();
+        
+        // document.querySelector('input[name="editid"]').value = id;
+        // document.querySelector('input[name="editid"]').value = id;
+        // document.querySelector('form[name="editCosecha"]').submit();
       }
     }
   }
@@ -123,7 +129,7 @@
               {%for cosecha in cosechas%}
               <tr class=" deleteOut tdEdit">
                   <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
-                  <form name="editCosecha" action="/cosechas/update" method="POST">
+                  <form name="editCosecha{{cosecha.id}}" action="/cosechas/update" method="POST">
                     <input type="hidden" name="editid" required="required" value="1">
                     <td class="table-light tdEdit" type="username" id="username">
                       <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}">
@@ -143,8 +149,7 @@
                           <i class="fa-solid fa-file-lines"></i>
                         </div>
                       </button>
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="handleEdit()" title="Editar Cosecha">
+                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" onclick="handleEdit()" title="Editar Cosecha">
                         <div>
                           <i class="fa-solid fa-pencil"></i>
                         </div>

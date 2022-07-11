@@ -268,8 +268,11 @@ def tipo_prod_update():
 @app.route('/tipoRecolector/updatePrecio',methods=['POST'])
 def tipo_prod_update_precio():
 
+    print(request.form['editidprecio'])
+    print(request.form['editprecio'])
+
     cambiarPrecio(
-        request.form['editid'],
+        request.form['editidprecio'],
         request.form['editprecio'],
     )
     return redirect(url_for('tipo_prod'))
