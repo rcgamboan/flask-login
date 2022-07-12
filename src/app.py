@@ -192,6 +192,7 @@ def compras(id_cosecha):
                                 request.form["cedula"],
                                 request.form["cacao"],
                                 request.form["cantidad"],
+                                id_cosecha,
                                 request.form["humedad"],
                                 )
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
@@ -561,15 +562,13 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha,cedula,cacao,cantidad,humedad):
+def generarCompra(fecha,cedula,cacao,cantidad,cosecha,humedad):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
-    tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first()
-    if cantidad > recolector.cantidad:
-        return None
-    else:    
-        compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), cedula,recolector.tipo,tipo_rec.precio,cacao,cantidad,humedad)
-        db1.session.add(compra)
-        db1.session.commit()
+    tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
+
+    compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), cedula,recolector.tipo,tipo_rec.precio,cacao,cantidad,cosecha,humedad)
+    db1.session.add(compra)
+    db1.session.commit()
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
@@ -586,6 +585,6 @@ if __name__ == '__main__':
     app.config.from_object(config['development'])
     agregarCosecha("Enero - Marzo 2022")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
-    generarCompra("2022-03-23",26063468,"Fermentado",20,12)
+    generarCompra("2022-03-23",26063468,"Fermentado",20,1,12)
     app.run()
 
