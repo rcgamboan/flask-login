@@ -562,11 +562,18 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha,cedula,cacao,cantidad,cosecha,humedad):
+def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
 
-    compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), cedula,recolector.tipo,tipo_rec.precio,cacao,cantidad,cosecha,humedad)
+    compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), 
+                    cedula,recolector.tipo,
+                    tipo_rec.precio,cacao,
+                    cantidad,
+                    cosecha,
+                    observaciones,
+                    humedad,
+                    merma)
     db1.session.add(compra)
     db1.session.commit()
 
