@@ -458,7 +458,6 @@ def activarCosecha(id):
         cosecha.activa = 0
     db1.session.commit()
 
-
 def eliminarUsuario(ID):
     
     if int(session['id']) == int(ID):
@@ -521,15 +520,14 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha, cedula,tipo,cacao,cantidad,humedad):
+def generarCompra(fecha, cedula,tipo,cacao,cantidad,cosecha,humedad):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=cedula).first()
-    if cantidad > recolector.cantidad:
+    if recolector == None or tipo_rec == None:
         return None
     else:    
-        compra = Compra(fecha, cedula,tipo,tipo_rec.precio,cacao,cantidad,humedad)
+        compra = Compra(fecha, cedula,tipo,tipo_rec.precio,cacao,cantidad,cosecha,humedad)
         db1.session.add(compra)
-        recolector.cantidad -= cantidad
         db1.session.commit()
 
 #Carga los datos de usuario loggeado a la sesion actual en cache

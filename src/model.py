@@ -39,7 +39,6 @@ class Recolector(db.Base):
     direccion = Column(String, nullable=False)
     direccion2 = Column(String, nullable=True)
     tipo = Column(Integer, ForeignKey("tiporecolector.id"))
-    cantidad = Column(Integer, nullable=True)
 
     def __init__(self, id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
         self.id = id
@@ -80,6 +79,7 @@ class Cosecha(db.Base):
     inicio = Column(Date, default=datetime.datetime.now())
     fin = Column(Date, default=datetime.datetime.now())
     numCosecha = relationship("Usuario")
+    compra = relationship("Compra")
     activa = Column(Integer, nullable = False)
     
 
@@ -107,10 +107,11 @@ class Compra(db.Base):
     cacao = Column(String, nullable=False)
     cantidad = Column(Integer, nullable=False)
     monto = Column(Integer, nullable=False)
+    cosecha = Column(Integer, ForeignKey("cosecha.id"))
     humedad = Column(Integer, nullable=False)
 
 
-    def __init__(self, fecha, cedula,tipo,precio,cacao,cantidad,humedad):
+    def __init__(self, fecha, cedula,tipo,precio,cacao,cantidad,cosecha,humedad):
         self.fecha = fecha
         self.cedula = cedula
         self.monto = precio * cantidad
@@ -119,6 +120,7 @@ class Compra(db.Base):
         self.cacao = cacao
         self.cantidad = cantidad
         self.humedad = humedad
+        self.cosecha = cosecha
 
     def __repr__(self):
         return f'Compra({self.fecha,self.precio,self.cantidad})'
