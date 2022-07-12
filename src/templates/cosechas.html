@@ -72,6 +72,12 @@
       }
     }
   }
+
+  function resaltar(id) {
+    var btn = document.querySelector('button[name="editbtn' + id + '"]')
+    btn.style.backgroundColor = "rgb(98, 161, 255)"
+    btn.style.color = "#f5f5f5"
+  }
 </script>
 
 <main class="form-signin w-100 mb-auto mt-3 text-center">
@@ -150,13 +156,13 @@
                   <form name="editCosecha{{cosecha.id}}" action="/cosechas/update" method="POST">
                     <input type="hidden" name="editid" required="required" value="1">
                     <td class="table-light tdEdit" type="username" id="username">
-                      <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}">
+                      <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}" onkeyup="resaltar('{{ cosecha.id }}')">
                     </td>
                     <td class="table-light">
-                      <input type="date" name="editInicio" class="form-control" value="{{cosecha.inicio}}">
+                      <input type="date" name="editInicio" class="form-control" value="{{cosecha.inicio}}" onchange="resaltar('{{ cosecha.id }}')">
                     </td>
                     <td class="table-light">
-                      <input type="date" name="editFin" class="form-control" value="{{cosecha.fin}}">
+                      <input type="date" name="editFin" class="form-control" value="{{cosecha.fin}}" onchange="resaltar('{{ cosecha.id }}')">
                     </td>  
                   </form>
                   <td class="col-3">
@@ -169,7 +175,7 @@
                           </div>
                         </button>
                       </form>
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" onclick="handleEdit()" title="Editar Cosecha">
+                      <button id="editbtn" method="POST" name="editbtn{{cosecha.id}}"class="edit pencil btn" role="button" onclick="handleEdit()" title="Aplicar cambios a la cosecha">
                         <div>
                           <i class="fa-solid fa-pencil"></i>
                         </div>
@@ -180,7 +186,7 @@
                           <i class="fa-solid fa-trash"></i>
                         </div>
                       </form>
-                      <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit trash btn" role="button" onclick="habilitar();" title="Deshabilitar Cosecha">
+                      <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit pencil btn" role="button" onclick="habilitar();" title="Deshabilitar Cosecha">
                         <input type="hidden" name="cosecha_id" value="" >
                         <div>
                           <i class="fas fa-ban"></i>
@@ -223,7 +229,7 @@
                         </div>
                       </button>
                     </form>
-                    <button id="editbtn" method="POST" class="edit pencil btn disabled" role="button" onclick="handleEdit()" title="Editar Cosecha">
+                    <button id="editbtn" method="POST" class="edit pencil btn disabled" role="button" onclick="handleEdit()" title="Aplicar cambios a la cosecha">
                       <div>
                         <i class="fa-solid fa-pencil"></i>
                       </div>
@@ -234,7 +240,7 @@
                         <i class="fa-solid fa-trash"></i>
                       </div>
                     </form>
-                    <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit trash btn" role="button" onclick="habilitar();" title="Habilitar Cosecha">
+                    <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit pencil btn" role="button" onclick="habilitar();" title="Habilitar Cosecha">
                       <input type="hidden" name="cosecha_id" value="" >
                       <div>
                         <i class="fas fa-play"></i>

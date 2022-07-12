@@ -92,6 +92,17 @@
                     </button>
                 </a>
             </li>
+            {% else %}
+            <li class="align-items-center justify-content-md-center fade-in">
+                <a href="#" class="w-100 disabled">
+                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
+                        Perfiles de Usuarios
+                    </button>
+                </a>
+            </li>
+            {% endif %}
+
+            {% if session['rol'] == 1 or session['rol'] == 0 %}
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="{{ url_for('cosechas') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
@@ -101,13 +112,6 @@
             </li>
             {% else %}
             <li class="align-items-center justify-content-md-center fade-in">
-                <a href="#" class="w-100 disabled">
-                    <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
-                        Perfiles de Usuarios
-                    </button>
-                </a>
-            </li>
-            <li class="align-items-center justify-content-md-center fade-in">
                 <a href="{{ url_for('cosechas') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3 disabled">
                         Portafolio de Cosechas
@@ -115,7 +119,7 @@
                 </a>
             </li>
             {% endif %}
-
+            
             {% if session['rol'] == 2 %}
             <li class="align-items-center justify-content-md-center fade-in">
                 <a href="#" class="w-100">

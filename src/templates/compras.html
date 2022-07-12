@@ -41,16 +41,16 @@
     var input, filter, table, tr, td, i, txtValue;
     input = document.getElementById("myInput");
     filter = input.value.toUpperCase();
-    table = document.getElementById("cosechas");
+    table = document.getElementById("compras");
     tr = table.getElementsByTagName("tr");
 
     // Loop through all table rows, and hide those who don't match the search query
-    for (i = 0; i < tr.length; i++) {
+    for (i = 1; i < tr.length; i++) {
       td = tr[i].getElementsByTagName("td")[0];
-
+        
       if (td) {
-        descripcion = td.querySelector('input[name="editDescripcion"]').value
-        if (descripcion.toUpperCase().indexOf(filter) > -1) {
+        fecha = td.innerText
+        if (fecha.toUpperCase().indexOf(filter) > -1) {
           tr[i].style.display = "";
         } else {
           tr[i].style.display = "none";
@@ -58,12 +58,11 @@
       }
     }
   }
-</script>\
+</script>
 
-<main class="form-signin w-100 mb-auto mt-3 text-center">
-    {% if cosecha %}
-    
-    <h2 class=" my-3 fade-in display-6">{{cosecha.descripcion}}<b class="fw-bold"> Datos de la Compra</b> </h2>
+<main class="form-signin w-100 mb-auto mt-3 text-center justify-content-md-center row">
+    {% if cosecha %}   
+        <h2 class=" my-4 fade-in display-6">Listado de Compras <b class="fw-bold">Cosecha {{cosecha.descripcion}}</b> </h2>
     {%endif%}
   {% with messages = get_flashed_messages()%}
 
@@ -80,8 +79,8 @@
   {% endwith %}
 
   <div class="row justify-content-md-center fade-in">
-    <div class="col-12 col-md-4 d-flex justify-content-end">
-          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por descripción...">
+    <div class="col-md-4 d-flex justify-content-end">
+          <input type="date" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por fecha...">
           <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarCosecha">
             <i class="fa-solid fa-plus"></i>
           </button>
@@ -120,58 +119,46 @@
     </div>
 </div>
 
-  {%if cosechas%}
+  {%if cosecha%}
       <div class="row justify-content-md-center fade-in">
-        <div class="col-12 col-md-11 table-responsive">
-          <table class="table mt-2 table-hover " id = "cosechas">
+        <div class="col-12 col-md-12 table-responsive">
+          <table class="table mt-2 table-hover " id = "compras">
             <thead>
               <th scope="col">ID</th>
-              <th scope="col">Descripción</th>
-              <th scope="col">Inicio</th>
-              <th scope="col">Cierre</th>
+              <th scope="col">Fecha</th>
+              <th scope="col">Cédula</th>
+              <th scope="col">Precio($)</th>
+              <th scope="col">Clase de Cacao</th>
+              <th scope="col">Cantidad (Kg)</th>
+              <th scope="col">Humedad (%)</th>
+              <th scope="col">Merma (%)</th>
+              <th scope="col">Merma (Kg)</th>
+              <th scope="col">Cantidad Total (Kg)</th>
+              <th scope="col">Monto ($)</th>
               <th scope="col">Acciones</th>
             </thead>
             <tbody>
-              {%for cosecha in cosechas%}
+              {%for compra in compras%}
               <tr class=" deleteOut tdEdit">
-                  <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
-                  <form name="editCosecha{{cosecha.id}}" action="/cosechas/update" method="POST">
+                  <th scope="row" id="{{compra.id}}">{{compra.id}}</th>
+                  <form name="editCompra{{compra.id}}" action="/compras/update" method="POST">
                     <input type="hidden" name="editid" required="required" value="1">
-                    <td class="table-light tdEdit" type="username" id="username">
-                      <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}">
-                    </td>
-                    <td class="table-light">
-                      <input type="date" name="editInicio" class="form-control" value="{{cosecha.inicio}}">
-                    </td>
-                    <td class="table-light">
-                      <input type="date" name="editFin" class="form-control" value="{{cosecha.fin}}">
-                    </td>  
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.cedula}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.precio}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.cacao}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.cantidad}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.humedad}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.monto}}</td> 
                   </form>
-                  <td class="col-3">
+                  <td class="col-1">
                     <div class="cont">
-                      <a href="cosechas/compras/{{cosecha.id}}">
-                        <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                          data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Generar Compras">
-                          <div>
-                            <i class="fa-solid fa-file-lines"></i>
-                          </div>
-                        </button>
-                      </a>
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" onclick="handleEdit()" title="Editar Cosecha">
                         <div>
                           <i class="fa-solid fa-pencil"></i>
-                        </div>
-                      </button>
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Habilitar Cosecha">
-                        <div>
-                          <i class="fas fa-play"></i>
-                        </div>
-                      </button>
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Listar Compras">
-                        <div>
-                          <i class="fa-solid fa-file-arrow-up"></i>
                         </div>
                       </button>
                       <form name="delete" action="/cosechas/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();" title="Eliminar Cosecha">

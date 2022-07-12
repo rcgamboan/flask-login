@@ -130,7 +130,7 @@ def admin():
 @app.route('/cosechas',methods=['GET','POST','PUT'])
 def cosechas():
     if 'username' in session:
-        if session['rol'] == 1:
+        if session['rol'] == 1 or session['rol'] == 0:
             if request.method=='POST':
                 new_cosecha = db1.session.query(Cosecha).filter_by(descripcion = request.form['descripcion']).first()
                 #si no existe la cosecha en la db
@@ -178,9 +178,32 @@ def cosechas_habilitar():
 # Se obtienen los datos de las cosechas
 @app.route('/cosechas/compras/<id_cosecha>',methods=['GET','POST','PUT'])
 def compras(id_cosecha):
-    print(id_cosecha)
-    cosecha = db1.session.query(Cosecha).filter_by(id = id_cosecha).first()
-    return render_template('compras.html',cosecha=cosecha,)
+    if 'username' in session:
+        if session['rol'] == 1 or session['rol'] == 0:
+            cosecha = db1.session.query(Cosecha).filter_by(id = id_cosecha).first()
+            tipos = obtenerTiposRecolectores()
+            recolectores = obtenerRecolectores()
+            compras = obtenerCompras()
+            if request.method=='POST':
+                if recolectores != []:
+                    # Hay que verificar que la fecha este dentro de la fecha de la cosecha
+                    generarCompra(request.form["id"],
+                                request.form["fecha"],
+                                request.form["cedula"],
+                                request.form["cacao"],
+                                request.form["cantidad"],
+                                request.form["humedad"],
+                                )
+                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
+                else:
+                    flash("No se puede agregar la compra, no existen recolectores")
+                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
+            else:
+                return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
+        else:
+            return redirect(url_for('home'))
+    else:
+       return redirect(url_for('login'))
 
 # Se obtienen los datos de los productores
 @app.route('/recolector',methods=['GET','POST','PUT'])
@@ -317,6 +340,10 @@ def obtenerTiposRecolectores():
 def obtenerCosechas():
     cosechas = db1.session.query(Cosecha).filter_by().all()
     return cosechas
+
+def obtenerCompras():
+    compras = db1.session.query(Compra).filter_by().all()
+    return compras
 
 def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
 
@@ -535,13 +562,13 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha, cedula,tipo,cacao,cantidad,humedad):
+def generarCompra(fecha,cedula,cacao,cantidad,humedad):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
-    tipo_rec = db1.session.query(TipoRecolector).filter_by(id=cedula).first()
+    tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first()
     if cantidad > recolector.cantidad:
         return None
     else:    
-        compra = Compra(fecha, cedula,tipo,tipo_rec.precio,cacao,cantidad,humedad)
+        compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), cedula,recolector.tipo,tipo_rec.precio,cacao,cantidad,humedad)
         db1.session.add(compra)
         recolector.cantidad -= cantidad
         db1.session.commit()
@@ -561,5 +588,6 @@ if __name__ == '__main__':
     app.config.from_object(config['development'])
     agregarCosecha("Enero - Marzo 2022")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
+    generarCompra("2022-03-23",26063468,"Fermentado",20,12)
     app.run()
 
