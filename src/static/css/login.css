@@ -136,6 +136,10 @@ button.edit{
   border-radius: 40rem !important;
 }
 
+.edit.disabled{
+  border-color: #f5f5f5;
+}
+
 .trash{
   margin: 0 6px !important;
 

@@ -169,6 +169,19 @@ def cosechas_eliminar():
     eliminarCosecha(request.form['cosecha_id'])
     return redirect(url_for('cosechas'))
 
+@app.route('/cosechas/habilitar',methods=['POST'])
+def cosechas_habilitar():
+    print(request.form['cosecha_id'])
+    activarCosecha(request.form['cosecha_id'])
+    return redirect(url_for('cosechas'))
+
+# Se obtienen los datos de las cosechas
+@app.route('/cosechas/compras/<id_cosecha>',methods=['GET','POST','PUT'])
+def compras(id_cosecha):
+    print(id_cosecha)
+    cosecha = db1.session.query(Cosecha).filter_by(id = id_cosecha).first()
+    return render_template('compras.html',cosecha=cosecha,)
+
 # Se obtienen los datos de los productores
 @app.route('/recolector',methods=['GET','POST','PUT'])
 def recolector():
@@ -451,11 +464,12 @@ def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
+
     if cosecha.activa == 1:
 
         cosecha.activa = 0
     else:
-        cosecha.activa = 0
+        cosecha.activa = 1
     db1.session.commit()
 
 def eliminarUsuario(ID):

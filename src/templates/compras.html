@@ -47,6 +47,7 @@
     // Loop through all table rows, and hide those who don't match the search query
     for (i = 0; i < tr.length; i++) {
       td = tr[i].getElementsByTagName("td")[0];
+
       if (td) {
         descripcion = td.querySelector('input[name="editDescripcion"]').value
         if (descripcion.toUpperCase().indexOf(filter) > -1) {
@@ -57,25 +58,13 @@
       }
     }
   }
-
-  function habilitar() {
-    var table = document.getElementById('cosechas');
-    var tbody = table.getElementsByTagName('tbody')[0];
-    var rows = tbody.getElementsByTagName('tr');
-
-    for (i = 0; i < rows.length; i++){
-      rows[i].onclick = async function() {
-        id = this.cells[0].innerHTML
-        var form = document.querySelector('form[name="habilitar' + id + '"]')
-        form[0].value = id;
-        form.submit();
-      }
-    }
-  }
-</script>
+</script>\
 
 <main class="form-signin w-100 mb-auto mt-3 text-center">
-  <h2 class=" my-3 fade-in display-6">Portafolio de <b class="fw-bold">Cosechas</b></h2>
+    {% if cosecha %}
+    
+    <h2 class=" my-3 fade-in display-6">{{cosecha.descripcion}}<b class="fw-bold"> Datos de la Compra</b> </h2>
+    {%endif%}
   {% with messages = get_flashed_messages()%}
 
   {% if messages %}
@@ -144,7 +133,6 @@
             </thead>
             <tbody>
               {%for cosecha in cosechas%}
-              {% if cosecha.activa %}
               <tr class=" deleteOut tdEdit">
                   <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
                   <form name="editCosecha{{cosecha.id}}" action="/cosechas/update" method="POST">
@@ -161,17 +149,29 @@
                   </form>
                   <td class="col-3">
                     <div class="cont">
-                      <form action="cosechas/compras/{{cosecha.id}}">
+                      <a href="cosechas/compras/{{cosecha.id}}">
                         <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
                           data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Generar Compras">
                           <div>
                             <i class="fa-solid fa-file-lines"></i>
                           </div>
                         </button>
-                      </form>
+                      </a>
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" onclick="handleEdit()" title="Editar Cosecha">
                         <div>
                           <i class="fa-solid fa-pencil"></i>
+                        </div>
+                      </button>
+                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Habilitar Cosecha">
+                        <div>
+                          <i class="fas fa-play"></i>
+                        </div>
+                      </button>
+                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
+                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Listar Compras">
+                        <div>
+                          <i class="fa-solid fa-file-arrow-up"></i>
                         </div>
                       </button>
                       <form name="delete" action="/cosechas/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();" title="Eliminar Cosecha">
@@ -180,78 +180,10 @@
                           <i class="fa-solid fa-trash"></i>
                         </div>
                       </form>
-                      <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit trash btn" role="button" onclick="habilitar();" title="Deshabilitar Cosecha">
-                        <input type="hidden" name="cosecha_id" value="" >
-                        <div>
-                          <i class="fas fa-ban"></i>
-                        </div>
-                      </form>
-                      
-                      <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Listar Compras">
-                        <div>
-                          <i class="fa-solid fa-file-arrow-up"></i>
-                        </div>
-                      </button>
-                      
 
                     </div>
                   </td>
               </tr>
-              {% else %}
-              <tr class=" deleteOut tdEdit">
-                <th scope="row" id="{{cosecha.id}}">{{cosecha.id}}</th>
-                <form name="editCosecha{{cosecha.id}}" action="/cosechas/update" method="POST">
-                  <input type="hidden" name="editid" required="required" value="1">
-                  <td class="table-light tdEdit" type="username" id="username">
-                    <input type="text" name="editDescripcion" class="form-control" value="{{cosecha.descripcion}}" disabled>
-                  </td>
-                  <td class="table-light">
-                    <input type="date" name="editInicio" class="form-control" value="{{cosecha.inicio}}" disabled>
-                  </td>
-                  <td class="table-light">
-                    <input type="date" name="editFin" class="form-control" value="{{cosecha.fin}}" disabled>
-                  </td>  
-                </form>
-                <td class="col-3">
-                  <div class="cont">
-                    <form action="cosechas/compras/{{cosecha.id}}">
-                      <button id="editbtn" method="POST" class="edit pencil btn disabled" role="button" 
-                        data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Generar Compras">
-                        <div>
-                          <i class="fa-solid fa-file-lines"></i>
-                        </div>
-                      </button>
-                    </form>
-                    <button id="editbtn" method="POST" class="edit pencil btn disabled" role="button" onclick="handleEdit()" title="Editar Cosecha">
-                      <div>
-                        <i class="fa-solid fa-pencil"></i>
-                      </div>
-                    </button>
-                    <form name="delete" action="/cosechas/delete" method="POST" class="edit trash btn disabled" role="button" onclick="handleDelete();" title="Eliminar Cosecha">
-                      <input type="hidden" name="cosecha_id" value="" >
-                      <div >
-                        <i class="fa-solid fa-trash"></i>
-                      </div>
-                    </form>
-                    <form name="habilitar{{cosecha.id}}" action="/cosechas/habilitar" method="POST" class="edit trash btn" role="button" onclick="habilitar();" title="Habilitar Cosecha">
-                      <input type="hidden" name="cosecha_id" value="" >
-                      <div>
-                        <i class="fas fa-play"></i>
-                      </div>
-                    </form>
-                    <button id="editbtn" method="POST" class="edit pencil btn" role="button" 
-                      data-bs-toggle="modal" data-bs-target="#EditarUsuario" onclick="" title="Listar Compras">
-                      <div>
-                        <i class="fa-solid fa-file-arrow-up"></i>
-                      </div>
-                    </button>
-                    
-
-                  </div>
-                </td>
-              </tr>
-              {% endif %}
               {%endfor%}
             </tbody>
           </table>

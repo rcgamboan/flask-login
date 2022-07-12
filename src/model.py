@@ -95,7 +95,7 @@ class Cosecha(db.Base):
     def __repr__(self):
         return f'Cosecha({self.descripcion,self.inicio,self.fin})'
     def __str__(self):
-        return self.direccion
+        return self.descripcion
 
 class Compra(db.Base):
     __tablename__ = 'compra'
