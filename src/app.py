@@ -583,8 +583,11 @@ def setSession(logged_user):
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
+
     agregarCosecha("Enero - Marzo 2022")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
+    agregarTipoRecolector("Revendedor 2",1.5)
+    # agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
     generarCompra("2022-03-23",26063468,"Fermentado",20,1,12)
     app.run()
 
