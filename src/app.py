@@ -499,7 +499,6 @@ def activarCosecha(id):
         cosecha.activa = 1
     db1.session.commit()
 
-
 def eliminarUsuario(ID):
     
     if int(session['id']) == int(ID):
@@ -570,7 +569,6 @@ def generarCompra(fecha,cedula,cacao,cantidad,humedad):
     else:    
         compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), cedula,recolector.tipo,tipo_rec.precio,cacao,cantidad,humedad)
         db1.session.add(compra)
-        recolector.cantidad -= cantidad
         db1.session.commit()
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
