@@ -109,9 +109,11 @@ class Compra(db.Base):
     monto = Column(Integer, nullable=False)
     cosecha = Column(Integer, ForeignKey("cosecha.id"))
     humedad = Column(Integer, nullable=False)
+    observaciones = Column(String, nullable=True)
+    merma = Column(Integer, nullable=False)
 
 
-    def __init__(self, fecha, cedula,tipo,precio,cacao,cantidad,cosecha,humedad):
+    def __init__(self, fecha, cedula,tipo,precio,cacao,cantidad,cosecha,observaciones,humedad,merma):
         self.fecha = fecha
         self.cedula = cedula
         self.monto = precio * cantidad
@@ -121,6 +123,8 @@ class Compra(db.Base):
         self.cantidad = cantidad
         self.humedad = humedad
         self.cosecha = cosecha
+        self.merma = merma
+        self.observaciones = observaciones
 
     def __repr__(self):
         return f'Compra({self.fecha,self.precio,self.cantidad})'
