@@ -187,15 +187,16 @@ def compras(id_cosecha):
             if request.method=='POST':
                 if recolectores != []:
                     # Hay que verificar que la fecha este dentro de la fecha de la cosecha
-                    generarCompra(request.form["id"],
-                                request.form["fecha"],
-                                request.form["cedula"],
-                                request.form["cacao"],
-                                request.form["cantidad"],
-                                id_cosecha,
-                                request.form["humedad"],
-                                )
-                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
+                    generarCompra(
+                                request.form['fecha'],
+                                request.form['cedula'],
+                                request.form['cacao'],
+                                request.form['cantidad'],
+                                request.form['cosecha'],
+                                request.form['observaciones'],
+                                request.form['humedad'],
+                                request.form['merma'])
+                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosechas=obtenerCosechas())
                 else:
                     flash("No se puede agregar la compra, no existen recolectores")
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
@@ -248,7 +249,6 @@ def recolector():
             return redirect(url_for('home'))
     else:
        return redirect(url_for('login'))
-
 
 @app.route('/recolector/update',methods=['POST'])
 def prod_update():
@@ -468,7 +468,9 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
             flash("El usuario ya se encuentra registrado")
 
 def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
-
+    rec = db1.session.query(Recolector).filter_by(id=id).first()
+    if rec != None:
+        return None
     tipos = db1.session.query(TipoRecolector).filter_by().all()
     if len(tipos) == 0:
         flash("Debe agregar un tipo de productor primero")
@@ -568,12 +570,16 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
+def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad=0,merma=0):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
 
+    if recolector == None or tipo_rec == None:
+        return None
+
     compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), 
-                    cedula,recolector.tipo,
+                    cedula,
+                    recolector.tipo,
                     tipo_rec.precio,cacao,
                     cantidad,
                     cosecha,
@@ -600,7 +606,7 @@ if __name__ == '__main__':
     agregarCosecha("Enero - Marzo 2022")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
     agregarTipoRecolector("Revendedor 2",1.5)
-    # agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
-    generarCompra("2022-03-23",26063468,"Fermentado",20,1,12)
+    agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
+    generarCompra("2022-03-23",26063468,"Fermentado",20,1,"",12,0)
     app.run()
 

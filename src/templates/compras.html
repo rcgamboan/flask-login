@@ -81,38 +81,63 @@
   <div class="row justify-content-md-center fade-in">
     <div class="col-md-4 d-flex justify-content-end">
           <input type="date" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por fecha...">
-          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarCosecha">
+          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarCompra">
             <i class="fa-solid fa-plus"></i>
           </button>
     </div>
   </div>
 
-  <!--Modal Agregar cosecha-->
-  <div class="modal fade" id="AgregarCosecha" tabindex="-1" role="dialog" aria-labelledby="Agregar Cosecha" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+  <!--Modal Agregar compra-->
+  <div class="modal fade" id="AgregarCompra" tabindex="-1" role="dialog" aria-labelledby="Agregar Compra" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Agregar Cosecha</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Generar Compra</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin" action="/cosechas" method="POST">
+        <form class="form-signin" action="/compra/agregar" method="POST">
             <div class="modal-body">
-                <div class="form-floating">
-                    <input class="form-control  top" id="descripcion" name="descripcion" placeholder="Enero Marzo 2022" required="required">
-                    <label for="floatingInput">Descripción</label>
-                </div>
-                <div class="form-floating">
-                    <input type="date" class="form-control  middle" id="inicio" name="inicio" placeholder="12/01/2022" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-                    <label for="floatingInput">Inicio</label>
-                </div>
-                <div class="form-floating">
-                  <input type="date" class="form-control  bottom" id="fin" name="fin" placeholder="12/01/2023" required="required" pattern="[A-Za-z0-9 ]{1,40}">
-                  <label for="floatingInput">Cierre</label>
+              <div class="form-floating">
+                  <input type="date" class="form-control  middle" id="fecha" name="fecha" placeholder="12/01/2022" required="required" pattern="[A-Za-z0-9 ]{1,40}">
+                  <label for="floatingInput">Fecha</label>
               </div>
-            </div>
-            <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-            <button type="submit" class="btn btn-primary">Agregar Cosecha</button>
+              <div class="form-floating">
+                <input   class="form-control  middle" id="cedula" name="id" placeholder="1234567" required="required">
+                <label for="floatingInput">Cédula</label>
+              </div>
+              <div class="form-floating">
+                <input class="form-control top" id="cacao" name="cacao" placeholder="Fermentado" required="required" pattern="[A-Za-z]{1,20}">
+                <label for="floatingInput">Cacao</label>
+              </div>
+              <div class="form-floating">
+                <input class="form-control top" id="cantidad" name="cantidad" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                <label for="floatingInput">Cantidad (Kg.)</label>
+              </div>
+              <div class="form-floating">
+                <select id="cosecha" class="form-control bottom" name="cosecha">
+                {% for cos in cosechas %}
+                <option value="{{cos.id}}">{{cos.descripcion}}</option>
+                {%endfor%}
+                </select>                  
+                <label for="floatingInput">Cosecha</label>
+              </div>
+                <div class="form-floating">
+                  <input class="form-control top" id="observaciones" name="observaciones" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                  <label for="floatingInput">Observaciones</label>
+                </div>
+                <div class="form-floating">
+                  <input class="form-control top" id="humedad" name="humedad" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                  <label for="floatingInput">Humedad</label>
+                </div>
+                <div class="form-floating">
+                  <input class="form-control top" id="merma" name="merma" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                  <label for="floatingInput">Merma</label>
+                </div>
+              </div>
+              <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+              <button type="submit" class="btn btn-primary">Generar Compra</button>
+              </div>
             </div>
         </form>
     </div>

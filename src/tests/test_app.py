@@ -249,7 +249,6 @@ class TestCompra(unittest.TestCase):
 
     def test_generar_compra(self):
         agregarTipoRecolector("prueba1")
-        #fecha, cedula,tipo,precio,cacao,cantidad,cosecha,observaciones,humedad,merma
         agregarRecolector(9999,"pedro","perez","1234","1234","caracas","valencia",0)
         generarCompra(datetime.datetime.now(),999,0,0,"","","","","",1)
         self.assertIsNotNone( test_db.session.query(Compra).filter_by(cedula = 999).first())
