@@ -456,7 +456,15 @@ def editarCosecha(id,descripcion = "", inicio = "", fin = "", activa=-1):
 def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
 
     logged_user = db1.session.query(Usuario).filter_by(username = username).first()
-
+    cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
+    if cosecha == None:
+        return None
+    
+    # no se puede agregar un usuario a cosechas inactivas
+    if cosecha.activa == 0:
+        flash("La cosecha seleccionada se encuentra inactiva")
+        return None
+    
     if logged_user == None:
         user = Usuario(username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
         db1.session.add(user)
@@ -491,12 +499,14 @@ def agregarTipoRecolector(descripcion,precio=0):
     else:
         return
 
-def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now(),activa = 1):
+def agregarCosecha(descripcion, inicio = datetime.datetime.now().date(), fin = datetime.datetime.now().date(),activa = 1):
+    # la fecha de inicio no puede ser mayor a la del fin
+    if inicio > fin:
+        return None
     cosecha = Cosecha(descripcion,inicio,fin,activa)
     
     db1.session.add(cosecha)
     db1.session.commit()
-
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
@@ -573,11 +583,24 @@ def cambiarPrecio(id,precioNuevo):
 def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad=0,merma=0):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
-
-    if recolector == None or tipo_rec == None:
+    cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
+    
+    if recolector == None or tipo_rec == None or cosecha == None:
+        return None
+    
+    # no se puede generar una compra en una cosecha inactiva
+    if cosecha.activa == 0:
+        flash("No se pueden generar compras sobre una cosecha inactiva")
         return None
 
-    compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), 
+    inicio = cosecha.inicio
+    fin = cosecha.fin
+    fecha = (datetime.datetime.strptime(fecha,"%Y-%m-%d").date())
+    # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
+    if not inicio<=fecha<=fin:
+        return None
+
+    compra = Compra(fecha, 
                     cedula,
                     recolector.tipo,
                     tipo_rec.precio,cacao,
