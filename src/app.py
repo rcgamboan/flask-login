@@ -479,16 +479,22 @@ def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direcc
         db1.session.commit()
 
 def agregarTipoRecolector(descripcion,precio=0):
-    tipo = TipoRecolector(descripcion,precio)
-    #print(tipo)
-    db1.session.add(tipo)
-    db1.session.commit()
+
+    new_tipo = db1.session.query(TipoRecolector).filter_by(direccion = descripcion).first()
+
+    if new_tipo == None:
+        tipo = TipoRecolector(descripcion,precio)
+        db1.session.add(tipo)
+        db1.session.commit()
+    else:
+        return
 
 def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now(),activa = 1):
     cosecha = Cosecha(descripcion,inicio,fin,activa)
     
     db1.session.add(cosecha)
     db1.session.commit()
+
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
