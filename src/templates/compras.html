@@ -149,9 +149,9 @@
                     <td class="table-light tdEdit" type="username" id="username">{{compra.cacao}}</td>
                     <td class="table-light tdEdit" type="username" id="username">{{compra.cantidad}}</td>
                     <td class="table-light tdEdit" type="username" id="username">{{compra.humedad}}</td>
-                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
-                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
-                    <td class="table-light tdEdit" type="username" id="username">{{compra.fecha}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{(compra.merma * 100)/compra.cantidad}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.merma}}</td>
+                    <td class="table-light tdEdit" type="username" id="username">{{compra.cantidad - compra.merma}}</td>
                     <td class="table-light tdEdit" type="username" id="username">{{compra.monto}}</td> 
                   </form>
                   <td class="col-1">
