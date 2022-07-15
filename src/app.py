@@ -189,14 +189,15 @@ def compras(id_cosecha):
                     # Hay que verificar que la fecha este dentro de la fecha de la cosecha
                     generarCompra(
                                 request.form['fecha'],
-                                request.form['cedula'],
+                                request.form['id'],
                                 request.form['cacao'],
                                 request.form['cantidad'],
-                                request.form['cosecha'],
+                                cosecha.id,
                                 request.form['observaciones'],
                                 request.form['humedad'],
                                 request.form['merma'])
-                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosechas=obtenerCosechas())
+                    compras = obtenerCompras()
+                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
                 else:
                     flash("No se puede agregar la compra, no existen recolectores")
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
@@ -584,27 +585,28 @@ def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad=0,me
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
     cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
-    
-    if recolector == None or tipo_rec == None or cosecha == None:
-        return None
-    
-    # no se puede generar una compra en una cosecha inactiva
-    if cosecha.activa == 0:
-        flash("No se pueden generar compras sobre una cosecha inactiva")
-        return None
 
-    inicio = cosecha.inicio
-    fin = cosecha.fin
-    fecha = (datetime.datetime.strptime(fecha,"%Y-%m-%d").date())
-    # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
-    if not inicio<=fecha<=fin:
-        return None
+    # if recolector == None or tipo_rec == None or cosecha == None:
+    #     return None
+    
+    # # no se puede generar una compra en una cosecha inactiva
+    # if cosecha.activa == 0:
+    #     flash("No se pueden generar compras sobre una cosecha inactiva")
+    #     return None
+
+    # inicio = cosecha.inicio
+    # fin = cosecha.fin
+    # fecha = (datetime.datetime.strptime(fecha,"%Y-%m-%d").date())
+    # # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
+    # if not inicio<=fecha<=fin:
+    #     return None
 
     compra = Compra(fecha, 
                     cedula,
                     recolector.tipo,
-                    tipo_rec.precio,cacao,
-                    cantidad,
+                    tipo_rec.precio,
+                    cacao,
+                    float(cantidad),
                     cosecha,
                     observaciones,
                     humedad,
@@ -626,7 +628,7 @@ if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
 
-    agregarCosecha("Enero - Marzo 2022")
+    agregarCosecha("Ene - Mar 22")
     agregarUsuario("admin","admin","admin","admin",0,1,0)
     agregarTipoRecolector("Revendedor 2",1.5)
     # agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)

@@ -92,10 +92,10 @@
     <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
         <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalLabel">Generar Compra</h5>
+        <h5 class="modal-title" id="exampleModalLabel">Generar Compra en Cosecha {{cosecha.descripcion}}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
-        <form class="form-signin" action="/compra/agregar" method="POST">
+        <form class="form-signin" action="/cosechas/compras/{{cosecha.id}}" method="POST">
             <div class="modal-body">
               <div class="form-floating">
                   <input type="date" class="form-control  middle" id="fecha" name="fecha" placeholder="12/01/2022" required="required" pattern="[A-Za-z0-9 ]{1,40}">
@@ -107,36 +107,28 @@
               </div>
               <div class="form-floating">
                 <input class="form-control top" id="cacao" name="cacao" placeholder="Fermentado" required="required" pattern="[A-Za-z]{1,20}">
-                <label for="floatingInput">Cacao</label>
+                <label for="floatingInput">Clase de Cacao</label>
               </div>
               <div class="form-floating">
-                <input class="form-control top" id="cantidad" name="cantidad" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                <input class="form-control top" id="cantidad" name="cantidad" placeholder="10" required="required" pattern="{1,20}">
                 <label for="floatingInput">Cantidad (Kg.)</label>
               </div>
               <div class="form-floating">
-                <select id="cosecha" class="form-control bottom" name="cosecha">
-                {% for cos in cosechas %}
-                <option value="{{cos.id}}">{{cos.descripcion}}</option>
-                {%endfor%}
-                </select>                  
-                <label for="floatingInput">Cosecha</label>
+                <input class="form-control top" id="observaciones" name="observaciones" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
+                <label for="floatingInput">Observaciones</label>
               </div>
-                <div class="form-floating">
-                  <input class="form-control top" id="observaciones" name="observaciones" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
-                  <label for="floatingInput">Observaciones</label>
-                </div>
-                <div class="form-floating">
-                  <input class="form-control top" id="humedad" name="humedad" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
-                  <label for="floatingInput">Humedad</label>
-                </div>
-                <div class="form-floating">
-                  <input class="form-control top" id="merma" name="merma" placeholder="10" required="required" pattern="[A-Za-z]{1,20}">
-                  <label for="floatingInput">Merma</label>
-                </div>
+              <div class="form-floating">
+                <input class="form-control top" id="humedad" name="humedad" placeholder="10" required="required" pattern="{1,20}">
+                <label for="floatingInput">Humedad (%)</label>
+              </div>
+              <div class="form-floating">
+                <input class="form-control top" id="merma" name="merma" placeholder="10" required="required" pattern="{1,20}">
+                <label for="floatingInput">Merma (kg)</label>
+              </div>
               </div>
               <div class="modal-footer">
-              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-              <button type="submit" class="btn btn-primary">Generar Compra</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="submit" class="btn btn-primary">Generar Compra</button>
               </div>
             </div>
         </form>

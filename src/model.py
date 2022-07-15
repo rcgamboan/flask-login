@@ -116,7 +116,7 @@ class Compra(db.Base):
     def __init__(self, fecha, cedula,tipo,precio,cacao,cantidad,cosecha,observaciones,humedad,merma):
         self.fecha = fecha
         self.cedula = cedula
-        self.monto = precio * cantidad
+        self.monto = cantidad * precio
         self.tipo = tipo
         self.precio = precio
         self.cacao = cacao
