@@ -40,12 +40,13 @@ def editarCosecha(id=-1,descripcion = "", inicio = "", fin = "", activa=-1):
     else:
         return None
 
-
-def activarCosecha(id):
+def activarCosecha(id=-1):
+    if id == -1:
+        return None
     cosecha = test_db.session.query(Cosecha).filter_by(id=id).first()
     if cosecha.activa == 1:
 
         cosecha.activa = 0
     else:
-        cosecha.activa = 0
+        cosecha.activa = 1
     test_db.session.commit()

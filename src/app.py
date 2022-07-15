@@ -187,15 +187,16 @@ def compras(id_cosecha):
             if request.method=='POST':
                 if recolectores != []:
                     # Hay que verificar que la fecha este dentro de la fecha de la cosecha
-                    generarCompra(request.form["id"],
-                                request.form["fecha"],
-                                request.form["cedula"],
-                                request.form["cacao"],
-                                request.form["cantidad"],
-                                id_cosecha,
-                                request.form["humedad"],
-                                )
-                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
+                    generarCompra(
+                                request.form['fecha'],
+                                request.form['cedula'],
+                                request.form['cacao'],
+                                request.form['cantidad'],
+                                request.form['cosecha'],
+                                request.form['observaciones'],
+                                request.form['humedad'],
+                                request.form['merma'])
+                    return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosechas=obtenerCosechas())
                 else:
                     flash("No se puede agregar la compra, no existen recolectores")
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
@@ -248,7 +249,6 @@ def recolector():
             return redirect(url_for('home'))
     else:
        return redirect(url_for('login'))
-
 
 @app.route('/recolector/update',methods=['POST'])
 def prod_update():
@@ -456,7 +456,15 @@ def editarCosecha(id,descripcion = "", inicio = "", fin = "", activa=-1):
 def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
 
     logged_user = db1.session.query(Usuario).filter_by(username = username).first()
-
+    cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
+    if cosecha == None:
+        return None
+    
+    # no se puede agregar un usuario a cosechas inactivas
+    if cosecha.activa == 0:
+        flash("La cosecha seleccionada se encuentra inactiva")
+        return None
+    
     if logged_user == None:
         user = Usuario(username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
         db1.session.add(user)
@@ -468,7 +476,9 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
             flash("El usuario ya se encuentra registrado")
 
 def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo):
-
+    rec = db1.session.query(Recolector).filter_by(id=id).first()
+    if rec != None:
+        return None
     tipos = db1.session.query(TipoRecolector).filter_by().all()
     if len(tipos) == 0:
         flash("Debe agregar un tipo de productor primero")
@@ -489,12 +499,14 @@ def agregarTipoRecolector(descripcion,precio=0):
     else:
         return
 
-def agregarCosecha(descripcion, inicio = datetime.datetime.now(), fin = datetime.datetime.now(),activa = 1):
+def agregarCosecha(descripcion, inicio = datetime.datetime.now().date(), fin = datetime.datetime.now().date(),activa = 1):
+    # la fecha de inicio no puede ser mayor a la del fin
+    if inicio > fin:
+        return None
     cosecha = Cosecha(descripcion,inicio,fin,activa)
     
     db1.session.add(cosecha)
     db1.session.commit()
-
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
@@ -568,12 +580,29 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
+def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad=0,merma=0):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
+    cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
+    
+    if recolector == None or tipo_rec == None or cosecha == None:
+        return None
+    
+    # no se puede generar una compra en una cosecha inactiva
+    if cosecha.activa == 0:
+        flash("No se pueden generar compras sobre una cosecha inactiva")
+        return None
 
-    compra = Compra(datetime.datetime.strptime(fecha,"%Y-%m-%d"), 
-                    cedula,recolector.tipo,
+    inicio = cosecha.inicio
+    fin = cosecha.fin
+    fecha = (datetime.datetime.strptime(fecha,"%Y-%m-%d").date())
+    # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
+    if not inicio<=fecha<=fin:
+        return None
+
+    compra = Compra(fecha, 
+                    cedula,
+                    recolector.tipo,
                     tipo_rec.precio,cacao,
                     cantidad,
                     cosecha,

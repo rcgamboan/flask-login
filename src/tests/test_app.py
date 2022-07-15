@@ -156,7 +156,6 @@ class TestRecolector(unittest.TestCase):
     def test_editar_sin_id(self):
         self.assertIsNone(editarCosecha())
 
-
 class TestTipoRecolector(unittest.TestCase):
 
     def test_agregar_sin_descripcion(self):
@@ -222,19 +221,36 @@ class TestCosecha(unittest.TestCase):
         agregarCosecha("prueba3")
         self.assertIsNone(agregarCosecha("prueba3"))
     
+    def test_editar_sin_id(self):
+        agregarCosecha("prueba4")
+        self.assertIsNone(editarCosecha())
+
     def test_editar_existente(self):
         agregarCosecha("prueba4")
         prod = test_db.session.query(Cosecha).filter_by(descripcion = "prueba4").first()
         editarCosecha(id=prod.id,descripcion="prueba5")
         RecolectorDB = test_db.session.query(Cosecha).filter_by(descripcion="prueba5").first()
         self.assertEqual(RecolectorDB.descripcion,"prueba5")
+    
+    def test_activar_sin_id(self):
+        
+        self.assertIsNone(activarCosecha())
+    
+    def test_activar_cosecha(self):
+        agregarCosecha("prueba5")
+        cosecha = test_db.session.query(Cosecha).filter_by(descripcion = "prueba5").first()
+        activarCosecha(cosecha.id)
+        self.assertEqual(0,cosecha.activa)
+        activarCosecha(cosecha.id)
+        self.assertEqual(1,cosecha.activa)
+    
 
 class TestCompra(unittest.TestCase):
 
     def test_generar_compra(self):
         agregarTipoRecolector("prueba1")
         agregarRecolector(9999,"pedro","perez","1234","1234","caracas","valencia",0)
-        generarCompra(datetime.datetime.now(),999,0,0,"","","")
+        generarCompra(datetime.datetime.now(),999,0,0,"","","","","",1)
         self.assertIsNotNone( test_db.session.query(Compra).filter_by(cedula = 999).first())
 
 if __name__ == '__main__':
