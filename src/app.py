@@ -467,7 +467,7 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
         return None
     
     if logged_user == None:
-        user = Usuario(username, generate_password_hash(password),nombres,apellidos,cosecha,rol)
+        user = Usuario(username, generate_password_hash(password),nombres,apellidos,int(cosecha.id),int(rol))
         db1.session.add(user)
         db1.session.commit()
     else:
@@ -630,7 +630,7 @@ if __name__ == '__main__':
     app.config.from_object(config['development'])
 
     agregarCosecha("Ene - Mar 22")
-    agregarUsuario("admin","admin","admin","admin",0,1,0)
+    agregarUsuario("admin","admin","admin","admin",1,1,0)
     agregarTipoRecolector("Revendedor 2",1.5)
     # agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
     generarCompra("2022-03-23",26063468,"Fermentado",20,1,"Demasiado oscuro",12,3)
