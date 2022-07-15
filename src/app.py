@@ -581,38 +581,39 @@ def cambiarPrecio(id,precioNuevo):
         tipoRec.precio = precioNuevo
         db1.session.commit()
 
-def generarCompra(fecha,cedula,cacao,cantidad,cosecha,observaciones,humedad=0,merma=0):
+def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
     cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
 
-    # if recolector == None or tipo_rec == None or cosecha == None:
-    #     return None
+    if recolector == None or tipo_rec == None or cosecha == None:
+        return None
     
-    # # no se puede generar una compra en una cosecha inactiva
-    # if cosecha.activa == 0:
-    #     flash("No se pueden generar compras sobre una cosecha inactiva")
-    #     return None
+    # no se puede generar una compra en una cosecha inactiva
+    if cosecha.activa == 0:
+        flash("No se pueden generar compras sobre una cosecha inactiva")
+        return None
 
-    # inicio = cosecha.inicio
-    # fin = cosecha.fin
-    # fecha = (datetime.datetime.strptime(fecha,"%Y-%m-%d").date())
+    inicio = cosecha.inicio
+    fin = cosecha.fin
+    fecha = datetime.datetime.strptime(fecha,"%Y-%m-%d")
     # # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
-    # if not inicio<=fecha<=fin:
-    #     return None
+    if not inicio<=fecha.date()<=fin:
+        return None
 
     compra = Compra(fecha, 
                     cedula,
-                    recolector.tipo,
-                    tipo_rec.precio,
+                    int(recolector.tipo),
+                    float(tipo_rec.precio),
                     cacao,
                     float(cantidad),
-                    cosecha,
+                    int(cosecha.id),
                     observaciones,
-                    humedad,
-                    merma)
+                    int(humedad),
+                    int(merma))
     db1.session.add(compra)
     db1.session.commit()
+
 
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
