@@ -12,6 +12,7 @@ class Usuario(db.Base):
     apellidos = Column(String, nullable=False)
     cosecha = Column(Integer, ForeignKey("cosecha.id"))
     rol = Column(Integer, default=0, nullable=False)
+    nombreCosecha = Column(String, nullable=True)
     # rol = 0 -> analista
     # rol = 1 -> admin
     # rol = 2 -> productor
@@ -23,6 +24,7 @@ class Usuario(db.Base):
         self.apellidos = apellidos
         self.cosecha = cosecha
         self.rol = rol
+        self.nombreCosecha = ""
 
     def __repr__(self):
         return f'Usuario({self.username}, {self.password}, {self.rol})'

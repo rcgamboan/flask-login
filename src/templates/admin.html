@@ -72,7 +72,7 @@
             document.querySelector('input[name="editusername"]').value = '{{user.username}}';
             document.querySelector('input[name="editnombre"]').value = '{{user.nombres}}';
             document.querySelector('input[name="editapellido"]').value = '{{user.apellidos}}';
-            document.querySelector('input[name="editcosecha"]').value = '{{user.cosecha}}';
+            document.querySelector('select[name="editcosecha"]').value = '{{user.cosecha}}';
             document.querySelector('select[name="editrol"]').value = '{{user.rol}}';
             document.querySelector('input[name="id"]').value = '{{user.id}}';
           }
@@ -168,7 +168,13 @@
               <label for="floatingInput">Apellidos</label>
             </div>
             <div class="form-floating">
-              <input class="form-control middle" id="direccion" name="cosecha" placeholder="Dic-Mar 2022" required="required">
+                      
+              <select id="direccion" class="form-control bottom" name="cosecha">
+              {% for cosecha in cosechas %}
+              <option value="{{cosecha.id}}">{{cosecha.descripcion}}</option>
+              {%endfor%}
+              </select>
+              
               <label for="floatingInput">Cosecha</label>
             </div>
             <div class="form-floating">
@@ -214,7 +220,13 @@
               <label for="floatingInput">Apellidos</label>
             </div>
             <div class="form-floating">
-              <input class="form-control middle"  name="editcosecha" placeholder="Dic-Mar 2022" required="required">
+                      
+              <select class="form-control bottom" name="editcosecha">
+              {% for cosecha in cosechas %}
+              <option value="{{cosecha.id}}">{{cosecha.descripcion}}</option>
+              {%endfor%}
+              </select>
+              
               <label for="floatingInput">Cosecha</label>
             </div>
             <div class="form-floating">
@@ -257,7 +269,7 @@
                   <td class="table-light tdEdit" type="username" id="nombre">{{user.nombres}}</td>
                   <td class="table-light tdEdit" type="username" id="apellidos">{{user.apellidos}}</td>
                   <td class="table-light tdEdit" type="username" name="Roles" value="{{user.rol}}"></td>
-                  <td class="table-light tdEdit" type="username" id="cosecha">{{user.cosecha}}</td>
+                  <td class="table-light tdEdit" type="username" id="cosecha">{{user.nombreCosecha}}</td>
                   <td>
                     <div class="cont">
                       <button id="editbtn" method="POST" class="edit pencil btn" role="button" 

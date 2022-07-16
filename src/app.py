@@ -81,7 +81,7 @@ def home():
 
 @app.route('/admin/update',methods=['POST'])
 def update():
-
+    print(request.form['id'])
     editarUsuario(  request.form['id'],
                     request.form['editusername'],  
                     request.form['editnombre'],
@@ -112,15 +112,15 @@ def admin():
                                     request.form['cosecha'],
                                     request.form['rol'])
                     users = obtenerUsuarios()
-                    return render_template('admin.html',users=users)
+                    return render_template('admin.html',users=users,cosechas=obtenerCosechas())
 
                 else:
                     flash("Este nombre de usuario ya existe ")
                     users = obtenerUsuarios()
-                    return render_template('admin.html',users=users)   
+                    return render_template('admin.html',users=users,cosechas=obtenerCosechas())   
             else:
                 users = obtenerUsuarios()
-                return render_template('admin.html',users=users)
+                return render_template('admin.html',users=users,cosechas=obtenerCosechas())
         else:
             return redirect(url_for('home'))
     else:
@@ -183,7 +183,7 @@ def compras(id_cosecha):
             cosecha = db1.session.query(Cosecha).filter_by(id = id_cosecha).first()
             tipos = obtenerTiposRecolectores()
             recolectores = obtenerRecolectores()
-            compras = obtenerCompras()
+            compras = obtenerCompras(cosecha.id)
             if request.method=='POST':
                 if recolectores != []:
                     # Hay que verificar que la fecha este dentro de la fecha de la cosecha
@@ -196,7 +196,6 @@ def compras(id_cosecha):
                                 request.form['observaciones'],
                                 request.form['humedad'],
                                 request.form['merma'])
-                    compras = obtenerCompras()
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
                 else:
                     flash("No se puede agregar la compra, no existen recolectores")
@@ -343,12 +342,12 @@ def obtenerCosechas():
     cosechas = db1.session.query(Cosecha).filter_by().all()
     return cosechas
 
-def obtenerCompras():
-    compras = db1.session.query(Compra).filter_by().all()
+def obtenerCompras(id):
+    compras = db1.session.query(Compra).filter_by(cosecha=id).all()
     return compras
 
 def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
-
+    print(f"id a editar : {id}")
     logged_user = db1.session.query(Usuario).filter_by(id = id).first()
     
     if logged_user != None:
@@ -372,11 +371,9 @@ def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol
         
         if cosecha != "" and cosecha != None:
             user.cosecha = cosecha
-        
+            user.nombreCosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first().descripcion
         if rol != -1 and rol != None:
             user.rol = rol
-
-        
 
         db1.session.commit()
     else:
@@ -468,6 +465,7 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
     
     if logged_user == None:
         user = Usuario(username, generate_password_hash(password),nombres,apellidos,int(cosecha.id),int(rol))
+        user.nombreCosecha = cosecha.descripcion
         db1.session.add(user)
         db1.session.commit()
     else:
@@ -501,6 +499,10 @@ def agregarTipoRecolector(descripcion,precio=0):
         return
 
 def agregarCosecha(descripcion, inicio = datetime.datetime.now().date(), fin = datetime.datetime.now().date(),activa = 1):
+
+    new_cosecha = db1.session.query(Cosecha).filter_by(descripcion = descripcion).first()
+    if new_cosecha != None:
+        return None
     # la fecha de inicio no puede ser mayor a la del fin
     if inicio > fin:
         return None
@@ -583,10 +585,13 @@ def cambiarPrecio(id,precioNuevo):
 
 def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
+    if recolector == None:
+        flash("No existe un recolector asociado a la cedula suministrada")
+        return None
     tipo_rec = db1.session.query(TipoRecolector).filter_by(id=recolector.tipo).first() 
     cosecha = db1.session.query(Cosecha).filter_by(id=cosecha).first() 
 
-    if recolector == None or tipo_rec == None or cosecha == None:
+    if tipo_rec == None or cosecha == None:
         return None
     
     # no se puede generar una compra en una cosecha inactiva
@@ -599,6 +604,7 @@ def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,mer
     fecha = datetime.datetime.strptime(fecha,"%Y-%m-%d")
     # # Si la fecha no se encuentra entre el inicio y el fin de la cosecha
     if not inicio<=fecha.date()<=fin:
+        flash("la fecha de la compra no se encuentra en el periodo de la cosecha")
         return None
 
     compra = Compra(fecha, 
@@ -630,9 +636,11 @@ if __name__ == '__main__':
     app.config.from_object(config['development'])
 
     agregarCosecha("Ene - Mar 22")
+    agregarCosecha("Sep - Dic 21")
     agregarUsuario("admin","admin","admin","admin",1,1,0)
+    agregarUsuario("analista","1234","analista","analista",1,0,0)
     agregarTipoRecolector("Revendedor 2",1.5)
-    # agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
-    generarCompra("2022-03-23",26063468,"Fermentado",20,1,"Demasiado oscuro",12,3)
+    agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
+    generarCompra("2022-07-16",26063468,"Fermentado",20,1,"Demasiado oscuro",12,3)
     app.run()
 
