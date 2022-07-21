@@ -568,6 +568,13 @@ def eliminarCosecha(ID):
         db1.session.commit()
         agregarEvento(session['username'],"Cosecha eliminada",datetime.datetime.now())
 
+def eliminarEvento(ID):
+    
+    
+    db1.session.query(Evento).filter_by(id=ID).delete()
+    db1.session.commit()
+    #agregarEvento(session['username'],"Usuario eliminado",datetime.datetime.now())
+
 def cambiarPassword(username,oldPassword,newPassword):
 
     usuario = db1.session.query(Usuario).filter_by(username=username).first()
