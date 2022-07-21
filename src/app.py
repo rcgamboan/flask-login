@@ -5,7 +5,7 @@ from werkzeug.security import check_password_hash , generate_password_hash
 from config import config
 import sqlite3 as sql
 import database as db1
-from model import Compra, Usuario, Recolector, TipoRecolector, Cosecha
+from model import Compra, Usuario, Recolector, TipoRecolector, Cosecha, Evento
 
 
 app = Flask(__name__)
@@ -376,6 +376,7 @@ def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol
             user.rol = rol
 
         db1.session.commit()
+        agregarEvento(session['username'],"Usuario editado",datetime.datetime.now())
     else:
         flash("El usuario no existe")
 
@@ -407,6 +408,7 @@ def editarRecolector(id,nombres = "",apellidos = "",telefonoCelular = "",telefon
             recolector.tipo = tipo
 
         db1.session.commit()
+        agregarEvento(session['username'],"Recolector editado",datetime.datetime.now())
     else:
         flash("El recolector no existe")
 
@@ -423,6 +425,7 @@ def editarTipoRecolector(id,direccion = "",precio = 0):
             tipoRecolector.precio = precio
 
         db1.session.commit()
+        agregarEvento(session['username'],"Tipo Recolector editado",datetime.datetime.now())
     else:
         flash("El tipo no existe")
 
@@ -446,6 +449,7 @@ def editarCosecha(id,descripcion = "", inicio = "", fin = "", activa=-1):
 
 
         db1.session.commit()
+        agregarEvento(session['username'],"Cosecha editada",datetime.datetime.now())
     else:
         flash("El tipo no existe")
 
@@ -468,6 +472,7 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
         user.nombreCosecha = cosecha.descripcion
         db1.session.add(user)
         db1.session.commit()
+        agregarEvento(session['username'],"Usuario agregado",datetime.datetime.now())
     else:
         if inicio != 1:
             return
@@ -486,6 +491,7 @@ def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direcc
         prod = Recolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo)
         db1.session.add(prod)
         db1.session.commit()
+        agregarEvento(session['username'],"Recolector agregado",datetime.datetime.now())
 
 def agregarTipoRecolector(descripcion,precio=0):
 
@@ -495,6 +501,7 @@ def agregarTipoRecolector(descripcion,precio=0):
         tipo = TipoRecolector(descripcion,precio)
         db1.session.add(tipo)
         db1.session.commit()
+        agregarEvento(session['username'],"Tipo Recolector agregado",datetime.datetime.now())
     else:
         return
 
@@ -510,6 +517,7 @@ def agregarCosecha(descripcion, inicio = datetime.datetime.now().date(), fin = d
     
     db1.session.add(cosecha)
     db1.session.commit()
+    agregarEvento(session['username'],"Cosecha agregada",datetime.datetime.now())
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
@@ -520,6 +528,7 @@ def activarCosecha(id):
     else:
         cosecha.activa = 1
     db1.session.commit()
+    agregarEvento(session['username'],"Cosecha activada",datetime.datetime.now())
 
 def eliminarUsuario(ID):
     
@@ -529,10 +538,12 @@ def eliminarUsuario(ID):
     else:
         db1.session.query(Usuario).filter_by(id=ID).delete()
         db1.session.commit()
+        agregarEvento(session['username'],"Usuario eliminado",datetime.datetime.now())
 
 def eliminarRecolector(ID):
     db1.session.query(Recolector).filter_by(id=ID).delete()
     db1.session.commit()
+    agregarEvento(session['username'],"Recolector eliminado",datetime.datetime.now())
 
 def eliminarTipoRecolector(ID):
     recolectores =  db1.session.query(Recolector).filter_by(tipo=ID).all()
@@ -543,6 +554,7 @@ def eliminarTipoRecolector(ID):
     else:
         db1.session.query(TipoRecolector).filter_by(id=ID).delete()
         db1.session.commit()
+        agregarEvento(session['username'],"Tipo Recolector eliminado",datetime.datetime.now())
 
 def eliminarCosecha(ID):
     cosechas =  db1.session.query(Usuario).filter_by(cosecha=ID).all()
@@ -554,6 +566,7 @@ def eliminarCosecha(ID):
     else:
         db1.session.query(Cosecha).filter_by(id=ID).delete()
         db1.session.commit()
+        agregarEvento(session['username'],"Cosecha eliminada",datetime.datetime.now())
 
 def cambiarPassword(username,oldPassword,newPassword):
 
@@ -568,6 +581,7 @@ def cambiarPassword(username,oldPassword,newPassword):
 
             usuario.password = generate_password_hash(newPassword)
             db1.session.commit()
+            agregarEvento(session['username'],"Cambio de contraseña",datetime.datetime.now())
         else:
             flash("Contraseña incorrecta")
             return
@@ -582,6 +596,7 @@ def cambiarPrecio(id,precioNuevo):
 
         tipoRec.precio = precioNuevo
         db1.session.commit()
+        agregarEvento(session['username'],"Cambio de precio",datetime.datetime.now())
 
 def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
@@ -619,8 +634,17 @@ def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,mer
                     int(merma))
     db1.session.add(compra)
     db1.session.commit()
+    agregarEvento(session['username'],"Generada nueva compra",datetime.datetime.now())
 
-
+def agregarEvento(usuario,descripcion,fecha):
+    user = db1.session.query(Usuario).filter_by(id=usuario).first()
+    if user == None:
+        return None
+    
+    event = Evento(usuario, descripcion, fecha)
+    db1.session.add(event)
+    db1.session.commit()
+    
 #Carga los datos de usuario loggeado a la sesion actual en cache
 def setSession(logged_user):
     session['id'] = logged_user.id

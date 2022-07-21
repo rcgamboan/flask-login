@@ -13,6 +13,7 @@ class Usuario(db.Base):
     cosecha = Column(Integer, ForeignKey("cosecha.id"))
     rol = Column(Integer, default=0, nullable=False)
     nombreCosecha = Column(String, nullable=True)
+    evento = relationship("Evento")
     # rol = 0 -> analista
     # rol = 1 -> admin
     # rol = 2 -> productor
@@ -132,3 +133,23 @@ class Compra(db.Base):
         return f'Compra({self.fecha,self.precio,self.cantidad})'
     def __str__(self):
         return self.fecha
+
+class Evento(db.Base):
+    __tablename__ = 'eventos'
+    id = Column(Integer, primary_key=True, autoincrement = True)
+    usuario = Column(Integer, ForeignKey("usuarios.id"))
+    evento = Column(String, nullable=False)
+    fecha = Column(Date, nullable=False)
+    hora = Column(String, nullable=True)
+    # agregar , buscar, eliminar, modificar
+
+    def __init__(self,usuario, evento, fecha):
+        self.usuario = usuario
+        self.evento = evento
+        self.fecha = fecha
+        self.hora = f"{fecha.hour}:{fecha.minute}:{fecha.second}"
+
+    def __repr__(self):
+        return f'Usuario({self.evento}, {self.fecha}'
+    def __str__(self):
+        return self.evento
