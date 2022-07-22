@@ -56,8 +56,9 @@ def updatePasswd():
 
     cambiarPassword(request.form['username'],
                     request.form['oldpassword'],  
-                    request.form['newpassword'],
+                    request.form['newpassword']
                     )
+    agregarEvento(request.form['username'],"Modificacion de contraseña","Inicio de Sesion",datetime.datetime.now())
     return redirect(url_for('admin'))
 
 @app.route('/logout')
@@ -88,13 +89,14 @@ def update():
                     request.form['editapellido'],
                     request.form['editcosecha'],
                     request.form['editrol'])
+    agregarEvento(session['username'],"Modificar","Usuario",datetime.datetime.now())
     return redirect(url_for('admin'))
 
 @app.route('/admin/delete',methods=['POST'])
 def delete():
     eliminarUsuario(request.form['user_id'])
+    agregarEvento(session['username'],"Eliminar","Usuario",datetime.datetime.now())
     return redirect(url_for('admin'))
-
 
 # Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
 @app.route('/admin',methods=['GET','POST','PUT'])
@@ -111,6 +113,7 @@ def admin():
                                     request.form['apellido'],
                                     request.form['cosecha'],
                                     request.form['rol'])
+                    agregarEvento(session['username'],"Agregar","Usuario",datetime.datetime.now())
                     users = obtenerUsuarios()
                     return render_template('admin.html',users=users,cosechas=obtenerCosechas())
 
@@ -126,6 +129,24 @@ def admin():
     else:
        return redirect(url_for('login'))
 
+# Para la pagina del Admin, recibe los datos del username y password del nuevo usuario
+@app.route('/eventos',methods=['GET','POST','PUT'])
+def eventos():
+    if 'username' in session:
+        if session['rol'] == 1:
+            eventos = obtenerEventos()
+            print(eventos)
+            return render_template('eventos.html',eventos=eventos)
+        else:
+            return redirect(url_for('home'))
+    else:
+       return redirect(url_for('login'))
+
+@app.route('/eventos/delete',methods=['POST'])
+def eventos_eliminar():
+    eliminarEvento(request.form['event_id'])
+    return redirect(url_for('eventos'))
+
 # Se obtienen los datos de las cosechas
 @app.route('/cosechas',methods=['GET','POST','PUT'])
 def cosechas():
@@ -138,6 +159,7 @@ def cosechas():
                     agregarCosecha( request.form['descripcion'], 
                                     datetime.datetime.strptime(request.form['inicio'],"%Y-%m-%d"),
                                     datetime.datetime.strptime(request.form['fin'],"%Y-%m-%d"))
+                    agregarEvento(session['username'],"Agregar","Cosecha",datetime.datetime.now())
                     cosechas = obtenerCosechas()
                     return render_template('cosechas.html',cosechas=cosechas)
 
@@ -162,11 +184,13 @@ def cosechas_update():
         datetime.datetime.strptime(request.form['editInicio'],"%Y-%m-%d"),
         datetime.datetime.strptime(request.form['editFin'],"%Y-%m-%d")
     )
+    agregarEvento(session['username'],"Modificar","Cosecha",datetime.datetime.now())
     return redirect(url_for('cosechas'))
 
 @app.route('/cosechas/delete',methods=['POST'])
 def cosechas_eliminar():
     eliminarCosecha(request.form['cosecha_id'])
+    agregarEvento(session['username'],"Eliminar","Cosecha",datetime.datetime.now())
     return redirect(url_for('cosechas'))
 
 @app.route('/cosechas/habilitar',methods=['POST'])
@@ -196,6 +220,7 @@ def compras(id_cosecha):
                                 request.form['observaciones'],
                                 request.form['humedad'],
                                 request.form['merma'])
+                    agregarEvento(session['username'],"Agregar","Compra",datetime.datetime.now())
                     return render_template('compras.html',recolectores=recolectores, tipos=tipos, compras=compras, cosecha=cosecha)
                 else:
                     flash("No se puede agregar la compra, no existen recolectores")
@@ -227,7 +252,8 @@ def recolector():
                                         request.form["telefonoLocal"],
                                         request.form["direccion"],
                                         request.form["direccion2"],
-                                        request.form["tipo"],)
+                                        request.form["tipo"])
+                        agregarEvento(session['username'],"Agregar","Recolector",datetime.datetime.now())
                         recolectores = obtenerRecolectores()
                         tipos = obtenerTiposRecolectores()
                         return render_template('recolector.html',recolectores=recolectores, tipos=tipos)
@@ -263,11 +289,13 @@ def prod_update():
         request.form['editdireccion2'],
         request.form['edittipo']
     )
+    agregarEvento(session['username'],"Modificar","Recolector",datetime.datetime.now())
     return redirect(url_for('recolector'))
 
 @app.route('/recolector/delete',methods=['POST'])
 def prod_eliminar():
     eliminarRecolector(request.form['prodid'])
+    agregarEvento(session['username'],"Eliminar","Recolector",datetime.datetime.now())
     return redirect(url_for('recolector'))
 
 @app.route('/tipoRecolector', methods=['GET','POST','PUT'])
@@ -281,6 +309,7 @@ def tipo_prod():
                 
                 if new_tipo == None:
                     agregarTipoRecolector(request.form['direccion'])
+                    agregarEvento(session['username'],"Agregar","Tipo Recolector",datetime.datetime.now())
                     tipos = obtenerTiposRecolectores()
                     return render_template('tipo.html', tipos=tipos)
 
@@ -296,7 +325,6 @@ def tipo_prod():
     else:
        return redirect(url_for('login'))
 
-
 @app.route('/tipoRecolector/update',methods=['POST'])
 def tipo_prod_update():
 
@@ -304,23 +332,26 @@ def tipo_prod_update():
         request.form['editid'],
         request.form['editdescripcion'],
     )
+    agregarEvento(session['username'],"Modificar","Tipo Recolector",datetime.datetime.now())
     return redirect(url_for('tipo_prod'))
 
 @app.route('/tipoRecolector/updatePrecio',methods=['POST'])
 def tipo_prod_update_precio():
 
-    print(request.form['editidprecio'])
-    print(request.form['editprecio'])
+    #print(request.form['editidprecio'])
+    #print(request.form['editprecio'])
 
     cambiarPrecio(
         request.form['editidprecio'],
         request.form['editprecio'],
     )
+    agregarEvento(session['username'],"Modificacion de precio","Tipo Recolector",datetime.datetime.now())
     return redirect(url_for('tipo_prod'))
 
 @app.route('/tipoRecolector/delete',methods=['POST'])
 def tipo_prod_eliminar():
     eliminarTipoRecolector(request.form['tipoid'])
+    agregarEvento(session['username'],"Eliminar","Tipo Recolector",datetime.datetime.now())
     return redirect(url_for('tipo_prod'))
 
 # Metodo que retorna todos los registros de la tabla productores
@@ -345,6 +376,10 @@ def obtenerCosechas():
 def obtenerCompras(id):
     compras = db1.session.query(Compra).filter_by(cosecha=id).all()
     return compras
+
+def obtenerEventos():
+    eventos = db1.session.query(Evento).filter_by().all()
+    return eventos
 
 def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol = -1):
     print(f"id a editar : {id}")
@@ -376,7 +411,6 @@ def editarUsuario(id,username = "", nombres = "",apellidos = "",cosecha = "",rol
             user.rol = rol
 
         db1.session.commit()
-        agregarEvento(session['username'],"Usuario editado",datetime.datetime.now())
     else:
         flash("El usuario no existe")
 
@@ -408,7 +442,6 @@ def editarRecolector(id,nombres = "",apellidos = "",telefonoCelular = "",telefon
             recolector.tipo = tipo
 
         db1.session.commit()
-        agregarEvento(session['username'],"Recolector editado",datetime.datetime.now())
     else:
         flash("El recolector no existe")
 
@@ -425,7 +458,6 @@ def editarTipoRecolector(id,direccion = "",precio = 0):
             tipoRecolector.precio = precio
 
         db1.session.commit()
-        agregarEvento(session['username'],"Tipo Recolector editado",datetime.datetime.now())
     else:
         flash("El tipo no existe")
 
@@ -449,7 +481,6 @@ def editarCosecha(id,descripcion = "", inicio = "", fin = "", activa=-1):
 
 
         db1.session.commit()
-        agregarEvento(session['username'],"Cosecha editada",datetime.datetime.now())
     else:
         flash("El tipo no existe")
 
@@ -472,7 +503,6 @@ def agregarUsuario(username,password,nombres,apellidos,cosecha,rol,inicio = 1):
         user.nombreCosecha = cosecha.descripcion
         db1.session.add(user)
         db1.session.commit()
-        agregarEvento(session['username'],"Usuario agregado",datetime.datetime.now())
     else:
         if inicio != 1:
             return
@@ -491,7 +521,6 @@ def agregarRecolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direcc
         prod = Recolector(id, nombres,apellidos,telefonoCelular,telefonoLocal,direccion,direccion2,tipo)
         db1.session.add(prod)
         db1.session.commit()
-        agregarEvento(session['username'],"Recolector agregado",datetime.datetime.now())
 
 def agregarTipoRecolector(descripcion,precio=0):
 
@@ -501,7 +530,6 @@ def agregarTipoRecolector(descripcion,precio=0):
         tipo = TipoRecolector(descripcion,precio)
         db1.session.add(tipo)
         db1.session.commit()
-        agregarEvento(session['username'],"Tipo Recolector agregado",datetime.datetime.now())
     else:
         return
 
@@ -517,7 +545,6 @@ def agregarCosecha(descripcion, inicio = datetime.datetime.now().date(), fin = d
     
     db1.session.add(cosecha)
     db1.session.commit()
-    agregarEvento(session['username'],"Cosecha agregada",datetime.datetime.now())
 
 def activarCosecha(id):
     cosecha = db1.session.query(Cosecha).filter_by(id=id).first()
@@ -525,10 +552,11 @@ def activarCosecha(id):
     if cosecha.activa == 1:
 
         cosecha.activa = 0
+        agregarEvento(session['username'],"Inhabilitar","Cosecha",datetime.datetime.now())
     else:
         cosecha.activa = 1
+        agregarEvento(session['username'],"Habilitar","Cosecha",datetime.datetime.now())
     db1.session.commit()
-    agregarEvento(session['username'],"Cosecha activada",datetime.datetime.now())
 
 def eliminarUsuario(ID):
     
@@ -538,12 +566,10 @@ def eliminarUsuario(ID):
     else:
         db1.session.query(Usuario).filter_by(id=ID).delete()
         db1.session.commit()
-        agregarEvento(session['username'],"Usuario eliminado",datetime.datetime.now())
 
 def eliminarRecolector(ID):
     db1.session.query(Recolector).filter_by(id=ID).delete()
     db1.session.commit()
-    agregarEvento(session['username'],"Recolector eliminado",datetime.datetime.now())
 
 def eliminarTipoRecolector(ID):
     recolectores =  db1.session.query(Recolector).filter_by(tipo=ID).all()
@@ -554,7 +580,6 @@ def eliminarTipoRecolector(ID):
     else:
         db1.session.query(TipoRecolector).filter_by(id=ID).delete()
         db1.session.commit()
-        agregarEvento(session['username'],"Tipo Recolector eliminado",datetime.datetime.now())
 
 def eliminarCosecha(ID):
     cosechas =  db1.session.query(Usuario).filter_by(cosecha=ID).all()
@@ -566,14 +591,13 @@ def eliminarCosecha(ID):
     else:
         db1.session.query(Cosecha).filter_by(id=ID).delete()
         db1.session.commit()
-        agregarEvento(session['username'],"Cosecha eliminada",datetime.datetime.now())
 
 def eliminarEvento(ID):
     
     
     db1.session.query(Evento).filter_by(id=ID).delete()
     db1.session.commit()
-    #agregarEvento(session['username'],"Usuario eliminado",datetime.datetime.now())
+    #agregarEvento(session['username'],"Eliminar","Evento",datetime.datetime.now())
 
 def cambiarPassword(username,oldPassword,newPassword):
 
@@ -588,7 +612,6 @@ def cambiarPassword(username,oldPassword,newPassword):
 
             usuario.password = generate_password_hash(newPassword)
             db1.session.commit()
-            agregarEvento(session['username'],"Cambio de contraseña",datetime.datetime.now())
         else:
             flash("Contraseña incorrecta")
             return
@@ -603,7 +626,6 @@ def cambiarPrecio(id,precioNuevo):
 
         tipoRec.precio = precioNuevo
         db1.session.commit()
-        agregarEvento(session['username'],"Cambio de precio",datetime.datetime.now())
 
 def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,merma):
     recolector = db1.session.query(Recolector).filter_by(id=cedula).first()
@@ -641,14 +663,10 @@ def generarCompra(fecha, cedula,cacao,cantidad,cosecha,observaciones,humedad,mer
                     int(merma))
     db1.session.add(compra)
     db1.session.commit()
-    agregarEvento(session['username'],"Generada nueva compra",datetime.datetime.now())
 
-def agregarEvento(usuario,descripcion,fecha):
-    user = db1.session.query(Usuario).filter_by(id=usuario).first()
-    if user == None:
-        return None
-    
-    event = Evento(usuario, descripcion, fecha)
+def agregarEvento(usuario,descripcion,modulo,fecha):
+    event = Evento(usuario, descripcion,modulo, fecha)
+    print(event)
     db1.session.add(event)
     db1.session.commit()
     
@@ -665,13 +683,13 @@ def setSession(logged_user):
 if __name__ == '__main__':
     db1.Base.metadata.create_all(db1.engine)
     app.config.from_object(config['development'])
-
     agregarCosecha("Ene - Mar 22")
     agregarCosecha("Sep - Dic 21")
     agregarUsuario("admin","admin","admin","admin",1,1,0)
     agregarUsuario("analista","1234","analista","analista",1,0,0)
     agregarTipoRecolector("Revendedor 2",1.5)
     agregarRecolector(26063468,"Carlos","Garcia","04124536562","04245637467","El Hatillo","El Cafetal",1)
-    generarCompra("2022-07-16",26063468,"Fermentado",20,1,"Demasiado oscuro",12,3)
+    generarCompra("2022-07-22",26063468,"Fermentado",20,1,"Demasiado oscuro",12,3)
     app.run()
+    
 

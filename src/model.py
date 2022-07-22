@@ -139,13 +139,15 @@ class Evento(db.Base):
     id = Column(Integer, primary_key=True, autoincrement = True)
     usuario = Column(Integer, ForeignKey("usuarios.id"))
     evento = Column(String, nullable=False)
+    modulo = Column(String, nullable=False)
     fecha = Column(Date, nullable=False)
     hora = Column(String, nullable=True)
     # agregar , buscar, eliminar, modificar
 
-    def __init__(self,usuario, evento, fecha):
+    def __init__(self,usuario, evento, modulo, fecha):
         self.usuario = usuario
         self.evento = evento
+        self.modulo = modulo
         self.fecha = fecha
         self.hora = f"{fecha.hour}:{fecha.minute}:{fecha.second}"
 

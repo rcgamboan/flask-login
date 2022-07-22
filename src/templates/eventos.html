@@ -1,0 +1,120 @@
+{% extends './home.html' %}
+
+{% block title %}Home{% endblock %}
+
+{% block customCSS %}
+<link rel="stylesheet" href="{{ url_for('static',filename='css/login.css') }}">
+{% endblock %}
+
+{% block body %}
+<script>
+  function handleDelete(){
+    var table = document.getElementById('eventos');
+    var tbody = table.getElementsByTagName('tbody')[0];
+    var rows = tbody.getElementsByTagName('tr');
+    for (i = 0; i < rows.length; i++){
+      rows[i].onclick = function() {
+        id = this.cells[0].innerHTML
+        document.querySelector('input[name="event_id"]').value = id;
+        document.querySelector('form[name="ID"]').submit();
+      }
+    }
+  }
+
+  function search() {
+    // Declare variables
+    var input, filter, table, tr, td, i, txtValue;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("eventos");
+    tr = table.getElementsByTagName("tr");
+
+    // Loop through all table rows, and hide those who don't match the search query
+    for (i = 0; i < tr.length; i++) {
+      td = tr[i].getElementsByTagName("td")[0];
+      if (td) {
+        descripcion = td.querySelector('input[name="editDescripcion"]').value
+        if (descripcion.toUpperCase().indexOf(filter) > -1) {
+          tr[i].style.display = "";
+        } else {
+          tr[i].style.display = "none";
+        }
+      }
+    }
+  }
+
+  function resaltar(id) {
+    var btn = document.querySelector('button[name="editbtn' + id + '"]')
+    btn.style.backgroundColor = "rgb(98, 161, 255)"
+    btn.style.color = "#f5f5f5"
+  }
+</script>
+
+<main class="form-signin w-100 mb-auto mt-3 text-center">
+  <h2 class=" my-3 fade-in display-6">Logger de <b class="fw-bold">Eventos</b></h2>
+  {% with messages = get_flashed_messages()%}
+
+  {% if messages %}
+  <br/>
+  {% for message in messages%}
+  <div class="alert alert-primary alert-dismissible" role="alert">
+      <strong>{{ message }}</strong>
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+  {% endfor %}
+  {% endif %}
+
+  {% endwith %}
+
+  <div class="row justify-content-md-center fade-in">
+    <div class="col-12 col-md-4 d-flex justify-content-end">
+          <input type="text" class="form-control my-2 search" id="myInput" onkeyup="search()" placeholder="Buscar por descripción...">
+          <button type="button" class="btn btn-primary my-2 mx-3" data-bs-toggle="modal" data-bs-target="#AgregarCosecha">
+            <i class="fa-solid fa-plus"></i>
+          </button>
+    </div>
+  </div>
+
+</div>
+
+{%if eventos%}
+<div class="row justify-content-md-center fade-in">
+  <div class="col-12 col-md-8 table-responsive">
+    <table class="table mt-2 table-hover " id = "eventos">
+      <thead>
+        <th scope="col">ID</th>
+        <th scope="col">Evento</th>
+        <th scope="col">Modulo</th>
+        <th scope="col">Fecha</th>
+        <th scope="col">Hora</th>
+        <th scope="col">Acciones</th>
+      </thead>
+      <tbody>
+        {%for evento in eventos%}
+        <tr class=" deleteOut tdEdit">
+            <th scope="row" id="{{evento.id}}">{{evento.id}}</th>
+            <td class="table-light tdEdit" type="text" id="evento">{{evento.evento}}</td>
+            <td class="table-light tdEdit" type="text" id="modulo">{{evento.modulo}}</td>
+            <td class="table-light tdEdit" type="date" id="fecha">{{evento.fecha}}</td>
+            <td class="table-light tdEdit" type="text" id="cosecha">{{evento.hora}}</td>
+            <td>
+              <div class="cont">
+                <form name="ID" action="/eventos/delete" method="POST" class="edit trash btn" role="button" onclick="handleDelete();">
+                  <input type="hidden" name="event_id" value="">
+                  <div >
+                    <i class="fa-solid fa-trash"></i>
+                  </div>
+                </form>
+              </div>
+            </td>
+        </tr>
+        {%endfor%}
+      </tbody>
+    </table>
+  </div>
+</div>
+{%endif%}
+  </div>
+</main>
+
+{% endblock %}

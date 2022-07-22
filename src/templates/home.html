@@ -120,9 +120,9 @@
             </li>
             {% endif %}
             
-            {% if session['rol'] == 2 %}
+            {% if session['rol'] == 1 %}
             <li class="align-items-center justify-content-md-center fade-in">
-                <a href="#" class="w-100">
+                <a href="{{ url_for('eventos') }}" class="w-100">
                     <button class="nav-item btn btn-outline-primary mb-3 px-4 py-3">
                         Logger de Eventos
                     </button>
