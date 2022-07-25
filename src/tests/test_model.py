@@ -130,3 +130,25 @@ class Compra(db.Base):
         return f'Compra({self.fecha,self.precio,self.cantidad})'
     def __str__(self):
         return self.fecha
+
+class Evento(db.Base):
+    __tablename__ = 'eventos'
+    id = Column(Integer, primary_key=True, autoincrement = True)
+    usuario = Column(Integer, ForeignKey("usuarios.id"))
+    evento = Column(String, nullable=False)
+    modulo = Column(String, nullable=False)
+    fecha = Column(Date, nullable=False)
+    hora = Column(String, nullable=True)
+    # agregar , buscar, eliminar, modificar
+
+    def __init__(self,usuario, evento, modulo, fecha):
+        self.usuario = usuario
+        self.evento = evento
+        self.modulo = modulo
+        self.fecha = fecha
+        self.hora = f"{fecha.hour}:{fecha.minute}:{fecha.second}"
+
+    def __repr__(self):
+        return f'Usuario({self.evento}, {self.fecha}'
+    def __str__(self):
+        return self.evento

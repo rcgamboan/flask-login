@@ -4,9 +4,10 @@ import test_database as test_db
 from test_usuario import agregarUsuario, editarUsuario, login, eliminarUsuario
 from test_recolector import editarRecolector, agregarRecolector, eliminarRecolector
 from test_tipo_recolector import editarTipoRecolector, agregarTipoRecolector, eliminarTipoRecolector
-from test_model import Usuario, Recolector, TipoRecolector, Cosecha, Compra
+from test_model import Usuario, Recolector, TipoRecolector, Cosecha, Compra, Evento
 from test_cosecha import agregarCosecha, activarCosecha, editarCosecha
 from test_compra import generarCompra
+from test_evento import eliminarEvento, agregarEvento
 
 
 class TestUsuario(unittest.TestCase):
@@ -244,7 +245,6 @@ class TestCosecha(unittest.TestCase):
         activarCosecha(cosecha.id)
         self.assertEqual(1,cosecha.activa)
     
-
 class TestCompra(unittest.TestCase):
 
     def test_generar_compra(self):
@@ -252,6 +252,76 @@ class TestCompra(unittest.TestCase):
         agregarRecolector(9999,"pedro","perez","1234","1234","caracas","valencia",0)
         generarCompra(datetime.datetime.now(),999,0,0,"","","","","",1)
         self.assertIsNotNone( test_db.session.query(Compra).filter_by(cedula = 999).first())
+    
+    def test_generar_compra_sin_cedula(self):
+        agregarTipoRecolector("prueba2")
+        agregarRecolector(9899,"pedro","perez","1234","1234","caracas","valencia",0)
+        generarCompra(fecha=datetime.datetime.now(), 
+                    tipo="",
+                    precio=-1,
+                    cacao="",
+                    cantidad="",
+                    cosecha=-1,
+                    observaciones="",
+                    humedad="",
+                    merma=0)
+        self.assertIsNone( test_db.session.query(Compra).filter_by(cedula = 9899).first())
+
+class TestEvento(unittest.TestCase):
+
+    def test_agregar_evento_sin_usuario(self):
+        self.assertIsNone( agregarEvento(descripcion="",modulo="",fecha=""))
+    
+    def test_agregar_evento_sin_descripcion(self):
+        self.assertIsNone( agregarEvento(usuario="",modulo="",fecha=""))
+    
+    def test_evento_agregar_compra(self):
+        agregarTipoRecolector("prueba1")
+        agregarRecolector(9999,"pedro","perez","1234","1234","caracas","valencia",0)
+        generarCompra(datetime.datetime.now(),999,0,0,"","","","","",1)
+        agregarEvento(0,"Agregar","Compra",datetime.datetime.now())
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario =0).first())
+    
+    def test_evento_agregar_usuario(self):
+        agregarCosecha("prueba1")
+        agregarUsuario("test0","test0","nombre4","apellido4",0,0)
+        usuarioDB = test_db.session.query(Usuario).filter_by(username = "test0").first()
+        agregarEvento(usuarioDB.id,"Agregar","Usuario",datetime.datetime.now())
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=usuarioDB.id).first())
+    
+    def test_evento_eliminar_usuario(self):
+        agregarCosecha("prueba1")
+        agregarUsuario("test2","test2","nombre4","apellido4",0,0)
+        usuarioDB = test_db.session.query(Usuario).filter_by(username = "test2").first()
+        agregarEvento(usuarioDB.id,"Eliminar","Usuario",datetime.datetime.now())
+        eliminarUsuario(usuarioDB.id)
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=usuarioDB.id).first())
+    
+    def test_evento_agregar_recolector(self):
+        agregarRecolector(12345,"test0","test0","1234","1234","caracas","valencia",0)
+        RecolectorDB = test_db.session.query(Recolector).filter_by(id = 12345).first()
+        agregarEvento(RecolectorDB.id,"Agregar","Recolector",datetime.datetime.now())
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=RecolectorDB.id).first())
+    
+    def test_evento_eliminar_recolector(self):
+        agregarRecolector(125,"test0","test0","1234","1234","caracas","valencia",0)
+        RecolectorDB = test_db.session.query(Recolector).filter_by(id = 125).first()
+        agregarEvento(RecolectorDB.id,"Eliminar","Recolector",datetime.datetime.now())
+        eliminarRecolector(RecolectorDB.id)
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=RecolectorDB.id).first())
+    
+    def test_evento_agregar_tipo(self):
+        agregarTipoRecolector("vendedor1")
+        tipo_Recolector = test_db.session.query(TipoRecolector).filter_by(direccion = "vendedor1").first()
+        agregarEvento(tipo_Recolector.id,"Agregar","Tipo de Recolector",datetime.datetime.now())
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=tipo_Recolector.id).first())
+    
+    def test_evento_eliminar_tipo(self):
+        agregarTipoRecolector("vendedor4")
+        tipo_Recolector = test_db.session.query(TipoRecolector).filter_by(direccion = "vendedor1").first()
+        agregarEvento(tipo_Recolector.id,"Eliminar","Tipo de Recolector",datetime.datetime.now())
+        eliminarTipoRecolector(tipo_Recolector.id)
+        self.assertIsNotNone( test_db.session.query(Evento).filter_by(usuario=tipo_Recolector.id).first())
 
 if __name__ == '__main__':
     test_db.Base.metadata.create_all(test_db.engine)
